@@ -1,0 +1,55 @@
+{
+    "cnlpprod": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-controlsnlp-cnlpprod-193200-authRole",
+            "UnauthRoleArn": "arn:aws:iam::307939272879:role/amplify-controlsnlp-cnlpprod-193200-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::307939272879:role/amplify-controlsnlp-cnlpprod-193200-authRole",
+            "Region": "eu-west-1",
+            "DeploymentBucketName": "amplify-controlsnlp-cnlpprod-193200-deployment",
+            "UnauthRoleName": "amplify-controlsnlp-cnlpprod-193200-unauthRole",
+            "StackName": "amplify-controlsnlp-cnlpprod-193200",
+            "StackId": "arn:aws:cloudformation:eu-west-1:307939272879:stack/amplify-controlsnlp-cnlpprod-193200/d9bb7070-46bb-11ea-8066-02ee8e94a71a",
+            "AmplifyAppId": "d6iatpfdnpx9p"
+        },
+        "categories": {
+            "auth": {
+                "userPoolGroups": {},
+                "controlsnlpAuth": {}
+            },
+            "function": {
+                "controlsnlpAuthCustomMessage": {
+                    "REDIRECTURL": "",
+                    "EMAILSUBJECT": "",
+                    "EMAILMESSAGE": ""
+                },
+                "AdminQueries1eb51441": {},
+                "controlsnlpAuth": {}
+            }
+        }
+    },
+    "cnlpdev": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-controlsnlp-cnlpdev-193453-authRole",
+            "UnauthRoleArn": "arn:aws:iam::307939272879:role/amplify-controlsnlp-cnlpdev-193453-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::307939272879:role/amplify-controlsnlp-cnlpdev-193453-authRole",
+            "Region": "eu-west-1",
+            "DeploymentBucketName": "amplify-controlsnlp-cnlpdev-193453-deployment",
+            "UnauthRoleName": "amplify-controlsnlp-cnlpdev-193453-unauthRole",
+            "StackName": "amplify-controlsnlp-cnlpdev-193453",
+            "StackId": "arn:aws:cloudformation:eu-west-1:307939272879:stack/amplify-controlsnlp-cnlpdev-193453/4100f840-46bc-11ea-b2d2-0a535c7d72e8",
+            "AmplifyAppId": "d6iatpfdnpx9p"
+        },
+        "categories": {
+            "function": {
+                "controlsnlpAuthCustomMessage": {
+                    "REDIRECTURL": "",
+                    "EMAILSUBJECT": "Atreides.Control account confirmation link",
+                    "EMAILMESSAGE": "Please click the link below to confirm your email address."
+                }
+            },
+            "auth": {
+                "controlsnlpAuth": {}
+            }
+        }
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "trigger": true,
+    "modules": [
+        "verification-link"
+    ],
+    "parentResource": "controlsnlpAuth",
+    "functionName": "controlsnlpAuthCustomMessage",
+    "parentStack": "auth",
+    "triggerEnvs": "[{\"key\":\"RESOURCENAME\",\"value\":\"resourceName\"}]",
+    "triggerTemplate": "CustomMessage.json.ejs",
+    "roleName": "controlsnlpAuthCustomMessage",
+    "skipEdit": true,
+    "resourceName": "controlsnlpAuthCustomMessage"
+}
