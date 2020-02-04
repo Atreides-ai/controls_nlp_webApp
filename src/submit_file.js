@@ -2,14 +2,13 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import TextField from "@material-ui/core/TextField";
 import Paper from "@material-ui/core/Paper";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import Amplify, { Storage } from "aws-amplify";
+import { Storage } from "aws-amplify";
 import SignOut from "./sign_out";
-import Guidance_Diaglogue from "./guidance_dialogue";
+import GuidanceDiaglogue from "./guidanceDialogue";
 import "./button_hider.css";
 import Snackbar from "@material-ui/core/Snackbar";
 import Chip from "@material-ui/core/Chip";
@@ -116,7 +115,7 @@ export default function SubmitFile() {
                     >
                       About us
                     </Button>
-                    <Guidance_Diaglogue />
+                    <GuidanceDiaglogue />
                     <SignOut />
                   </CardActions>
                 </Card>

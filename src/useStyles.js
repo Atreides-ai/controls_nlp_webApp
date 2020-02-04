@@ -1,10 +1,9 @@
 import { green } from "@material-ui/core/colors";
 import { makeStyles } from "@material-ui/core/styles";
-import { forceCenter } from "d3";
 
 const useStyles = makeStyles(theme => ({
   root: {
-    height: "100vh",
+    height: "100vh"
   },
   success: {
     backgroundColor: green[600]

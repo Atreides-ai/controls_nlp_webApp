@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Amplify, { Storage } from "aws-amplify";
+import { Storage } from "aws-amplify";
 import Paper from "@material-ui/core/Paper";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";

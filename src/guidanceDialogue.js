@@ -11,7 +11,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function Guidance_Dialogue() {
+export default function GuidanceDialogue() {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {

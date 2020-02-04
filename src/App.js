@@ -1,10 +1,10 @@
 import React from "react";
 import "./App.css";
 import {
+  SignIn,
   RequireNewPassword,
   ConfirmSignIn,
   ForgotPassword,
-  SignIn,
   TOTPSetup,
   withAuthenticator
 } from "aws-amplify-react";
@@ -41,10 +41,15 @@ class App extends React.Component {
     );
   }
 }
-export default withAuthenticator(App, true, [
-  <SignIn />,
-  <ConfirmSignIn />,
-  <ForgotPassword />,
-  <RequireNewPassword />,
-  <TOTPSetup />
-]);
+export default withAuthenticator(
+  App,
+  true,
+  [
+    <SignIn />,
+    <ConfirmSignIn />,
+    <ForgotPassword />,
+    <RequireNewPassword />,
+    <TOTPSetup />
+  ],
+  { theme: { theme } }
+);
