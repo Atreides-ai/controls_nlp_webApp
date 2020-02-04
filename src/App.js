@@ -19,37 +19,31 @@ import awsmobile from "./aws-exports";
 
 Amplify.configure(awsmobile);
 
-class App extends React.Component {
-  render() {
-    return (
-      <Router>
-        <Switch>
-          <Route path="/dashboard">
-            <ThemeProvider theme={theme}>
-              <CssBaseline />
-              <Dashboard></Dashboard>
-            </ThemeProvider>
-          </Route>
-          <Route path="/">
-            <ThemeProvider theme={theme}>
-              <CssBaseline />
-              <SubmitFile />
-            </ThemeProvider>
-          </Route>
-        </Switch>
-      </Router>
-    );
-  }
+function App() {
+  return (
+    <Router>
+      <Switch>
+        <Route path="/dashboard">
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <Dashboard />
+          </ThemeProvider>
+        </Route>
+        <Route path="/">
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <SubmitFile />
+          </ThemeProvider>
+        </Route>
+      </Switch>
+    </Router>
+  );
 }
-export default withAuthenticator(
-  App,
-  true,
-  [
-    <SignIn />,
-    <ConfirmSignIn />,
-    <ForgotPassword />,
-    <RequireNewPassword />,
-    <TOTPSetup />
-  ],
-  { theme: { theme } }
-);
+
+export default withAuthenticator(App, true, [
+  <SignIn />,
+  <ConfirmSignIn />,
+  <ForgotPassword />,
+  <RequireNewPassword />,
+  <TOTPSetup />
+]);
