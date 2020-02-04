@@ -205,7 +205,7 @@ export default function Dashboard() {
               <div className={classes.pie}>
                 <Paper className={classes.paper}>
                   <Typography variant="h6" align="center">
-                    Process
+                    Contains When?
                   </Typography>
                   <MyResponsivePie
                     id="when_piechart"
@@ -218,7 +218,7 @@ export default function Dashboard() {
               <div className={classes.pie}>
                 <Paper className={classes.paper}>
                   <Typography variant="h6" align="center">
-                    Control Type
+                    Contains Multiple Whens?
                   </Typography>
                   <MyResponsivePie
                     id="multiple_whens_pie"
