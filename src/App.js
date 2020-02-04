@@ -16,6 +16,7 @@ import theme from "./theme.js";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Amplify from "aws-amplify";
 import awsmobile from "./aws-exports";
+import CustomSignIn from "./customSignIn.js";
 
 Amplify.configure(awsmobile);
 
@@ -29,7 +30,7 @@ function App() {
             <Dashboard />
           </ThemeProvider>
         </Route>
-        <Route path="/">
+        <Route path="/submitFile">
           <ThemeProvider theme={theme}>
             <CssBaseline />
             <SubmitFile />
@@ -41,7 +42,7 @@ function App() {
 }
 
 export default withAuthenticator(App, true, [
-  <SignIn />,
+  <CustomSignIn />,
   <ConfirmSignIn />,
   <ForgotPassword />,
   <RequireNewPassword />,

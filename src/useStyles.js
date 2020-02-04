@@ -69,6 +69,24 @@ const useStyles = makeStyles(theme => ({
   pie: {
     height: 250,
     marginBottom: theme.spacing(2)
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main
+  },
+  form: {
+    width: "100%", // Fix IE 11 issue.
+    marginTop: theme.spacing(1),
+    "&:focus": {
+      borderColor: "primary.dark"
+    }
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+    background: "primary.main",
+    "&:hover": {
+      backgroundColor: "primary.dark"
+    }
   }
 }));
 
