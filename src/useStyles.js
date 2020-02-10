@@ -1,3 +1,4 @@
+import theme from "./theme.js";
 import { green } from "@material-ui/core/colors";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -83,10 +84,18 @@ const useStyles = makeStyles(theme => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
+    padding: theme.spacing(3, 2),
     background: "primary.main",
     "&:hover": {
       backgroundColor: "primary.dark"
     }
+  },
+  login: {
+    padding: theme.spacing(3, 2),
+    height: 200,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center"
   }
 }));
 

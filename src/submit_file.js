@@ -90,7 +90,7 @@ export default function SubmitFile() {
                     <CardMedia
                       className={classes.media}
                       image={logo}
-                      title="Atreides.ai Reptile"
+                      title="Atreides.ai"
                     />
                     <CardContent>
                       <Typography gutterBottom variant="h5" component="h2">
