@@ -11,9 +11,9 @@
         "SMS Text Message",
         "TOTP"
     ],
-    "smsAuthenticationMessage": "Your Atreides.Control authentication code is {####}.",
+    "smsAuthenticationMessage": "Your authentication code is {####}",
     "smsVerificationMessage": "Your verification code is {####}",
-    "emailVerificationSubject": "Your email verification code for Atreides.Control",
+    "emailVerificationSubject": "Your verification code",
     "emailVerificationMessage": "Your verification code is {####}",
     "defaultPasswordPolicy": false,
     "passwordPolicyMinLength": 8,
@@ -30,26 +30,25 @@
     ],
     "userpoolClientReadAttributes": [
         "email",
-        "name"
+        "name",
+        "email_verified"
     ],
     "userpoolClientLambdaRole": "contro459e160f_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": true,
     "useDefault": "manual",
     "authSelections": "identityPoolAndUserPool",
     "resourceName": "controlsnlpAuth",
-    "thirdPartyAuth": false,
     "usernameAttributes": [
         "email"
     ],
-    "userPoolGroups": true,
-    "adminQueries": true,
+    "userPoolGroups": false,
+    "adminQueries": false,
     "triggers": "{\"CustomMessage\":[\"verification-link\"]}",
     "hostedUI": false,
     "userPoolGroupList": [
         "atreides",
         "demo"
     ],
-    "adminQueryGroup": "atreides",
     "verificationBucketName": "controlsnlpauthverificationbucket",
     "authRoleArn": {
         "Fn::GetAtt": [
@@ -77,5 +76,6 @@
                 "Name"
             ]
         }
-    ]
+    ],
+    "thirdPartyAuth": false
 }

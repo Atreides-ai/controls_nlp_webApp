@@ -7,8 +7,10 @@
     "functionName": "controlsnlpAuthCustomMessage",
     "parentStack": "auth",
     "triggerEnvs": "[{\"key\":\"RESOURCENAME\",\"value\":\"resourceName\"}]",
-    "triggerTemplate": "CustomMessage.json.ejs",
+    "triggerDir": "/usr/local/lib/node_modules/@aws-amplify/cli/node_modules/amplify-category-auth/provider-utils/awscloudformation/utils/../triggers/CustomMessage",
     "roleName": "controlsnlpAuthCustomMessage",
+    "triggerTemplate": "CustomMessage.json.ejs",
+    "triggerEventPath": "CustomMessage.event.json",
     "skipEdit": true,
     "resourceName": "controlsnlpAuthCustomMessage"
 }

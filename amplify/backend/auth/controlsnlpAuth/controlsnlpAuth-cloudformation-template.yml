@@ -94,10 +94,7 @@ Parameters:
               
   resourceName:
     Type: String
-                
-  thirdPartyAuth:
-    Type: String
-                    
+                      
   usernameAttributes:
     Type: CommaDelimitedList
         
@@ -116,9 +113,6 @@ Parameters:
   userPoolGroupList:
     Type: CommaDelimitedList
       
-  adminQueryGroup:
-    Type: String
-              
   verificationBucketName:
     Type: String
                                             
@@ -130,7 +124,10 @@ Parameters:
               
   dependsOn:
     Type: CommaDelimitedList
-    
+        
+  thirdPartyAuth:
+    Type: String
+                      
 Conditions:
   ShouldNotCreateEnvResources: !Equals [ !Ref env, NONE ]
 
