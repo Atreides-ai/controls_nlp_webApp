@@ -10,13 +10,14 @@ import AuthComponent from "./AuthComponent";
 Amplify.configure(awsmobile);
 
 export default function App() {
-  return;
-  <AuthComponent>
-    <Router>
-      <Switch>
-        <Route exact path="/dashboard" render={Dashboard} />}
-        <Route exact path="/submitFile" render={SubmitFile} />}
-      </Switch>
-    </Router>
-  </AuthComponent>;
+  return (
+    <AuthComponent>
+      <Router>
+        <Switch>
+          <Route exact path="/dashboard" render={Dashboard} />}
+          <Route exact path="/submitFile" render={SubmitFile} />}
+        </Switch>
+      </Router>
+    </AuthComponent>
+  );
 }

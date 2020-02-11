@@ -1,4 +1,4 @@
-import React, { useState }  from "react";
+import React, { useState } from "react";
 import {
   RequireNewPassword,
   ConfirmSignIn,
@@ -38,6 +38,5 @@ export default function AuthComponent() {
     //    </Box>
 
     // TODO maybe move conditional render of the routes here?
-    
   );
 }

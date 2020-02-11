@@ -8,6 +8,7 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "./theme.js";
 import Container from "@material-ui/core/Container";
 import useStyles from "./useStyles.js";
+import { Link } from "react-router-dom";
 
 const classes = useStyles;
 
@@ -56,16 +57,18 @@ export default class CustomSignIn extends SignIn {
                     autoComplete="current-password"
                     onChange={this.handleInputChange}
                   />
-                  <Button
-                    type="button"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    className={classes.submit}
-                    onClick={() => super.signIn()}
-                  >
-                    Sign In
-                  </Button>
+                  <Link path="/submitFile">
+                    <Button
+                      type="button"
+                      fullWidth
+                      variant="contained"
+                      color="primary"
+                      className={classes.submit}
+                      onClick={() => super.signIn()}
+                    >
+                      Sign In
+                    </Button>
+                  </Link>
                   <Button
                     type="button"
                     fullWidth
