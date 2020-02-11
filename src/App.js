@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import "./App.css";
 import SubmitFile from "./submit_file";
 import Dashboard from "./dashboard";
@@ -9,15 +9,23 @@ import AuthComponent from "./AuthComponent";
 
 Amplify.configure(awsmobile);
 
+const PrivateRoute = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={props =>
+      authState === true ? <Component {...props} /> : <Redirect to="/" />
+    }
+  />
+);
+
 export default function App() {
   return (
-    <AuthComponent>
-      <Router>
-        <Switch>
-          <Route exact path="/dashboard" render={Dashboard} />}
-          <Route exact path="/submitFile" render={SubmitFile} />}
-        </Switch>
-      </Router>
-    </AuthComponent>
+    <Router>
+      <Switch>
+        <Route exact path="/" render={AuthComponent} />
+        <PrivateRoute exact path="/dashboard" render={Dashboard} />}
+        <PrivateRoute exact path="/submitFile" render={SubmitFile} />}
+      </Switch>
+    </Router>
   );
 }

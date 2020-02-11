@@ -37,6 +37,5 @@ export default function AuthComponent() {
     </Authenticator>
     //    </Box>
 
-    // TODO maybe move conditional render of the routes here?
   );
 }
