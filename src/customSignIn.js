@@ -57,7 +57,7 @@ export default class CustomSignIn extends SignIn {
                     autoComplete="current-password"
                     onChange={this.handleInputChange}
                   />
-                  <Link path="/submitFile">
+                  <Link to="/submitFile">
                     <Button
                       type="button"
                       fullWidth
