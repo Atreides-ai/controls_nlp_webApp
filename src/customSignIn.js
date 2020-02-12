@@ -57,18 +57,16 @@ export default class CustomSignIn extends SignIn {
                     autoComplete="current-password"
                     onChange={this.handleInputChange}
                   />
-                  <Link to="/submitFile">
-                    <Button
-                      type="button"
-                      fullWidth
-                      variant="contained"
-                      color="primary"
-                      className={classes.submit}
-                      onClick={() => super.signIn()}
-                    >
-                      Sign In
-                    </Button>
-                  </Link>
+                  <Button
+                    type="button"
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    className={classes.submit}
+                    onClick={() => super.signIn()}
+                  >
+                    Sign In
+                  </Button>
                   <Button
                     type="button"
                     fullWidth

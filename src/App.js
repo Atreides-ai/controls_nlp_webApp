@@ -1,7 +1,7 @@
-import React, { Component, useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
-import SubmitFile from "./submit_file";
-import Dashboard from "./dashboard";
+import SubmitFile from "./submit_file.js";
+import Dashboard from "./dashboard.js";
 import {
   BrowserRouter as Router,
   Switch,
@@ -16,13 +16,19 @@ import {
   ForgotPassword,
   TOTPSetup,
   Authenticator,
-  VerifyContact
+  VerifyContact,
+  Greetings
 } from "aws-amplify-react";
 import CustomSignIn from "./customSignIn.js";
+import Box from "@material-ui/core/Box";
 
 Amplify.configure(awsmobile);
 
-const PrivateRoute = ({authState, component: Component,  ...rest }) => (
+const PrivateRoute = ({
+  authState: authState,
+  component: Component,
+  ...rest
+}) => (
   <Route
     {...rest}
     render={props =>
@@ -32,29 +38,37 @@ const PrivateRoute = ({authState, component: Component,  ...rest }) => (
 );
 
 function AuthComponent({ appCallback }) {
-  const [authState, setState] = useState(false);
+  const [authState, SetAuthState] = useState(false);
+
   const handleStateChange = state => {
     if (state === "signedIn") {
-      setState(true);
-      appCallback(authState);
+      appCallback(true);
+      SetAuthState(true);
+      console.log("signed in!");
+    } else {
+      console.log("you are not signed in!");
     }
   };
+
   return (
-    //   <Box styles={{backgroundImage="url(someImage)"}}>
-    <Authenticator
-      authState="signIn"
-      onStateChange={handleStateChange}
-      hideDefault={true}
-      amplifyConfig={awsmobile}
-    >
-      <CustomSignIn override={"SignIn"} />
-      <ConfirmSignIn />
-      <ForgotPassword />
-      <RequireNewPassword />
-      <TOTPSetup />
-      <VerifyContact />
-    </Authenticator>
-    //    </Box>
+    <Box>
+      {authState === true && <Redirect to="/submitFile" />}
+      {authState === false && (
+        <Authenticator
+          authState="signIn"
+          onStateChange={handleStateChange}
+          hideDefault={true}
+          amplifyConfig={awsmobile}
+        >
+          <CustomSignIn override={"SignIn"} />
+          <ConfirmSignIn />
+          <ForgotPassword />
+          <RequireNewPassword />
+          <TOTPSetup />
+          <VerifyContact />
+        </Authenticator>
+      )}
+    </Box>
   );
 }
 
@@ -66,23 +80,15 @@ export default function App() {
   return (
     <Router>
       <Switch>
-        <Route exact path="/">
-          <AuthComponent appCallback={() => callbackState()} />
+        <PrivateRoute path="/dashboard" authState={authState}>
+          <Dashboard />
+        </PrivateRoute>
+        <PrivateRoute path="/submitFile" authState={authState}>
+          <SubmitFile />
+        </PrivateRoute>
+        <Route path="/">
+          <AuthComponent appCallback={callbackState} />
         </Route>
-        <PrivateRoute
-          exact
-          path="/dashboard"
-          render={Dashboard}
-          authState={authState}
-        />
-        }
-        <PrivateRoute
-          exact
-          path="/submitFile"
-          render={SubmitFile}
-          authState={authState}
-        />
-        }
       </Switch>
     </Router>
   );
