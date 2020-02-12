@@ -1,68 +1,73 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# ControlsNLP WebApp
 
-## Available Scripts
+## Background
 
-In the project directory, you can run:
+This is a serverless web app for interacting with the Atreides Controls NLP service. The business user guide can be found on Nuclino, here. [provide link]
 
-### `yarn start`
+## Stack
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+This web app is an AWS Amplify Web App which has a React Front End (bootstrapped with create-react-app) and a node.js back end. 
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+The package manager in use is npm. 
 
-### `yarn test`
+The Material-UI Library is used throughout to provide components that are compatible with the Google Material Style Guidelines. 
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Authentication
 
-### `yarn build`
+Authentication is provider by the AWS Cognito Service. 
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Authentication is 2FA and is provided by user email, password and SMS token.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+## Components
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+All components (unless specified) have been created using React Hooks and ES6 JS Syntax. 
 
-### `yarn eject`
+### AuthComponent
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+This is a wrapper for the AWS Amplify [authenticator](https://aws-amplify.github.io/docs/js/authentication) component. This wrapper is required to create the login landing page, integrate react-route-dom to allow the react app to function as a single page application **and** allow CustomSignIn to replace the default SignIn component from Amplify.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Copyright
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+The Copyright component renders a Material-UI Typography component that provides the text Copyright © Atreides.ai [Insert Current Year].
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### CustomSignIn
 
-## Learn More
+This component extends the amplify SignIn class component and so does not use React Hooks. The signin component provides a CustomSignIn that allows presentation to be in line with Material-UI guidelines and fit the Atreides brand.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Dashboard
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Provides a dashboard to interact with the data returned by the Atreides Controls Package. The dashboard is built using d3 and Nivo chart. It reads data in from the users private s3 bucket so that users can only view their own data. Furthermore users can download their source file directly from s3 providing they are authenticated.
 
-### Code Splitting
+### GuidanceDialogue
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+A material-ui Dialogue box that pops onto the SubmitFile view to guide users on how to upload data. 
 
-### Analyzing the Bundle Size
+### MySnackbarContentWrapper
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+A wrapper for a snackbar that displays toasts during file upload.
 
-### Making a Progressive Web App
+### pieConfig
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+Configures the nivo pie charts on the dashboard to take in data and meet the Atreides style guidelines.
 
-### Advanced Configuration
+### PrivateRoute
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+An extension of the react-router-dom Route component to allow routes to be hidden unless the user is authenticated. This is central to the integration of aws amplfiy cognito and react-router-dom. The component takes the following props: authState, component (children) and the standard props for the route denoted by ...rest. If the user is authenticated the route is accessible.
 
-### Deployment
+### SignOut
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+This is a custom SignOut component that lets the user logout by clicking a button. The autState is set back to **SignIn** and the user is redirected back to the root login screen.
 
-### `yarn build` fails to minify
+### SubmitFile
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+This is a view for uploading a file. It integrates the GuidanceDialogue, MySnackbarContentWrapper and Amplify-Storage to allow users to upload files to their own private s3 bucket directory for processing by the Atreides Controls NLP service.
+
+### theme
+
+Stores the theme for the Atreides.ai branding.
+
+### useStyles
+
+Creates the style guidelines for the app using the class system provided by Material-UI.
+
+## 
