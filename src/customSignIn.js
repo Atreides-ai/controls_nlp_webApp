@@ -8,7 +8,6 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "./theme.js";
 import Container from "@material-ui/core/Container";
 import useStyles from "./useStyles.js";
-import { Link } from "react-router-dom";
 
 const classes = useStyles;
 
@@ -20,69 +19,63 @@ export default class CustomSignIn extends SignIn {
 
   showComponent() {
     return (
-      <div
-        styles={{
-          backgroundImage: "url(https://source.unsplash.com/8WFnEehJWso)"
-        }}
-      >
-        <ThemeProvider theme={theme}>
-          <Container component="main" maxWidth="xs">
-            <CssBaseline />
-            <div className={classes.login}>
-              <Typography component="h1" variant="h5">
-                Sign In
-              </Typography>
-              <div className={classes.form}>
-                <form className={classes.form} noValidate>
-                  <TextField
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="username"
-                    label="Email Address"
-                    name="username"
-                    autoComplete="Email Address"
-                    onChange={this.handleInputChange}
-                  />
-                  <TextField
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    fullWidth
-                    name="password"
-                    label="Password"
-                    type="password"
-                    id="password"
-                    autoComplete="current-password"
-                    onChange={this.handleInputChange}
-                  />
-                  <Button
-                    type="button"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    className={classes.submit}
-                    onClick={() => super.signIn()}
-                  >
-                    Sign In
-                  </Button>
-                  <Button
-                    type="button"
-                    fullWidth
-                    variant="contained"
-                    color="dark"
-                    className={classes.submit}
-                    onClick={() => super.changeState("forgotPassword")}
-                  >
-                    Forgot Password?
-                  </Button>
-                </form>
-              </div>
+      <ThemeProvider theme={theme}>
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
+          <div className={classes.login}>
+            <Typography component="h1" variant="h5" align="center">
+              Sign in to Atreides
+            </Typography>
+            <div className={classes.form}>
+              <form className={classes.form} noValidate>
+                <TextField
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="username"
+                  label="Email Address"
+                  name="username"
+                  autoComplete="Email Address"
+                  onChange={this.handleInputChange}
+                />
+                <TextField
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                  onChange={this.handleInputChange}
+                />
+                <Button
+                  type="button"
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}
+                  onClick={() => super.signIn()}
+                >
+                  Sign In
+                </Button>
+                <Button
+                  type="button"
+                  fullWidth
+                  variant="contained"
+                  color="dark"
+                  className={classes.submit}
+                  onClick={() => super.changeState("forgotPassword")}
+                >
+                  Forgot Password?
+                </Button>
+              </form>
             </div>
-          </Container>
-        </ThemeProvider>
-      </div>
+          </div>
+        </Container>
+      </ThemeProvider>
     );
   }
 }

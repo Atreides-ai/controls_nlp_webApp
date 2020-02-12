@@ -91,11 +91,25 @@ const useStyles = makeStyles(theme => ({
     }
   },
   login: {
-    padding: theme.spacing(3, 2),
+    padding: "0 30px",
     height: 200,
     display: "flex",
     flexDirection: "column",
     justifyContent: "center"
+  },
+  loginImage: {
+    backgroundImage: "url(https://source.unsplash.com/oyXis2kALVg)",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    height: "100vh"
+  },
+  loginSurface: {
+    height: "40vh",
+    padding: "20px 10px",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center"
   }
 }));
 
