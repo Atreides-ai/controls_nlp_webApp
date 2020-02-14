@@ -23,34 +23,41 @@ export default class CustomSignIn extends SignIn {
         <Container component="main" maxWidth="xs">
           <CssBaseline />
           <div className={classes.login}>
-            <Typography component="h1" variant="h5" align="center">
+            <Typography
+              component="h1"
+              variant="h5"
+              align="center"
+              color="primary"
+            >
               Sign in to Atreides
             </Typography>
             <div className={classes.form}>
               <form className={classes.form} noValidate>
                 <TextField
+                  style={{ backgroundColor: "white" }}
                   variant="outlined"
                   margin="normal"
                   required
                   fullWidth
                   id="username"
-                  label="Email Address"
                   name="username"
                   autoComplete="Email Address"
                   onChange={this.handleInputChange}
                 />
                 <TextField
+                  style={{ backgroundColor: "white" }}
                   variant="outlined"
                   margin="normal"
                   required
                   fullWidth
                   name="password"
-                  label="Password"
                   type="password"
                   id="password"
                   autoComplete="current-password"
                   onChange={this.handleInputChange}
-                />
+                />{" "}
+                <br></br>
+                <br></br>
                 <Button
                   type="button"
                   fullWidth
@@ -61,6 +68,8 @@ export default class CustomSignIn extends SignIn {
                 >
                   Sign In
                 </Button>
+                <br></br>
+                <br></br>
                 <Button
                   type="button"
                   fullWidth

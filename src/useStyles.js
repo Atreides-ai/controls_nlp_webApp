@@ -98,7 +98,7 @@ const useStyles = makeStyles(theme => ({
     justifyContent: "center"
   },
   loginImage: {
-    backgroundImage: "url(https://source.unsplash.com/oyXis2kALVg)",
+    backgroundImage: "url(https://source.unsplash.com/rCbdp8VCYhQ)",
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
     backgroundPosition: "center",
@@ -109,7 +109,11 @@ const useStyles = makeStyles(theme => ({
     padding: "20px 10px",
     display: "flex",
     flexDirection: "column",
-    alignItems: "center"
+    alignItems: "center",
+    background: "black"
+  },
+  table: {
+    minWidth: 650
   }
 }));
 

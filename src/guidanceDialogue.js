@@ -6,6 +6,14 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import Paper from "@material-ui/core/Paper";
+import useStyles from "./useStyles";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -13,6 +21,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function GuidanceDialogue() {
   const [open, setOpen] = React.useState(false);
+  const classes = useStyles();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -34,6 +43,8 @@ export default function GuidanceDialogue() {
         onClose={handleClose}
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
+        fullWidth={true}
+        maxWidth={"md"}
       >
         <DialogTitle id="alert-dialog-slide-title">
           {"Using Atreides' NLP service for controls?"}
@@ -47,11 +58,32 @@ export default function GuidanceDialogue() {
               The file type must be a .csv with no blank border rows or columns.
             </li>
             <li>
-              Please ensure that you label the control column "Control
-              Description" and risk column "Risk Description". This is case
-              sensitive and must be exactly as specified for the processing to
-              work.
+              The columns should be titled <b>exactly</b> as shown below:
             </li>
+            <br></br>
+            <TableContainer component={Paper}>
+              <Table className={classes.table} aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="center">Control Description</TableCell>
+                    <TableCell align="center">Risk Description</TableCell>
+                    <TableCell align="center">Control Operator</TableCell>
+                    <TableCell align="center">Control Frequency</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableRow>
+                  <TableCell align="center">A reconciliation is...</TableCell>
+                  <TableCell align="center">There is a risk that...</TableCell>
+                  <TableCell align="center">Financial Accountant...</TableCell>
+                  <TableCell align="center">Monthly...</TableCell>
+                </TableRow>
+              </Table>
+            </TableContainer>
+            <br></br>
+            <div>
+              Please note that ordering of columns and unrelated data columns do
+              not matter.
+            </div>
           </DialogContentText>
         </DialogContent>
         <DialogActions>
