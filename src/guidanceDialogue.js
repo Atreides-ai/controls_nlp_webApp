@@ -71,12 +71,18 @@ export default function GuidanceDialogue() {
                     <TableCell align="center">Control Frequency</TableCell>
                   </TableRow>
                 </TableHead>
-                <TableRow>
-                  <TableCell align="center">A reconciliation is...</TableCell>
-                  <TableCell align="center">There is a risk that...</TableCell>
-                  <TableCell align="center">Financial Accountant...</TableCell>
-                  <TableCell align="center">Monthly...</TableCell>
-                </TableRow>
+                <TableBody>
+                  <TableRow>
+                    <TableCell align="center">A reconciliation is...</TableCell>
+                    <TableCell align="center">
+                      There is a risk that...
+                    </TableCell>
+                    <TableCell align="center">
+                      Financial Accountant...
+                    </TableCell>
+                    <TableCell align="center">Monthly...</TableCell>
+                  </TableRow>
+                </TableBody>
               </Table>
             </TableContainer>
             <br></br>
