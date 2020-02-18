@@ -66,6 +66,19 @@ export default function Dashboard() {
     return data_count.map(function(obj) {
       obj["id"] = obj["key"];
       delete obj["key"];
+      if (obj["id"] === "True") {
+        obj["color"] = "#7C4DFF";
+      } else if (obj["id"] === "False") {
+        obj["color"] = "#607D8B";
+      } else if (obj["id"] === "poor") {
+        obj["color"] = "#7C4DFF";
+      } else if (obj["id"] === "fair") {
+        obj["color"] = "#607D8B";
+      } else if (obj["id"] === "good") {
+        obj["color"] = "#CFD8DC";
+      } else if (obj["id"] === "strong") {
+        obj["color"] = "#455A64";
+      }
       return obj;
     });
   };

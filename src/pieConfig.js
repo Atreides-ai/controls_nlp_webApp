@@ -9,7 +9,7 @@ const MyResponsivePie = ({ data }) => (
     innerRadius={0.5}
     padAngle={0.7}
     cornerRadius={3}
-    colors={["#7C4DFF", "#607D8B", "#CFD8DC", "#455A64"]}
+    colors={d => d.color}
     borderWidth={1}
     borderColor={{ theme: "grid.line.stroke" }}
     radialLabelsSkipAngle={10}
