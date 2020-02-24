@@ -93,7 +93,6 @@ export default function Dashboard() {
 
   return (
     <Box className={classes.root}>
-      {authState === false && <Redirect to="/"></Redirect>}
       <AppBar position="static">
         <Toolbar>
           <a href={url} download="output">
