@@ -2,12 +2,7 @@ import React, { useState } from "react";
 import "./App.css";
 import SubmitFile from "./submit_file.js";
 import Dashboard from "./dashboard.js";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect
-} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import PrivateRoute from "./private_route.js";
 import Amplify from "aws-amplify";
 import awsmobile from "./aws-exports";
@@ -30,15 +25,13 @@ export default function App() {
         <PrivateRoute path="/dashboard" authState={authState}>
           <ThemeProvider theme={theme}>
             <CssBaseline />
-            {authState === false && <Redirect to="/" />}
-            {authState === true && <Dashboard />}
+            <Dashboard />
           </ThemeProvider>
         </PrivateRoute>
         <PrivateRoute path="/submitFile" authState={authState}>
           <ThemeProvider theme={theme}>
             <CssBaseline />
-            {authState === false && <Redirect to="/" />}
-            {authState === true && <SubmitFile />}
+            <SubmitFile />
           </ThemeProvider>
         </PrivateRoute>
         <Route path="/">
