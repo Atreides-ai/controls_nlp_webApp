@@ -2,10 +2,15 @@ import React, { useState } from "react";
 import "./App.css";
 import SubmitFile from "./submit_file.js";
 import Dashboard from "./dashboard.js";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect
+} from "react-router-dom";
+import PrivateRoute from "./private_route.js";
 import Amplify from "aws-amplify";
 import awsmobile from "./aws-exports";
-import PrivateRoute from "./private_route.js";
 import AuthComponent from "./authComponent";
 import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "./theme.js";
@@ -15,6 +20,7 @@ Amplify.configure(awsmobile);
 
 export default function App() {
   const [authState, setState] = useState(false);
+  console.log("main: " + authState);
   const callbackState = authStateData => {
     setState(authStateData);
   };
@@ -24,13 +30,15 @@ export default function App() {
         <PrivateRoute path="/dashboard" authState={authState}>
           <ThemeProvider theme={theme}>
             <CssBaseline />
-            <Dashboard />
+            {authState === false && <Redirect to="/" />}
+            {authState === true && <Dashboard />}
           </ThemeProvider>
         </PrivateRoute>
         <PrivateRoute path="/submitFile" authState={authState}>
           <ThemeProvider theme={theme}>
             <CssBaseline />
-            <SubmitFile />
+            {authState === false && <Redirect to="/" />}
+            {authState === true && <SubmitFile />}
           </ThemeProvider>
         </PrivateRoute>
         <Route path="/">
