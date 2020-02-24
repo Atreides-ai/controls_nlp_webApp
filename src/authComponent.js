@@ -23,9 +23,7 @@ export default function AuthComponent({ appCallback }) {
     if (state === "signedIn") {
       appCallback(true);
       SetAuthState(true);
-      console.log("signed in!");
     } else {
-      console.log("you are not signed in!");
     }
   };
 
