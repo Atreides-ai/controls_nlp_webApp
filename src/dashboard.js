@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { Storage } from "aws-amplify";
 import Paper from "@material-ui/core/Paper";
 import Box from "@material-ui/core/Box";
@@ -14,8 +14,6 @@ import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import Typography from "@material-ui/core/Typography";
 import "typeface-roboto";
 import Copyright from "./copyright";
-import { authContext } from "./authContext.js";
-import { Redirect } from "react-router-dom";
 
 Storage.configure({ level: "private" });
 
@@ -24,7 +22,6 @@ export default function Dashboard() {
     getFile();
   }, []);
 
-  const authState = useContext(authContext);
   const classes = useStyles();
   const [dashboard, showDashboard] = useState(false);
   const [dashboardfile, setFile] = useState();
@@ -35,10 +32,12 @@ export default function Dashboard() {
       .catch(err => getFile())
       .then(function(url) {
         setURL(url);
-        d3.csv(url).then(function(file) {
-          setFile(file);
-          showDashboard(true);
-        });
+        d3.csv(url)
+          .then(function(file) {
+            setFile(file);
+            showDashboard(true);
+          })
+          .catch(err => setTimeout(getFile(), 60000));
       });
   };
 
@@ -93,7 +92,6 @@ export default function Dashboard() {
 
   return (
     <Box className={classes.root}>
-      {authState === false && <Redirect to="/"></Redirect>}
       <AppBar position="static">
         <Toolbar>
           <a href={url} download="output">
@@ -247,7 +245,6 @@ export default function Dashboard() {
           </Grid>
         </div>
       )}
-      )
     </Box>
   );
 }

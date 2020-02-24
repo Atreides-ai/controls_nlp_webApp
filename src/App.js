@@ -10,7 +10,7 @@ import AuthComponent from "./authComponent";
 import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "./theme.js";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { authContext } from "./authContext.js";
+
 
 Amplify.configure(awsmobile);
 
@@ -26,17 +26,13 @@ export default function App() {
         <PrivateRoute path="/dashboard" authState={authState}>
           <ThemeProvider theme={theme}>
             <CssBaseline />
-            <authContext.Provider value={authState}>
-              <Dashboard />
-            </authContext.Provider>
+            <Dashboard />
           </ThemeProvider>
         </PrivateRoute>
         <PrivateRoute path="/submitFile" authState={authState}>
           <ThemeProvider theme={theme}>
             <CssBaseline />
-            <authContext.Provider value={authState}>
-              <SubmitFile />
-            </authContext.Provider>
+            <SubmitFile />
           </ThemeProvider>
         </PrivateRoute>
         <Route path="/">
