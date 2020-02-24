@@ -1,5 +1,4 @@
 import React, { useState, useContext } from "react";
-import { authContext } from "./authContext.js";
 import PropTypes from "prop-types";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -37,7 +36,6 @@ MySnackbarContentWrapper.propTypes = {
 };
 
 export default function SubmitFile() {
-  const authState = useContext(authContext);
   const classes = useStyles();
   const [file, selectFile] = useState(null);
   const [open, setOpen] = useState();
