@@ -14,6 +14,7 @@ import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import Typography from "@material-ui/core/Typography";
 import "typeface-roboto";
 import Copyright from "./copyright";
+import "array.prototype.move";
 
 Storage.configure({ level: "private" });
 
@@ -57,14 +58,14 @@ export default function Dashboard() {
       })
       .entries(file);
 
-    var output_data = renameKeys(data_count);
+    var output_data = formatData(data_count);
 
-    console.log(output_data);
+    var ordered_data = orderData(output_data);
 
-    return output_data;
+    return ordered_data;
   };
 
-  const renameKeys = data_count => {
+  const formatData = data_count => {
     return data_count.map(function(obj) {
       obj["id"] = obj["key"];
       delete obj["key"];
@@ -83,6 +84,26 @@ export default function Dashboard() {
       }
       return obj;
     });
+  };
+
+  const orderData = data => {
+    data.forEach(function(element) {
+      if (element["id"] === "True") {
+        data.move(data.indexOf(element), 0);
+      } else if (element["id"] === "False") {
+        data.move(data.indexOf(element), 1);
+      } else if (element["id"] === "poor") {
+        data.move(data.indexOf(element), 0);
+      } else if (element["id"] === "fair") {
+        data.move(data.indexOf(element), 1);
+      } else if (element["id"] === "good") {
+        data.move(data.indexOf(element), 2);
+      } else if (element["id"] === "strong") {
+        data.move(data.indexOf(element), 3);
+      }
+    });
+
+    return data;
   };
 
   const generatePie = (file, column) => {
