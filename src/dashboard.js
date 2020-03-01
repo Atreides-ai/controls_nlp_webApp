@@ -59,7 +59,7 @@ export default function Dashboard() {
       .entries(file);
 
     var output_data = formatData(data_count);
-
+    console.log(output_data);
     var ordered_data = orderData(output_data);
 
     return ordered_data;
@@ -88,18 +88,25 @@ export default function Dashboard() {
 
   const orderData = data => {
     data.forEach(function(element) {
+      var ordCount = 0;
       if (element["id"] === "True") {
-        data.move(data.indexOf(element), 0);
+        data.move(data.indexOf(element), ordCount);
+        ordCount++;
       } else if (element["id"] === "False") {
-        data.move(data.indexOf(element), 1);
+        data.move(data.indexOf(element), ordCount);
+        ordCount++;
       } else if (element["id"] === "poor") {
-        data.move(data.indexOf(element), 0);
+        data.move(data.indexOf(element), ordCount);
+        ordCount++;
       } else if (element["id"] === "fair") {
-        data.move(data.indexOf(element), 1);
+        data.move(data.indexOf(element), ordCount);
+        ordCount++;
       } else if (element["id"] === "good") {
-        data.move(data.indexOf(element), 2);
+        data.move(data.indexOf(element), ordCount);
+        ordCount++;
       } else if (element["id"] === "strong") {
-        data.move(data.indexOf(element), 3);
+        data.move(data.indexOf(element), ordCount);
+        ordCount++;
       }
     });
 
