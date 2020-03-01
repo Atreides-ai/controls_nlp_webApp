@@ -57,6 +57,7 @@ export default function GuidanceDialogue() {
             <li>
               The file type must be a .csv with no blank border rows or columns.
             </li>
+            <li>The file name must have no spaces.</li>
             <li>
               The columns should be titled <b>exactly</b> as shown below:
             </li>
