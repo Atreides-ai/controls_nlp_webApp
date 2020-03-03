@@ -115,10 +115,6 @@ export default function Dashboard() {
     return data;
   };
 
-  const getCSV = () => {
-    return dashboardfile;
-  };
-
   return (
     <Box className={classes.root}>
       <AppBar position="static">
