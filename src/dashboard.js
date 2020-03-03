@@ -15,6 +15,7 @@ import Typography from "@material-ui/core/Typography";
 import "typeface-roboto";
 import Copyright from "./copyright";
 import "array.prototype.move";
+import { CSVLink } from "react-csv";
 
 Storage.configure({ level: "private" });
 
@@ -58,8 +59,8 @@ export default function Dashboard() {
       })
       .entries(file);
 
+    console.log(file);
     var output_data = formatData(data_count);
-    console.log(output_data);
     var ordered_data = orderData(output_data);
 
     return ordered_data;
@@ -118,15 +119,21 @@ export default function Dashboard() {
     return data;
   };
 
+  const getCSV = () => {
+    return dashboardfile;
+  };
+
   return (
     <Box className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <a href={url} download="output">
-            <IconButton edge="start" color="secondary">
-              <CloudDownloadIcon></CloudDownloadIcon>
-            </IconButton>
-          </a>
+          {dashboard && (
+            <CSVLink data={dashboardfile} filename="Analysis.csv">
+              <IconButton edge="start" color="secondary">
+                <CloudDownloadIcon></CloudDownloadIcon>
+              </IconButton>
+            </CSVLink>
+          )}
           <Typography variant="h6" className={classes.title} align="center">
             Atreides Controls NLP Dashboard
           </Typography>
