@@ -62,7 +62,12 @@ export default function Dashboard() {
     var output_data = formatData(data_count);
     var ordered_data = orderData(output_data);
 
-    return ordered_data;
+    var filtered = ordered_data.filter(function(x) {
+      return x !== undefined;
+    });
+
+    console.timeLog(filtered);
+    return filtered;
   };
 
   const formatData = data_count => {
@@ -87,11 +92,7 @@ export default function Dashboard() {
   };
 
   const orderData = data => {
-    var filtered = data.filter(function(x) {
-      return x !== undefined;
-    });
-
-    filtered.forEach(function(element) {
+    data.forEach(function(element) {
       if (element["id"] === "True") {
         data.move(data.indexOf(element), 0);
       } else if (element["id"] === "False") {
@@ -107,7 +108,7 @@ export default function Dashboard() {
       }
     });
 
-    return filtered;
+    return data;
   };
 
   const generatePie = (file, column) => {
