@@ -24,7 +24,6 @@ import Copyright from "./copyright";
 import { Link } from "react-router-dom";
 import MySnackbarContentWrapper from "./mySnackbarContentWrapper";
 import useStyles from "./useStyles";
-import { Redirect } from "react-router-dom";
 
 Storage.configure({ level: "private" });
 
