@@ -1,8 +1,8 @@
-import theme from "./theme.js";
-import { green } from "@material-ui/core/colors";
-import { makeStyles } from "@material-ui/core/styles";
+import { green, red } from "@material-ui/core/colors";
+import { createStyles, withStyles } from "@material-ui/core/styles";
+import { Theme } from '@material-ui/core';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = (theme: Theme) => createStyles({
   root: {
     height: "100vh"
   },
@@ -10,7 +10,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: green[600]
   },
   error: {
-    backgroundColor: theme.palette.error.dark
+    backgroundColor: red[800]
   },
   icon: {
     fontSize: 20
@@ -26,10 +26,7 @@ const useStyles = makeStyles(theme => ({
   image: {
     backgroundImage: "url(https://source.unsplash.com/8WFnEehJWso)",
     backgroundRepeat: "no-repeat",
-    backgroundColor:
-      theme.palette.type === "dark"
-        ? theme.palette.grey[900]
-        : theme.palette.grey[50],
+    backgroundColor: theme.palette.primary.light,
     backgroundSize: "cover",
     backgroundPosition: "center"
   },
@@ -40,8 +37,8 @@ const useStyles = makeStyles(theme => ({
     flexDirection: "column",
     alignItems: "center"
   },
-  form: {
-    width: "100%", // Fix IE 11 issue.
+  mui_form: {
+    width: "100%",
     marginTop: theme.spacing(1)
   },
   submit: {
@@ -75,14 +72,14 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main
   },
-  form: {
+  muiform: {
     width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(1),
     "&:focus": {
       borderColor: "primary.dark"
     }
   },
-  submit: {
+  muisubmit: {
     margin: theme.spacing(3, 0, 2),
     padding: theme.spacing(3, 2),
     background: "primary.main",
@@ -115,6 +112,6 @@ const useStyles = makeStyles(theme => ({
   table: {
     minWidth: 650
   }
-}));
+});
 
-export default useStyles;
+export default withStyles(useStyles);

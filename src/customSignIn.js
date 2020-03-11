@@ -5,9 +5,9 @@ import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import { SignIn } from "aws-amplify-react";
 import { ThemeProvider } from "@material-ui/core/styles";
-import theme from "./theme.js";
+import theme from "./theme";
 import Container from "@material-ui/core/Container";
-import useStyles from "./useStyles.js";
+import useStyles from "./useStyles";
 
 const classes = useStyles;
 
@@ -31,8 +31,8 @@ export default class CustomSignIn extends SignIn {
             >
               Sign in to Atreides
             </Typography>
-            <div className={classes.form}>
-              <form className={classes.form} noValidate>
+            <div className={classes.muiform}>
+              <form className={classes.muiform} noValidate>
                 <TextField
                   style={{ backgroundColor: "white" }}
                   variant="outlined"
@@ -63,7 +63,7 @@ export default class CustomSignIn extends SignIn {
                   fullWidth
                   variant="contained"
                   color="primary"
-                  className={classes.submit}
+                  className={classes.muisubmit}
                   onClick={() => super.signIn()}
                 >
                   Sign In
@@ -75,7 +75,7 @@ export default class CustomSignIn extends SignIn {
                   fullWidth
                   variant="contained"
                   color="dark"
-                  className={classes.submit}
+                  className={classes.muisubmit}
                   onClick={() => super.changeState("forgotPassword")}
                 >
                   Forgot Password?

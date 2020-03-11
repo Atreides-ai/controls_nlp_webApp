@@ -83,7 +83,7 @@ export default function SubmitFile() {
         <Grid item xs={false} sm={4} md={7} className={classes.image} />
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
           <div className={classes.paper}>
-            <form className={classes.form} noValidate>
+            <form className={classes.muiform} noValidate>
               <Grid item xs={12}>
                 <Container>
                   <Card className={classes.card}>
@@ -142,7 +142,7 @@ export default function SubmitFile() {
                       variant="contained"
                       color="primary"
                       component="span"
-                      className={classes.submit}
+                      className={classes.muisubmit}
                       fullwidth
                     >
                       Select File
@@ -157,7 +157,7 @@ export default function SubmitFile() {
                       color="primary"
                       component="span"
                       fullwidth
-                      className={classes.submit}
+                      className={classes.muisubmit}
                       onClick={uploadManager}
                     >
                       Upload
@@ -173,7 +173,7 @@ export default function SubmitFile() {
                         color="secondary"
                         component="span"
                         fullwidth
-                        className={classes.submit}
+                        className={classes.muisubmit}
                       >
                         View Results
                       </Button>

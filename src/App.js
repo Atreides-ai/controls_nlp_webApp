@@ -8,7 +8,7 @@ import Amplify from "aws-amplify";
 import awsmobile from "./aws-exports";
 import AuthComponent from "./authComponent";
 import { ThemeProvider } from "@material-ui/core/styles";
-import theme from "./theme.js";
+import theme from "./theme";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
 Amplify.configure(awsmobile);
@@ -20,6 +20,7 @@ export default function App() {
     setState(authStateData);
   };
   return (
+    <ThemeProvider theme={theme}>
     <Router>
       <Switch>
         <PrivateRoute path="/dashboard" authState={authState}>
@@ -39,5 +40,6 @@ export default function App() {
         </Route>
       </Switch>
     </Router>
+    </ThemeProvider>
   );
 }

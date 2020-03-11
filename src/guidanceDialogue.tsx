@@ -15,6 +15,8 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import useStyles from "./useStyles";
 import { TransitionProps } from "@material-ui/core/transitions";
+import { useTheme } from '@material-ui/core/styles';
+import { Theme } from '@material-ui/core';
 
 const Transition = React.forwardRef<unknown, TransitionProps>(
   function Transition(props, ref) {
@@ -22,14 +24,13 @@ const Transition = React.forwardRef<unknown, TransitionProps>(
   }
 );
 
-export default function GuidanceDialogue() {
+export default function GuidanceDialogue(){
+  const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-  const classes = useStyles();
-
+  const classes = useStyles(theme);
   const handleClickOpen = () => {
     setOpen(true);
   };
-
   const handleClose = () => {
     setOpen(false);
   };

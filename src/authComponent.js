@@ -11,7 +11,7 @@ import CustomSignIn from "./customSignIn.js";
 import Box from "@material-ui/core/Box";
 import { Redirect } from "react-router-dom";
 import awsmobile from "./aws-exports";
-import useStyles from "./useStyles.js";
+import useStyles from "./useStyles";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 
