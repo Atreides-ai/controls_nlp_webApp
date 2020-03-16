@@ -1,8 +1,8 @@
 import { green, red } from "@material-ui/core/colors";
-import { createStyles, withStyles } from "@material-ui/core/styles";
+import { makeStyles, createStyles } from "@material-ui/core/styles";
 import { Theme } from '@material-ui/core';
 
-const useStyles = (theme: Theme) => createStyles({
+const useStyles = makeStyles((theme: Theme) => createStyles({
   root: {
     height: "100vh"
   },
@@ -112,6 +112,6 @@ const useStyles = (theme: Theme) => createStyles({
   table: {
     minWidth: 650
   }
-});
+}));
 
-export default withStyles(useStyles);
+export default useStyles;

@@ -7,7 +7,7 @@ import PrivateRoute from "./private_route.js";
 import Amplify from "aws-amplify";
 import awsmobile from "./aws-exports";
 import AuthComponent from "./authComponent";
-import { ThemeProvider } from "@material-ui/core/styles";
+import { ThemeProvider} from "@material-ui/core/styles";
 import theme from "./theme";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
@@ -24,16 +24,12 @@ export default function App() {
     <Router>
       <Switch>
         <PrivateRoute path="/dashboard" authState={authState}>
-          <ThemeProvider theme={theme}>
             <CssBaseline />
             <Dashboard />
-          </ThemeProvider>
         </PrivateRoute>
         <PrivateRoute path="/submitFile" authState={authState}>
-          <ThemeProvider theme={theme}>
             <CssBaseline />
             <SubmitFile />
-          </ThemeProvider>
         </PrivateRoute>
         <Route path="/">
           <AuthComponent appCallback={callbackState} />
