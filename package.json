@@ -44,7 +44,7 @@
         "build": "react-scripts-ts build",
         "test": "react-scripts-ts test",
         "eject": "react-scripts-ts eject",
-        "lint:ts": "“eslint --ext=jsx,ts,tsx src”"
+        "lint:ts": "“eslint --ext=jsx,ts,ts,tsx src”"
     },
     "eslintConfig": {
         "extends": "react-app"
