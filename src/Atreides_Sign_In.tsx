@@ -1,27 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
-import { SignIn } from "aws-amplify-react";
-import { ThemeProvider } from "@material-ui/core/styles";
-import theme from "./theme";
 import Container from "@material-ui/core/Container";
 import useStyles from "./useStyles";
+import {useTheme, Theme} from "@material-ui/core/styles"
+import {Auth} from 'aws-amplify'
 
-const classes = useStyles;
+export default function AtreidesSignIn() {
+  const theme = useTheme<Theme>();
+  const classes = useStyles(theme);
 
-export default function AtreidesSignIn(){
-  constructor(props) {
-    super(props);
-    this._validAuthStates = ["signIn", "signedOut", "signedUp"];
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+
+  const setEmailInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.target.value);
   }
 
-  showComponent() {
+  const setPasswordInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(event.target.value);
+  }
+
+  const signIn = () => {
+    Auth.signIn(email, password)
+  }
+
     return (
-      <ThemeProvider theme={theme}>
         <Container component="main" maxWidth="xs">
-          <CssBaseline />
           <div className={classes.login}>
             <Typography
               component="h1"
@@ -42,7 +48,7 @@ export default function AtreidesSignIn(){
                   id="username"
                   name="username"
                   autoComplete="Email Address"
-                  onChange={this.handleInputChange}
+                  onChange={setEmailInput}
                 />
                 <TextField
                   style={{ backgroundColor: "white" }}
@@ -54,29 +60,19 @@ export default function AtreidesSignIn(){
                   type="password"
                   id="password"
                   autoComplete="current-password"
-                  onChange={this.handleInputChange}
-                />{" "}
-                <br></br>
-                <br></br>
+                  onChange={setPasswordInput}
+                />
                 <Button
-                  type="button"
-                  fullWidth
                   variant="contained"
                   color="primary"
                   className={classes.muisubmit}
-                  onClick={() => super.signIn()}
-                >
+                  onClick={signIn}>
                   Sign In
                 </Button>
-                <br></br>
-                <br></br>
                 <Button
-                  type="button"
-                  fullWidth
                   variant="contained"
-                  color="dark"
                   className={classes.muisubmit}
-                  onClick={() => super.changeState("forgotPassword")}
+                  onClick={}
                 >
                   Forgot Password?
                 </Button>
@@ -84,7 +80,6 @@ export default function AtreidesSignIn(){
             </div>
           </div>
         </Container>
-      </ThemeProvider>
     );
   }
 }

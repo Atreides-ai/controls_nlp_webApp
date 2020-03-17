@@ -39,22 +39,13 @@ export default function AuthComponent({ appCallback }) {
           justify="center"
           style={{ minHeight: "100vh" }}
         >
-          {" "}
           <Grid item xs={3}>
             <Paper elevation={3} className={classes.loginSurface}>
-              <Authenticator
-                authState="signIn"
-                onStateChange={handleStateChange}
-                hideDefault={true}
-                amplifyConfig={awsmobile}
-              >
-                <CustomSignIn override={"SignIn"} />
-                <ConfirmSignIn />
-                <ForgotPassword />
-                <RequireNewPassword />
-                <TOTPSetup />
-                <VerifyContact />
-              </Authenticator>
+              <AtreidesSignIn></AtreidesSignIn>
+              <AtreidesMFA></AtreidesMFA>
+              <AtreidesMFASetUp></AtreidesMFASetUp>
+              <AtreidesForgotPassword></AtreidesForgotPassword>
+              <AtreidesReqNewPassword></AtreidesReqNewPassword>
             </Paper>
           </Grid>
         </Grid>
