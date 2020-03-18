@@ -8,40 +8,38 @@ import AtreidesSignIn from 'Atreides_Sign_In';
 
 export default function AuthComponent(appCallback: any): JSX.Element {
     const classes = useStyles();
-    const [authStage, setAuthStage] = useState<string>('');
-    const [authState, SetAuthState] = useState(false);
+    const [authStage, setAuthStage] = useState<string>('SignedOut');
 
-    const handleStateChange = (state: string): void => {
-        if (state === 'signedIn') {
-            appCallback(true);
-            SetAuthState(true);
-        } else {
-        }
+    const manageAuthStage = (stage: string): void => {
+        setAuthStage(stage);
+    };
+
+    const authenticate = (): void => {
+        appCallback(true);
+        setAuthStage('SignedIn');
     };
 
     return (
         <Box className={classes.loginImage}>
-            {authState === true && <Redirect to="/submitFile" />}
-            {authState === false && (
-                <Grid
-                    container
-                    spacing={0}
-                    direction="column"
-                    alignItems="center"
-                    justify="center"
-                    style={{ minHeight: '100vh' }}
-                >
-                    <Grid item xs={3}>
-                        <Paper elevation={3} className={classes.loginSurface}>
-                            <AtreidesSignIn></AtreidesSignIn>
-                            {/* <AtreidesMFA></AtreidesMFA>
-              <AtreidesMFASetUp></AtreidesMFASetUp>
-              <AtreidesForgotPassword></AtreidesForgotPassword>
-              <AtreidesReqNewPassword></AtreidesReqNewPassword> */}
-                        </Paper>
-                    </Grid>
+            {authStage === 'SignedIn' && <Redirect to="/submitFile" />}
+            <Grid
+                container
+                spacing={0}
+                direction="column"
+                alignItems="center"
+                justify="center"
+                style={{ minHeight: '100vh' }}
+            >
+                <Grid item xs={3}>
+                    <Paper elevation={3} className={classes.loginSurface}>
+                        {authStage === 'SignedOut' && <AtreidesSignIn signInStatus={manageAuthStage} />}
+                        {authStage === 'ConfirmSignIn' && <AtreidesMFA signInStatus={manageAuthStage} />}
+                        {authStage === 'SetUpMFA' && <AtreidesMFASetUp signInStatus={manageAuthStage} />}
+                        {authStage === 'ForgotPassword' && <AtreidesForgotPassword signInStatus={manageAuthStage} />}
+                        {authStage === 'NewPasswordReq' && <AtreidesReqNewPassword signInStatus={manageAuthStage} />}
+                    </Paper>
                 </Grid>
-            )}
+            </Grid>
         </Box>
     );
 }

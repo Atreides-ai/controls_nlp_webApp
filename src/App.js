@@ -15,7 +15,6 @@ Amplify.configure(awsmobile);
 
 export default function App() {
     const [authState, setState] = useState(false);
-    console.log('main: ' + authState);
     const callbackState = authStateData => {
         setState(authStateData);
     };
