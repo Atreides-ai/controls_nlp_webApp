@@ -26,14 +26,23 @@ export default function AtreidesSignIn(props: {
         setPassword(event.target.value);
     };
 
+    const ForgotPassword = (): void => {
+        ToggleForgotPassword(true);
+    };
+
+    const submitPasswordReset = (): void => {
+        Auth.forgotPassword(email).then(() => props.signInStatus('ForgotPassword'));
+    };
+
     const handleChallenge = (user: any): void => {
         try {
             if (user.challengeName === 'SOFTWARE_TOKEN_MFA') {
                 props.user(user);
                 props.signInStatus('ConfirmSignIn');
             } else if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
+                Auth.forgotPassword(email);
                 props.user(user);
-                props.signInStatus('requireNewPassword');
+                props.signInStatus('RequireNewPassword');
             } else if (
                 user.challengeName === 'SMS_MFA' ||
                 user.challengeName === 'MFA_SETUP' ||
@@ -45,7 +54,7 @@ export default function AtreidesSignIn(props: {
         } catch (err) {
             if (err.code === 'PasswordResetRequiredException') {
                 props.user(user);
-                props.signInStatus('forgotPassword');
+                submitPasswordReset();
             } else {
                 console.log(err);
             }
@@ -54,14 +63,6 @@ export default function AtreidesSignIn(props: {
 
     const signIn = (): void => {
         Auth.signIn(email, password).then(user => handleChallenge(user));
-    };
-
-    const ForgotPassword = (): void => {
-        ToggleForgotPassword(true);
-    };
-
-    const submitPasswordReset = (): void => {
-        Auth.forgotPassword(email).then(() => props.signInStatus('ForgotPassword'));
     };
 
     return (
