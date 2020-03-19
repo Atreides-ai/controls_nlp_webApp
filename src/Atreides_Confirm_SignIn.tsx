@@ -18,9 +18,7 @@ export default function AtreidesMFA(props: { signInStatus: (stage: string) => vo
 
     const submitCode = (): void => {
         Auth.currentAuthenticatedUser().then(user =>
-            Auth.confirmSignIn(user, code)
-                .then(() => props.signInStatus('SignedIn'))
-                .then(() => console.log(user)),
+            Auth.confirmSignIn(user, code).then(() => props.signInStatus('SignedIn')),
         );
     };
 

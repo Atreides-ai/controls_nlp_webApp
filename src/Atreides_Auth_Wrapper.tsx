@@ -21,7 +21,6 @@ export default function AuthComponent(appCallback: any): JSX.Element {
     };
 
     const getUser = (user: any): void => {
-        console.log(user);
         setUser(user);
     };
 

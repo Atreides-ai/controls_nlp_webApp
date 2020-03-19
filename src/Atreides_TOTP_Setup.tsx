@@ -7,6 +7,7 @@ import useStyles from './useStyles';
 import { useTheme, Theme } from '@material-ui/core/styles';
 import { Auth } from 'aws-amplify';
 import QRCode from 'qrcode.react';
+import { isCompositeComponent } from 'react-dom/test-utils';
 
 export default function AtreidesTOTPSetup(props: { signInStatus: (stage: string) => void; user: any }): JSX.Element {
     const theme = useTheme<Theme>();
@@ -15,10 +16,12 @@ export default function AtreidesTOTPSetup(props: { signInStatus: (stage: string)
     const [totpCode, setTOTPCode] = useState('');
 
     const generateQRCode = (): void => {
-        console.log(props.user);
+        console.log('generating QR Code');
         const username = props.user.username;
+        console.log(username);
         Auth.setupTOTP(props.user).then(code => {
-            const generatedQrCode = 'otpauth://totp/AWSCognito:' + username + '?secret=' + code + '&issuer=Cognito';
+            console.log(code);
+            const generatedQrCode = 'otpauth://totp/AWSCognito:' + username + '?secret=' + code + '&issuer=Atreides';
             setQrCode(generatedQrCode);
         });
     };
