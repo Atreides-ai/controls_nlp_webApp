@@ -7,7 +7,7 @@ import useStyles from './useStyles';
 import { useTheme, Theme } from '@material-ui/core/styles';
 import { Auth } from 'aws-amplify';
 
-export default function AtreidesSignIn(signInStatus: any): JSX.Element {
+export default function AtreidesSignIn(props: { signInStatus: (stage: string) => void }): JSX.Element {
     const theme = useTheme<Theme>();
     const classes = useStyles(theme);
 
@@ -23,7 +23,10 @@ export default function AtreidesSignIn(signInStatus: any): JSX.Element {
     };
 
     const signIn = (): void => {
-        Auth.signIn(email, password).then(signInStatus('ConfirmSignIn'));
+        Auth.signIn(email, password).then(user => console.log(user));
+      // Look at the user object if user.
+
+        // then((() => props.signInStatus('ConfirmSignIn')));
     };
 
     return (
