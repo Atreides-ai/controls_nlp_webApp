@@ -22,13 +22,27 @@ export default function AtreidesSignIn(props: { signInStatus: (stage: string) =>
         setPassword(event.target.value);
     };
 
-    const signIn = (): void => {
-        Auth.signIn(email, password).then(user => console.log(user));
-      // Look at the user object if user.
-
-        // then((() => props.signInStatus('ConfirmSignIn')));
+    const handleChallenge = (user: any): void => {
+        try {
+            if (user.challengeName === 'SMS_MFA' || user.challengeName === 'SOFTWARE_TOKEN_MFA') {
+                props.signInStatus('confirmSignIn');
+            } else if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
+                props.signInStatus('requireNewPassword');
+            } else if (user.challengeName === 'MFA_SETUP') {
+                props.signInStatus('TOTPSetup');
+            }
+        } catch (err) {
+            if (err.code === 'PasswordResetRequiredException') {
+                props.signInStatus('forgotPassword');
+            } else {
+                console.log(err);
+            }
+        }
     };
 
+    const signIn = (): void => {
+        Auth.signIn(email, password).then(user => handleChallenge(user));
+    };
     return (
         <Container component="main" maxWidth="xs">
             <div className={classes.login}>
