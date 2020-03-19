@@ -7,7 +7,10 @@ import useStyles from './useStyles';
 import { useTheme, Theme } from '@material-ui/core/styles';
 import { Auth } from 'aws-amplify';
 
-export default function AtreidesSignIn(props: { signInStatus: (stage: string) => void }): JSX.Element {
+export default function AtreidesSignIn(props: {
+    signInStatus: (stage: string) => void;
+    user: (user: any) => void;
+}): JSX.Element {
     const theme = useTheme<Theme>();
     const classes = useStyles(theme);
 
@@ -24,15 +27,19 @@ export default function AtreidesSignIn(props: { signInStatus: (stage: string) =>
 
     const handleChallenge = (user: any): void => {
         try {
-            if (user.challengeName === 'SMS_MFA' || user.challengeName === 'SOFTWARE_TOKEN_MFA') {
+            if (user.challengeName === 'SOFTWARE_TOKEN_MFA') {
+                props.user(user);
                 props.signInStatus('confirmSignIn');
             } else if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
+                props.user(user);
                 props.signInStatus('requireNewPassword');
-            } else if (user.challengeName === 'MFA_SETUP') {
+            } else if (user.challengeName === 'SMS_MFA' || user.challengeName === 'MFA_SETUP') {
+                props.user(user);
                 props.signInStatus('TOTPSetup');
             }
         } catch (err) {
             if (err.code === 'PasswordResetRequiredException') {
+                props.user(user);
                 props.signInStatus('forgotPassword');
             } else {
                 console.log(err);
