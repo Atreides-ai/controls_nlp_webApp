@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
-import Container from '@material-ui/core/Container';
 import useStyles from './useStyles';
 import { useTheme, Theme } from '@material-ui/core/styles';
 import { Auth } from 'aws-amplify';
+import Grid from '@material-ui/core/Grid';
+import Link from '@material-ui/core/Link';
 
 export default function AtreidesSignIn(props: {
     signInStatus: (stage: string) => void;
@@ -66,44 +67,47 @@ export default function AtreidesSignIn(props: {
     };
 
     return (
-        <Container component="main" maxWidth="xs">
-            <div className={classes.login}>
-                <Typography component="h1" variant="h5" align="center" color="primary">
-                    Sign in to Atreides
-                </Typography>
-                <div className={classes.muiform}>
-                    <form className={classes.muiform} noValidate>
-                        <TextField
-                            style={{ backgroundColor: 'white' }}
-                            variant="outlined"
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="username"
-                            name="username"
-                            autoComplete="Email Address"
-                            onChange={setEmailInput}
-                        />
-                        {!ForgotPasswordBool && (
-                            <TextField
-                                style={{ backgroundColor: 'white' }}
-                                variant="outlined"
-                                margin="normal"
-                                required
-                                fullWidth
-                                name="password"
-                                type="password"
-                                id="password"
-                                autoComplete="current-password"
-                                onChange={setPasswordInput}
-                            />
-                        )}
-                        {!ForgotPasswordBool && (
-                            <Button variant="contained" color="primary" className={classes.muisubmit} onClick={signIn}>
-                                Sign In
-                            </Button>
-                        )}
-                        {ForgotPasswordBool && (
+        <div>
+            <Typography component="h1" variant="h5" align="center" color="primary">
+                Sign in to Atreides
+            </Typography>
+            <form className={classes.muiform} noValidate>
+                <TextField
+                    style={{ backgroundColor: 'white' }}
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="username"
+                    label="Email Address"
+                    name="username"
+                    autoComplete="Email Address"
+                    onChange={setEmailInput}
+                    autoFocus
+                />
+                {!ForgotPasswordBool && (
+                    <TextField
+                        style={{ backgroundColor: 'white' }}
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        fullWidth
+                        name="password"
+                        type="password"
+                        id="password"
+                        label="Password"
+                        autoComplete="current-password"
+                        onChange={setPasswordInput}
+                    />
+                )}
+                {!ForgotPasswordBool && (
+                    <Button variant="contained" color="primary" className={classes.muisubmit} onClick={signIn}>
+                        Sign In
+                    </Button>
+                )}
+                <Grid container>
+                    {ForgotPasswordBool && (
+                        <Grid item xs>
                             <Button
                                 variant="contained"
                                 color="primary"
@@ -112,13 +116,17 @@ export default function AtreidesSignIn(props: {
                             >
                                 Submit Password Reset
                             </Button>
-                        )}
-                        <Button variant="contained" className={classes.muisubmit} onClick={ForgotPassword}>
-                            Forgot Password?
-                        </Button>
-                    </form>
-                </div>
-            </div>
-        </Container>
+                        </Grid>
+                    )}
+                    {!ForgotPasswordBool && (
+                        <Grid item>
+                            <Link variant="body2" className={classes.muisubmit} onClick={ForgotPassword}>
+                                Forgot Password?
+                            </Link>
+                        </Grid>
+                    )}
+                </Grid>
+            </form>
+        </div>
     );
 }

@@ -21,30 +21,27 @@ export default function AtreidesMFA(props: { signInStatus: (stage: string) => vo
     };
 
     return (
-        <Container component="main" maxWidth="xs">
-            <div className={classes.login}>
-                <Typography component="h1" variant="h5" align="center" color="primary">
-                    Enter Your Code
-                </Typography>
-                <div className={classes.muiform}>
-                    <form className={classes.muiform} noValidate>
-                        <TextField
-                            style={{ backgroundColor: 'white' }}
-                            variant="outlined"
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="username"
-                            name="username"
-                            autoComplete="Email Address"
-                            onChange={handleCode}
-                        />
-                        <Button variant="contained" color="primary" className={classes.muisubmit} onClick={submitCode}>
-                            Submit Code
-                        </Button>
-                    </form>
-                </div>
-            </div>
-        </Container>
+        <div>
+            <Typography component="h1" variant="h5" align="center" color="primary">
+                Enter Your Code
+            </Typography>
+            <form className={classes.muiform} noValidate>
+                <TextField
+                    style={{ backgroundColor: 'white' }}
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="code"
+                    name="code"
+                    autoComplete="TOTP Code"
+                    label="TOTP Code"
+                    onChange={handleCode}
+                />
+                <Button variant="contained" color="primary" className={classes.muisubmit} onClick={submitCode}>
+                    Submit Code
+                </Button>
+            </form>
+        </div>
     );
 }

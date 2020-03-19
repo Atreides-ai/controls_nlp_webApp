@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
-import Container from '@material-ui/core/Container';
 import useStyles from './useStyles';
 import { useTheme, Theme } from '@material-ui/core/styles';
 import { Auth } from 'aws-amplify';
@@ -31,57 +30,51 @@ export default function AtreidesForgotPassword(props: { signInStatus: (stage: st
     };
 
     return (
-        <Container component="main" maxWidth="xs">
-            <div className={classes.login}>
-                <Typography component="h1" variant="h5" align="center" color="primary">
-                    Reset Your Password
-                </Typography>
-                <div className={classes.muiform}>
-                    <form className={classes.muiform} noValidate>
-                        <TextField
-                            style={{ backgroundColor: 'white' }}
-                            variant="outlined"
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="Email"
-                            name="Email"
-                            autoComplete="Email"
-                            onChange={setEmailInput}
-                        />
-                        <TextField
-                            style={{ backgroundColor: 'white' }}
-                            variant="outlined"
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="New Password"
-                            name="New Password"
-                            autoComplete="New Password"
-                            onChange={handlePassword}
-                        />
-                        <TextField
-                            style={{ backgroundColor: 'white' }}
-                            variant="outlined"
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="Reset Code"
-                            name="Reset Code"
-                            autoComplete="Reset Code"
-                            onChange={handleResetCode}
-                        />
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            className={classes.muisubmit}
-                            onClick={submitPassword}
-                        >
-                            Submit
-                        </Button>
-                    </form>
-                </div>
-            </div>
-        </Container>
+        <div>
+            <Typography component="h1" variant="h5" align="center" color="primary">
+                Reset Your Password
+            </Typography>
+            <form className={classes.muiform} noValidate>
+                <TextField
+                    style={{ backgroundColor: 'white' }}
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="Email"
+                    name="Email"
+                    autoComplete="Email"
+                    label="Email Address"
+                    onChange={setEmailInput}
+                />
+                <TextField
+                    style={{ backgroundColor: 'white' }}
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="New Password"
+                    name="New Password"
+                    autoComplete="New Password"
+                    label="New Password"
+                    onChange={handlePassword}
+                />
+                <TextField
+                    style={{ backgroundColor: 'white' }}
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="Reset Code"
+                    name="Reset Code"
+                    autoComplete="Reset Code"
+                    label="Reset Code"
+                    onChange={handleResetCode}
+                />
+                <Button variant="contained" color="primary" className={classes.muisubmit} onClick={submitPassword}>
+                    Submit
+                </Button>
+            </form>
+        </div>
     );
 }

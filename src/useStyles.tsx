@@ -71,44 +71,20 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         avatar: {
             margin: theme.spacing(1),
-            backgroundColor: theme.palette.secondary.main,
+            backgroundColor: theme.palette.primary.main,
         },
         muiform: {
             width: '100%', // Fix IE 11 issue.
             marginTop: theme.spacing(1),
-            '&:focus': {
-                borderColor: 'primary.dark',
-            },
         },
         muisubmit: {
             margin: theme.spacing(3, 0, 2),
-            padding: theme.spacing(3, 2),
-            background: 'primary.main',
-            '&:hover': {
-                backgroundColor: 'primary.dark',
-            },
-        },
-        login: {
-            padding: '0 30px',
-            height: 200,
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-        },
-        loginImage: {
-            backgroundImage: 'url(https://source.unsplash.com/rCbdp8VCYhQ)',
-            backgroundRepeat: 'no-repeat',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            height: '100vh',
         },
         loginSurface: {
-            height: '40vh',
-            padding: '20px 10px',
+            marginTop: theme.spacing(8),
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            background: 'white',
         },
         table: {
             minWidth: 650,
