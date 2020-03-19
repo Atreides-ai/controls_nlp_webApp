@@ -7,6 +7,7 @@ import Paper from '@material-ui/core/Paper';
 import AtreidesSignIn from './Atreides_Sign_In';
 import AtreidesMFA from './Atreides_Confirm_SignIn';
 import AtreidesTOTPSetup from './Atreides_TOTP_Setup';
+import AtreidesForgotPassword from './Atreides_Forgot_Password';
 
 export default function AuthComponent(appCallback: any): JSX.Element {
     const classes = useStyles();
@@ -40,8 +41,9 @@ export default function AuthComponent(appCallback: any): JSX.Element {
                         {authStage === 'SignedOut' && <AtreidesSignIn signInStatus={manageAuthStage} user={getUser} />}
                         {authStage === 'ConfirmSignIn' && <AtreidesMFA signInStatus={manageAuthStage} user={user} />}
                         {authStage === 'TOTPSetup' && <AtreidesTOTPSetup signInStatus={manageAuthStage} user={user} />}
-                        {/* {authStage === 'ForgotPassword' && <AtreidesForgotPassword signInStatus={manageAuthStage} />}
-                        {authStage === 'NewPasswordReq' && <AtreidesReqNewPassword signInStatus={manageAuthStage} />} */}
+                        {authStage === 'ForgotPassword' && <AtreidesForgotPassword signInStatus={manageAuthStage} />}
+                        {/* {authStage === 'NewPasswordReq' && <AtreidesReqNewPassword signInStatus={manageAuthStage} />}{' '}
+                         */}
                     </Paper>
                 </Grid>
             </Grid>

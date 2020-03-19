@@ -16,6 +16,7 @@ export default function AtreidesSignIn(props: {
 
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+    const [ForgotPasswordBool, ToggleForgotPassword] = useState(false);
 
     const setEmailInput = (event: React.ChangeEvent<HTMLInputElement>): void => {
         setEmail(event.target.value);
@@ -54,6 +55,15 @@ export default function AtreidesSignIn(props: {
     const signIn = (): void => {
         Auth.signIn(email, password).then(user => handleChallenge(user));
     };
+
+    const ForgotPassword = (): void => {
+        ToggleForgotPassword(true);
+    };
+
+    const submitPasswordReset = (): void => {
+        Auth.forgotPassword(email).then(() => props.signInStatus('ForgotPassword'));
+    };
+
     return (
         <Container component="main" maxWidth="xs">
             <div className={classes.login}>
@@ -73,22 +83,36 @@ export default function AtreidesSignIn(props: {
                             autoComplete="Email Address"
                             onChange={setEmailInput}
                         />
-                        <TextField
-                            style={{ backgroundColor: 'white' }}
-                            variant="outlined"
-                            margin="normal"
-                            required
-                            fullWidth
-                            name="password"
-                            type="password"
-                            id="password"
-                            autoComplete="current-password"
-                            onChange={setPasswordInput}
-                        />
-                        <Button variant="contained" color="primary" className={classes.muisubmit} onClick={signIn}>
-                            Sign In
-                        </Button>
-                        <Button variant="contained" className={classes.muisubmit}>
+                        {!ForgotPasswordBool && (
+                            <TextField
+                                style={{ backgroundColor: 'white' }}
+                                variant="outlined"
+                                margin="normal"
+                                required
+                                fullWidth
+                                name="password"
+                                type="password"
+                                id="password"
+                                autoComplete="current-password"
+                                onChange={setPasswordInput}
+                            />
+                        )}
+                        {!ForgotPasswordBool && (
+                            <Button variant="contained" color="primary" className={classes.muisubmit} onClick={signIn}>
+                                Sign In
+                            </Button>
+                        )}
+                        {ForgotPasswordBool && (
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                className={classes.muisubmit}
+                                onClick={submitPasswordReset}
+                            >
+                                Submit Password Reset
+                            </Button>
+                        )}
+                        <Button variant="contained" className={classes.muisubmit} onClick={ForgotPassword}>
                             Forgot Password?
                         </Button>
                     </form>
