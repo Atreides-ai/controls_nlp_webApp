@@ -7,7 +7,6 @@ import useStyles from './useStyles';
 import { useTheme, Theme } from '@material-ui/core/styles';
 import { Auth } from 'aws-amplify';
 import QRCode from 'qrcode.react';
-import { isCompositeComponent } from 'react-dom/test-utils';
 
 export default function AtreidesTOTPSetup(props: { signInStatus: (stage: string) => void; user: any }): JSX.Element {
     const theme = useTheme<Theme>();
@@ -16,11 +15,8 @@ export default function AtreidesTOTPSetup(props: { signInStatus: (stage: string)
     const [totpCode, setTOTPCode] = useState('');
 
     const generateQRCode = (): void => {
-        console.log('generating QR Code');
         const username = props.user.username;
-        console.log(username);
         Auth.setupTOTP(props.user).then(code => {
-            console.log(code);
             const generatedQrCode = 'otpauth://totp/AWSCognito:' + username + '?secret=' + code + '&issuer=Atreides';
             setQrCode(generatedQrCode);
         });
@@ -32,8 +28,9 @@ export default function AtreidesTOTPSetup(props: { signInStatus: (stage: string)
     const verifyTOTPCode = (): void => {
         Auth.verifyTotpToken(props.user, totpCode)
             .then(() => {
-                Auth.setPreferredMFA(props.user, 'TOTP');
-                props.signInStatus('SignedIn');
+                Auth.setPreferredMFA(props.user, 'TOTP').then(() => {
+                    Auth.enableSMS(props.user);
+                });
             })
             .catch(e => {
                 // Token is not verified

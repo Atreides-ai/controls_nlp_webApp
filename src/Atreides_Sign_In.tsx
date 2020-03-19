@@ -29,11 +29,15 @@ export default function AtreidesSignIn(props: {
         try {
             if (user.challengeName === 'SOFTWARE_TOKEN_MFA') {
                 props.user(user);
-                props.signInStatus('confirmSignIn');
+                props.signInStatus('ConfirmSignIn');
             } else if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
                 props.user(user);
                 props.signInStatus('requireNewPassword');
-            } else if (user.challengeName === 'SMS_MFA' || user.challengeName === 'MFA_SETUP') {
+            } else if (
+                user.challengeName === 'SMS_MFA' ||
+                user.challengeName === 'MFA_SETUP' ||
+                user.challengeName === undefined
+            ) {
                 props.user(user);
                 props.signInStatus('TOTPSetup');
             }

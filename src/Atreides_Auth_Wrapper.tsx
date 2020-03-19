@@ -38,7 +38,7 @@ export default function AuthComponent(appCallback: any): JSX.Element {
                 <Grid item xs={3}>
                     <Paper elevation={3} className={classes.loginSurface}>
                         {authStage === 'SignedOut' && <AtreidesSignIn signInStatus={manageAuthStage} user={getUser} />}
-                        {authStage === 'ConfirmSignIn' && <AtreidesMFA signInStatus={manageAuthStage} />}
+                        {authStage === 'ConfirmSignIn' && <AtreidesMFA signInStatus={manageAuthStage} user={user} />}
                         {authStage === 'TOTPSetup' && <AtreidesTOTPSetup signInStatus={manageAuthStage} user={user} />}
                         {/* {authStage === 'ForgotPassword' && <AtreidesForgotPassword signInStatus={manageAuthStage} />}
                         {authStage === 'NewPasswordReq' && <AtreidesReqNewPassword signInStatus={manageAuthStage} />} */}

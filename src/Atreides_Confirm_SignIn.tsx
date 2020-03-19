@@ -7,7 +7,7 @@ import useStyles from './useStyles';
 import { useTheme, Theme } from '@material-ui/core/styles';
 import { Auth } from 'aws-amplify';
 
-export default function AtreidesMFA(props: { signInStatus: (stage: string) => void }): JSX.Element {
+export default function AtreidesMFA(props: { signInStatus: (stage: string) => void; user: any }): JSX.Element {
     const theme = useTheme<Theme>();
     const classes = useStyles(theme);
     const [code, setCode] = useState<string>('');
@@ -17,9 +17,7 @@ export default function AtreidesMFA(props: { signInStatus: (stage: string) => vo
     };
 
     const submitCode = (): void => {
-        Auth.currentAuthenticatedUser().then(user =>
-            Auth.confirmSignIn(user, code).then(() => props.signInStatus('SignedIn')),
-        );
+        Auth.confirmSignIn(props.user, code, 'SOFTWARE_TOKEN_MFA').then(() => props.signInStatus('SignedIn'));
     };
 
     return (
