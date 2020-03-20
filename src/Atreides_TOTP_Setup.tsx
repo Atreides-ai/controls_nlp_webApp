@@ -29,6 +29,7 @@ export default function AtreidesTOTPSetup(props: { signInStatus: (stage: string)
         Auth.verifyTotpToken(props.user, totpCode)
             .then(() => {
                 Auth.setPreferredMFA(props.user, 'TOTP').then(() => {
+                    props.signInStatus('SignedIn');
                     Auth.enableSMS(props.user);
                 });
             })
@@ -47,7 +48,7 @@ export default function AtreidesTOTPSetup(props: { signInStatus: (stage: string)
                 Please scan this QR Code with your authentication app of choice
             </Typography>
             <form className={classes.muiform} noValidate>
-                    <QRCode value={qrCode} />
+                <QRCode value={qrCode} />
                 <TextField
                     style={{ backgroundColor: 'white' }}
                     variant="outlined"
