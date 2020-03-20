@@ -112,7 +112,7 @@ export default function SubmitFile() {
                             </Grid>
                             <Grid item xs={12}>
                                 <input
-                                    accept=".csv,.xls,.xslx"
+                                    accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                                     id="contained-button-file"
                                     type="file"
                                     onChange={handleSelectedFile}
