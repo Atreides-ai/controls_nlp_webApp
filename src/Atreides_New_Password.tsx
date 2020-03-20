@@ -7,16 +7,21 @@ import { useTheme, Theme } from '@material-ui/core/styles';
 import { Auth } from 'aws-amplify';
 import Snackbar from '@material-ui/core/Snackbar';
 import MySnackbarContentWrapper from './mySnackbarContentWrapper';
+import { UsernameAttributes } from 'aws-amplify-react/lib-esm/Auth/common/types';
 
-export default function AtreidesForgotPassword(props: { signInStatus: (stage: string) => void }): JSX.Element {
+export default function AtreidesNewPassword(props: { signInStatus: (stage: string) => void; user: any }): JSX.Element {
     const theme = useTheme<Theme>();
     const classes = useStyles(theme);
+    const [preferredName, setPreferredName] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
-    const [pwResetCode, setPWResetCode] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [error, setError] = useState<boolean>(false);
     const [errorOpen, setErrorOpen] = useState<boolean>(false);
+
+    const handlePreferredName = (event: React.ChangeEvent<HTMLInputElement>): void => {
+        setPreferredName(event.target.value);
+    };
 
     const handlePassword = (event: React.ChangeEvent<HTMLInputElement>): void => {
         setPassword(event.target.value);
@@ -24,10 +29,6 @@ export default function AtreidesForgotPassword(props: { signInStatus: (stage: st
 
     const handleConfirmPassword = (event: React.ChangeEvent<HTMLInputElement>): void => {
         setConfirmPassword(event.target.value);
-    };
-
-    const handleResetCode = (event: React.ChangeEvent<HTMLInputElement>): void => {
-        setPWResetCode(event.target.value);
     };
 
     const setEmailInput = (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -39,7 +40,9 @@ export default function AtreidesForgotPassword(props: { signInStatus: (stage: st
             setErrorOpen(true);
             setError(true);
         } else {
-            Auth.forgotPasswordSubmit(email, pwResetCode, password).then(() => props.signInStatus('SignedOut'));
+            Auth.completeNewPassword(props.user, password, { preferredName }).then(() =>
+                props.signInStatus('TOTPSetUp'),
+            );
         }
     };
 
@@ -54,9 +57,21 @@ export default function AtreidesForgotPassword(props: { signInStatus: (stage: st
     return (
         <div>
             <Typography component="h1" variant="h5" align="center" color="primary">
-                Reset Your Password
+                Set Your New Password
             </Typography>
             <form className={classes.muiform} noValidate>
+                <TextField
+                    style={{ backgroundColor: 'white' }}
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="Name"
+                    name="Name"
+                    autoComplete="Name"
+                    label="Preferred Name"
+                    onChange={handlePreferredName}
+                />
                 <TextField
                     style={{ backgroundColor: 'white' }}
                     variant="outlined"
@@ -92,18 +107,6 @@ export default function AtreidesForgotPassword(props: { signInStatus: (stage: st
                     autoComplete="Confirm Password"
                     label="Confirm Password"
                     onChange={handleConfirmPassword}
-                />
-                <TextField
-                    style={{ backgroundColor: 'white' }}
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="Reset Code"
-                    name="Reset Code"
-                    autoComplete="Reset Code"
-                    label="Reset Code"
-                    onChange={handleResetCode}
                 />
                 <Button variant="contained" color="primary" className={classes.muisubmit} onClick={submitPassword}>
                     Submit

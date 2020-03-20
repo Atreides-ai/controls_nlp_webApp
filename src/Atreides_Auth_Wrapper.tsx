@@ -6,6 +6,7 @@ import AtreidesSignIn from './Atreides_Sign_In';
 import AtreidesMFA from './Atreides_Confirm_SignIn';
 import AtreidesTOTPSetup from './Atreides_TOTP_Setup';
 import AtreidesForgotPassword from './Atreides_Forgot_Password';
+import AtreidesNewPassword from './Atreides_New_Password';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Avatar from '@material-ui/core/Avatar';
@@ -40,6 +41,9 @@ export default function AuthComponent(appCallback: any): JSX.Element {
                 {authStage === 'ConfirmSignIn' && <AtreidesMFA signInStatus={manageAuthStage} user={user} />}
                 {authStage === 'TOTPSetup' && <AtreidesTOTPSetup signInStatus={manageAuthStage} user={user} />}
                 {authStage === 'ForgotPassword' && <AtreidesForgotPassword signInStatus={manageAuthStage} />}
+                {authStage === 'NewPassword' && (
+                    <AtreidesNewPassword signInStatus={manageAuthStage} user={user}></AtreidesNewPassword>
+                )}
             </div>
             <Box mt={8}>
                 <Copyright />

@@ -6,6 +6,7 @@ import useStyles from './useStyles';
 import { useTheme, Theme } from '@material-ui/core/styles';
 import { Auth } from 'aws-amplify';
 import QRCode from 'qrcode.react';
+import Container from '@material-ui/core/Container';
 
 export default function AtreidesTOTPSetup(props: { signInStatus: (stage: string) => void; user: any }): JSX.Element {
     const theme = useTheme<Theme>();
@@ -46,7 +47,7 @@ export default function AtreidesTOTPSetup(props: { signInStatus: (stage: string)
                 Please scan this QR Code with your authentication app of choice
             </Typography>
             <form className={classes.muiform} noValidate>
-                <QRCode value={qrCode} />
+                    <QRCode value={qrCode} />
                 <TextField
                     style={{ backgroundColor: 'white' }}
                     variant="outlined"

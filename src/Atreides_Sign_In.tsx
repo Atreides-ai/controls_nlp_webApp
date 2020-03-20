@@ -41,9 +41,8 @@ export default function AtreidesSignIn(props: {
                 props.user(user);
                 props.signInStatus('ConfirmSignIn');
             } else if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
-                Auth.forgotPassword(email);
                 props.user(user);
-                props.signInStatus('RequireNewPassword');
+                props.signInStatus('NewPassword');
             } else if (
                 user.challengeName === 'SMS_MFA' ||
                 user.challengeName === 'MFA_SETUP' ||
