@@ -25,6 +25,7 @@
     "userpoolClientGenerateSecret": true,
     "userpoolClientRefreshTokenValidity": 30,
     "userpoolClientWriteAttributes": [
+        "given_name",
         "email",
         "name"
     ],

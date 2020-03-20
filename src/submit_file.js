@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import React, { useState, useContext } from 'react';
+=======
+import React, { useState } from 'react';
+>>>>>>> feature/custom_authentication
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -112,7 +116,11 @@ export default function SubmitFile() {
                             </Grid>
                             <Grid item xs={12}>
                                 <input
+<<<<<<< HEAD
                                     accept=".csv,.xls,.xslx"
+=======
+                                    accept=".csv"
+>>>>>>> feature/custom_authentication
                                     id="contained-button-file"
                                     type="file"
                                     onChange={handleSelectedFile}
@@ -204,7 +212,11 @@ export default function SubmitFile() {
                         <MySnackbarContentWrapper
                             variant="error"
                             className={classes.margin}
+<<<<<<< HEAD
                             message="Please enter an email and select a file!"
+=======
+                            message="Please select a file!"
+>>>>>>> feature/custom_authentication
                         />
                     </Snackbar>
                 </div>
