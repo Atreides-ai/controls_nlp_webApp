@@ -22,7 +22,6 @@ const Transition = React.forwardRef<unknown, TransitionProps>(function Transitio
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-<<<<<<< HEAD
 export default function GuidanceDialogue() {
     const theme = useTheme<Theme>();
     console.log(theme);
@@ -34,18 +33,6 @@ export default function GuidanceDialogue() {
     const handleClose = () => {
         setOpen(false);
     };
-=======
-export default function GuidanceDialogue(){
-  const theme = useTheme<Theme>();
-  const [open, setOpen] = React.useState(false);
-  const classes = useStyles(theme);
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
->>>>>>> feature/custom_authentication
 
     return (
         <div>
