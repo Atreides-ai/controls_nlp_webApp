@@ -16,8 +16,7 @@ export default function AtreidesForgotPassword(props: { signInStatus: (stage: st
     const [pwResetCode, setPWResetCode] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [error, setError] = useState<boolean>(false);
-    const [errorOpen, setErrorOpen] = useState<boolean>(false);
-
+    const [policyErrorOpen, setPolicyErrorOpen] = useState<boolean>(false);
 
     const handlePassword = (event: React.ChangeEvent<HTMLInputElement>): void => {
         setPassword(event.target.value);
@@ -37,10 +36,11 @@ export default function AtreidesForgotPassword(props: { signInStatus: (stage: st
 
     const submitPassword = (): void => {
         if (password !== confirmPassword) {
-            setErrorOpen(true);
             setError(true);
         } else {
-            Auth.forgotPasswordSubmit(email, pwResetCode, password).then(() => props.signInStatus('SignedOut'));
+            Auth.forgotPasswordSubmit(email, pwResetCode, password)
+                .then(() => props.signInStatus('SignedOut'))
+                .catch(() => setPolicyErrorOpen(true));
         }
     };
 
@@ -48,7 +48,7 @@ export default function AtreidesForgotPassword(props: { signInStatus: (stage: st
         if (reason === 'clickaway') {
             return;
         }
-        setErrorOpen(false);
+        setPolicyErrorOpen(false);
         setError(false);
     };
 
@@ -70,6 +70,9 @@ export default function AtreidesForgotPassword(props: { signInStatus: (stage: st
                     label="Email Address"
                     onChange={setEmailInput}
                 />
+                <Typography variant="caption" display="block">
+                    Your password must be at least 8 characters long and contain numbers, upper and lower case letters.
+                </Typography>
                 <TextField
                     style={{ backgroundColor: 'white' }}
                     variant="outlined"
@@ -117,11 +120,22 @@ export default function AtreidesForgotPassword(props: { signInStatus: (stage: st
                     vertical: 'bottom',
                     horizontal: 'left',
                 }}
-                open={error && errorOpen}
+                open={error}
                 autoHideDuration={6000}
                 onClose={handleClose}
             >
                 <MySnackbarContentWrapper variant="error" message="Password doesn't match" />
+            </Snackbar>
+            <Snackbar
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                }}
+                open={policyErrorOpen}
+                autoHideDuration={6000}
+                onClose={handleClose}
+            >
+                <MySnackbarContentWrapper variant="error" message="Password does not comply with policy" />
             </Snackbar>
         </div>
     );
