@@ -6,13 +6,15 @@ import useStyles from './useStyles';
 import { useTheme, Theme } from '@material-ui/core/styles';
 import { Auth } from 'aws-amplify';
 import QRCode from 'qrcode.react';
-import Container from '@material-ui/core/Container';
+import Snackbar from '@material-ui/core/Snackbar';
+import MySnackbarContentWrapper from './mySnackbarContentWrapper';
 
 export default function AtreidesTOTPSetup(props: { signInStatus: (stage: string) => void; user: any }): JSX.Element {
     const theme = useTheme<Theme>();
     const classes = useStyles(theme);
     const [qrCode, setQrCode] = useState('');
     const [totpCode, setTOTPCode] = useState('');
+    const [error, setError] = useState<boolean>(false);
 
     const generateQRCode = (): void => {
         const username = props.user.username;
@@ -33,9 +35,14 @@ export default function AtreidesTOTPSetup(props: { signInStatus: (stage: string)
                     Auth.enableSMS(props.user);
                 });
             })
-            .catch(e => {
-                // Token is not verified
-            });
+            .catch(() => setError(true));
+    };
+
+    const handleClose = (event: any, reason: any): void => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setError(false);
     };
 
     useEffect(() => {
@@ -66,6 +73,17 @@ export default function AtreidesTOTPSetup(props: { signInStatus: (stage: string)
                     Submit Code
                 </Button>
             </form>
+            <Snackbar
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                }}
+                open={error}
+                autoHideDuration={6000}
+                onClose={handleClose}
+            >
+                <MySnackbarContentWrapper variant="error" message="Incorrect Code" />
+            </Snackbar>
         </div>
     );
 }

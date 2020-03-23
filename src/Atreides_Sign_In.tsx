@@ -7,6 +7,8 @@ import { useTheme, Theme } from '@material-ui/core/styles';
 import { Auth } from 'aws-amplify';
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
+import Snackbar from '@material-ui/core/Snackbar';
+import MySnackbarContentWrapper from './mySnackbarContentWrapper';
 
 export default function AtreidesSignIn(props: {
     signInStatus: (stage: string) => void;
@@ -18,6 +20,7 @@ export default function AtreidesSignIn(props: {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [ForgotPasswordBool, ToggleForgotPassword] = useState(false);
+    const [error, setError] = useState<boolean>(false);
 
     const setEmailInput = (event: React.ChangeEvent<HTMLInputElement>): void => {
         setEmail(event.target.value);
@@ -61,8 +64,17 @@ export default function AtreidesSignIn(props: {
         }
     };
 
+    const handleClose = (event: any, reason: any): void => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setError(false);
+    };
+
     const signIn = (): void => {
-        Auth.signIn(email, password).then(user => handleChallenge(user));
+        Auth.signIn(email, password)
+            .then(user => handleChallenge(user))
+            .catch(() => setError(true));
     };
 
     return (
@@ -126,6 +138,17 @@ export default function AtreidesSignIn(props: {
                     )}
                 </Grid>
             </form>
+            <Snackbar
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                }}
+                open={error}
+                autoHideDuration={6000}
+                onClose={handleClose}
+            >
+                <MySnackbarContentWrapper variant="error" message="Incorrect username or password" />
+            </Snackbar>
         </div>
     );
 }

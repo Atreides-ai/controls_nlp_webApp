@@ -7,7 +7,6 @@ import { useTheme, Theme } from '@material-ui/core/styles';
 import { Auth } from 'aws-amplify';
 import Snackbar from '@material-ui/core/Snackbar';
 import MySnackbarContentWrapper from './mySnackbarContentWrapper';
-import { UsernameAttributes } from 'aws-amplify-react/lib-esm/Auth/common/types';
 
 export default function AtreidesNewPassword(props: { signInStatus: (stage: string) => void; user: any }): JSX.Element {
     const theme = useTheme<Theme>();
