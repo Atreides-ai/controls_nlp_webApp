@@ -18,6 +18,7 @@ export default function AtreidesForgotPassword(props: { signInStatus: (stage: st
     const [error, setError] = useState<boolean>(false);
     const [errorOpen, setErrorOpen] = useState<boolean>(false);
 
+
     const handlePassword = (event: React.ChangeEvent<HTMLInputElement>): void => {
         setPassword(event.target.value);
     };
@@ -77,6 +78,7 @@ export default function AtreidesForgotPassword(props: { signInStatus: (stage: st
                     fullWidth
                     id="New Password"
                     name="New Password"
+                    type="password"
                     autoComplete="New Password"
                     label="New Password"
                     onChange={handlePassword}
@@ -87,6 +89,7 @@ export default function AtreidesForgotPassword(props: { signInStatus: (stage: st
                     margin="normal"
                     required
                     fullWidth
+                    type="password"
                     id="Confirm Password"
                     name="Confirm Password"
                     autoComplete="Confirm Password"
