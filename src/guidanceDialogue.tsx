@@ -24,7 +24,6 @@ const Transition = React.forwardRef<unknown, TransitionProps>(function Transitio
 
 export default function GuidanceDialogue() {
     const theme = useTheme<Theme>();
-    console.log(theme);
     const [open, setOpen] = React.useState(false);
     const classes = useStyles(theme);
     const handleClickOpen = () => {
