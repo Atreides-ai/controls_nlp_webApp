@@ -27,13 +27,11 @@ export default function Dashboard() {
   const classes = useStyles();
   const [dashboard, showDashboard] = useState(false);
   const [dashboardfile, setFile] = useState();
-  const [url, setURL] = useState();
 
   const getFile = async () => {
     get_url()
       .catch(err => getFile())
       .then(function(url) {
-        setURL(url);
         d3.csv(url)
           .then(function(file) {
             setFile(file);
