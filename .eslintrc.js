@@ -12,6 +12,7 @@ module.exports = {
             jsx: true, // Allows for the parsing of JSX
         },
     },
+    plugins: ['react', '@typescript-eslint', 'react-hooks'],
     rules: {
         'react-hooks/rules-of-hooks': 'error',
         'react-hooks/exhaustive-deps': 'warn',
