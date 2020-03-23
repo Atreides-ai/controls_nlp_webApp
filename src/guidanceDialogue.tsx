@@ -62,6 +62,9 @@ export default function GuidanceDialogue() {
                         </li>
                         <li>The file name must have no spaces.</li>
                         <li>
+                            The file should not contain greater than <b>10,000</b> controls
+                        </li>
+                        <li>
                             The columns should be titled <b>exactly</b> as shown below:
                         </li>
                         <br></br>
