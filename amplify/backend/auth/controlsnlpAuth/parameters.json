@@ -48,7 +48,9 @@
     "hostedUI": false,
     "userPoolGroupList": [
         "atreides",
-        "demo"
+        "demo",
+        "pilot",
+        "enterprise"
     ],
     "verificationBucketName": "controlsnlpauthverificationbucket",
     "authRoleArn": {

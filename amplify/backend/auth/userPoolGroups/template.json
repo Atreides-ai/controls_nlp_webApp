@@ -131,6 +131,98 @@
             }
         },
     
+        "pilotGroup": {
+          "Type" : "AWS::Cognito::UserPoolGroup",
+          "Properties" : {
+              "GroupName" : "pilot",
+              "Precedence" : 3,
+              "RoleArn" : {
+                "Fn::GetAtt": [
+                    "pilotGroupRole",
+                    "Arn"
+                ]
+              },
+              "UserPoolId" : {
+                "Ref": "authcontrolsnlpAuthUserPoolId"
+              } 
+            }
+        },
+        "pilotGroupRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "RoleName":{
+                    "Fn::Join": [
+                        "",
+                        [
+                          {
+                            "Ref": "authcontrolsnlpAuthUserPoolId"
+                          },
+                          "-pilotGroupRole"
+                        ]
+                    ]
+                },
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Sid": "",
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Federated": "cognito-identity.amazonaws.com"
+                            },
+                            "Action": "sts:AssumeRoleWithWebIdentity"
+                        }
+                    ]
+                }
+            }
+        },
+    
+        "enterpriseGroup": {
+          "Type" : "AWS::Cognito::UserPoolGroup",
+          "Properties" : {
+              "GroupName" : "enterprise",
+              "Precedence" : 4,
+              "RoleArn" : {
+                "Fn::GetAtt": [
+                    "enterpriseGroupRole",
+                    "Arn"
+                ]
+              },
+              "UserPoolId" : {
+                "Ref": "authcontrolsnlpAuthUserPoolId"
+              } 
+            }
+        },
+        "enterpriseGroupRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "RoleName":{
+                    "Fn::Join": [
+                        "",
+                        [
+                          {
+                            "Ref": "authcontrolsnlpAuthUserPoolId"
+                          },
+                          "-enterpriseGroupRole"
+                        ]
+                    ]
+                },
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Sid": "",
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Federated": "cognito-identity.amazonaws.com"
+                            },
+                            "Action": "sts:AssumeRoleWithWebIdentity"
+                        }
+                    ]
+                }
+            }
+        },
+    
         "LambdaExecutionRole": {
             "Type": "AWS::IAM::Role",
             "Properties": {
@@ -343,6 +435,28 @@
             "Value": {
                 "Fn::GetAtt": [
                     "demoGroupRole",
+                    "Arn"
+                ]
+            }
+         
+        },
+        
+      
+        "pilotGroupRole": {
+            "Value": {
+                "Fn::GetAtt": [
+                    "pilotGroupRole",
+                    "Arn"
+                ]
+            }
+         
+        },
+        
+      
+        "enterpriseGroupRole": {
+            "Value": {
+                "Fn::GetAtt": [
+                    "enterpriseGroupRole",
                     "Arn"
                 ]
             }

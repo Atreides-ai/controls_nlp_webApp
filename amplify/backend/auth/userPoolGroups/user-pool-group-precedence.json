@@ -6,5 +6,13 @@
     {
         "groupName": "demo",
         "precedence": 2
+    },
+    {
+        "groupName": "pilot",
+        "precedence": 3
+    },
+    {
+        "groupName": "enterprise",
+        "precedence": 4
     }
 ]
