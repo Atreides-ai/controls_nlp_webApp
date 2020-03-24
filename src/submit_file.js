@@ -25,6 +25,7 @@ import { Link } from 'react-router-dom';
 import MySnackbarContentWrapper from './mySnackbarContentWrapper';
 import useStyles from './useStyles';
 import * as d3 from 'd3';
+import { Auth } from 'aws-amplify';
 
 Storage.configure({ level: 'private' });
 
@@ -52,13 +53,24 @@ export default function SubmitFile(user) {
     };
 
     const reduceFileForPilot = () => {
-        d3.csv.parse;
+        const uploadedFile = d3.csv(file);
+        const sample = uploadedFile.slice(0, 16);
+        const sampleSubmission = d3.csvFormat(sample);
+        selectFile(sampleSubmission);
     };
 
     const handleUpload = () => {
-        Storage.put(fileName, file, 'private')
-            .then(result => console.log(result))
-            .catch(err => console.log(err));
+        Auth.userSession(user).then(session => {
+            const userGroup = session.accessToken.payload['cognito:groups'][0];
+            if (userGroup === 'pilot' || 'demo') {
+                reduceFileForPilot();
+            } else if (userGroup === 'atreides' || 'enterprise') {
+                continue;
+            }
+            Storage.put(fileName, file, 'private')
+                .then(result => console.log(result))
+                .catch(err => console.log(err));
+        });
     };
     const successMessage = () => {
         setSuccess(true);
