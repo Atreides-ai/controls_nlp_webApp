@@ -19,7 +19,7 @@ import { CSVLink } from 'react-csv';
 
 Storage.configure({ level: 'private' });
 
-export default function Dashboard() {
+export default function Dashboard(user) {
     useEffect(() => {
         getFile();
     }, []);
