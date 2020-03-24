@@ -26,11 +26,11 @@ export default function App() {
                 <Switch>
                     <PrivateRoute path="/dashboard" authState={authState}>
                         <CssBaseline />
-                        <Dashboard user={user} />
+                        <Dashboard />
                     </PrivateRoute>
                     <PrivateRoute path="/submitFile" authState={authState}>
                         <CssBaseline />
-                        <SubmitFile />
+                        <SubmitFile user={user} />
                     </PrivateRoute>
                     <Route path="/">
                         <AuthComponent appCallback={callbackState} />

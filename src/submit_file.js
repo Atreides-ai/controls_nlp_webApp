@@ -24,6 +24,7 @@ import Copyright from './copyright';
 import { Link } from 'react-router-dom';
 import MySnackbarContentWrapper from './mySnackbarContentWrapper';
 import useStyles from './useStyles';
+import * as d3 from 'd3';
 
 Storage.configure({ level: 'private' });
 
@@ -34,7 +35,7 @@ MySnackbarContentWrapper.propTypes = {
     variant: PropTypes.oneOf(['error', 'success']).isRequired,
 };
 
-export default function SubmitFile() {
+export default function SubmitFile(user) {
     const classes = useStyles();
     const [file, selectFile] = useState(null);
     const [open, setOpen] = useState();
@@ -49,16 +50,21 @@ export default function SubmitFile() {
             failMessage();
         }
     };
-    const handleUpload = async e => {
+
+    const reduceFileForPilot = () => {
+        d3.csv.parse;
+    };
+
+    const handleUpload = () => {
         Storage.put(fileName, file, 'private')
             .then(result => console.log(result))
             .catch(err => console.log(err));
     };
-    const successMessage = async e => {
+    const successMessage = () => {
         setSuccess(true);
         setOpen(true);
     };
-    const failMessage = async e => {
+    const failMessage = () => {
         setSuccess(false);
         setOpen(true);
     };
