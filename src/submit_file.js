@@ -36,7 +36,7 @@ MySnackbarContentWrapper.propTypes = {
     variant: PropTypes.oneOf(['error', 'success']).isRequired,
 };
 
-export default function SubmitFile(user) {
+export default function SubmitFile({ user }) {
     const classes = useStyles();
     const [file, selectFile] = useState(null);
     const [open, setOpen] = useState();
@@ -53,10 +53,11 @@ export default function SubmitFile(user) {
     };
 
     const reduceFileForPilot = () => {
-        const uploadedFile = d3.csv(file);
-        const sample = uploadedFile.slice(0, 16);
-        const sampleSubmission = d3.csvFormat(sample);
-        selectFile(sampleSubmission);
+        d3.csv(file).then(parsedFile => {
+            const sample = parsedFile.slice(0, 16);
+            const sampleCSV = d3.csvFormat(sample);
+            selectFile(sampleCSV);
+        });
     };
 
     const handleUpload = () => {
@@ -64,13 +65,13 @@ export default function SubmitFile(user) {
             const userGroup = session.accessToken.payload['cognito:groups'][0];
             if (userGroup === 'pilot' || 'demo') {
                 reduceFileForPilot();
+                console.log(file);
             } else if (userGroup === 'atreides' || 'enterprise') {
-                continue;
             }
-            Storage.put(fileName, file, 'private')
-                .then(result => console.log(result))
-                .catch(err => console.log(err));
         });
+        Storage.put(fileName, file, 'private')
+            .then(result => console.log(result))
+            .catch(err => console.log(err));
     };
     const successMessage = () => {
         setSuccess(true);

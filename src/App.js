@@ -17,8 +17,8 @@ export default function App() {
     const [authState, setState] = useState(false);
     const [user, setUser] = useState();
     const callbackState = (authStateData, currentUser) => {
-        setUser(currentUser);
         setState(authStateData);
+        setUser(currentUser);
     };
     return (
         <ThemeProvider theme={theme}>

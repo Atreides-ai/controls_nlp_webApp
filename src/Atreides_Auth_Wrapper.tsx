@@ -13,15 +13,15 @@ import Avatar from '@material-ui/core/Avatar';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Copyright from './copyright';
 
-export default function AuthComponent(appCallback: any): JSX.Element {
+export default function AuthComponent(props: { appCallback: any }): JSX.Element {
     const classes = useStyles();
     const [authStage, setAuthStage] = useState<string>('SignedOut');
     const [user, setUser] = useState();
 
     const manageAuthStage = (stage: string): void => {
         setAuthStage(stage);
-        if (authStage === 'SignedIn') {
-            appCallback(true, user);
+        if (stage === 'SignedIn') {
+            props.appCallback(true, user);
         }
     };
 
