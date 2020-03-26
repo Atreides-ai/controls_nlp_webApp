@@ -38,7 +38,7 @@ export default function AtreidesNewPassword(props: { signInStatus: (stage: strin
         if (password !== confirmPassword) {
             setError(true);
         } else {
-            Auth.completeNewPassword(props.user, password, { preferredName })
+            Auth.completeNewPassword(props.user, password, { name: preferredName })
                 .then(() => props.signInStatus('TOTPSetUp'))
                 .catch(() => setPolicyErrorOpen(true));
         }
