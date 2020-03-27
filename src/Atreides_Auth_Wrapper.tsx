@@ -41,9 +41,7 @@ export default function AuthComponent(props: { appCallback: any }): JSX.Element 
                 {authStage === 'ConfirmSignIn' && <AtreidesMFA signInStatus={manageAuthStage} user={user} />}
                 {authStage === 'TOTPSetup' && <AtreidesTOTPSetup signInStatus={manageAuthStage} user={user} />}
                 {authStage === 'ForgotPassword' && <AtreidesForgotPassword signInStatus={manageAuthStage} />}
-                {authStage === 'NewPassword' && (
-                    <AtreidesNewPassword signInStatus={manageAuthStage} user={user}></AtreidesNewPassword>
-                )}
+                {authStage === 'NewPassword' && <AtreidesNewPassword signInStatus={manageAuthStage} user={user} />}
             </div>
             <Box mt={8}>
                 <Copyright />
