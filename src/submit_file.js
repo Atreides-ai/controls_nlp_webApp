@@ -47,6 +47,7 @@ export default function SubmitFile({ user }) {
     const reduceFileForPilot = fileString => {
         const parsedFile = d3.csvParse(fileString);
         const sample = parsedFile.slice(0, 16);
+
         return d3.csvFormat(sample);
     };
 

@@ -18,7 +18,10 @@ import { TransitionProps } from '@material-ui/core/transitions';
 import { useTheme } from '@material-ui/core/styles';
 import { Theme } from '@material-ui/core';
 
-const Transition = React.forwardRef<unknown, TransitionProps>(function Transition(props, ref) {
+const Transition = React.forwardRef(function Transition(
+    props: TransitionProps & { children?: React.ReactElement<any, any> },
+    ref: React.Ref<unknown>,
+) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
