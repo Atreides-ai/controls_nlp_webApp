@@ -15,8 +15,10 @@ Amplify.configure(awsmobile);
 
 export default function App() {
     const [authState, setState] = useState(false);
-    const callbackState = authStateData => {
+    const [user, setUser] = useState();
+    const callbackState = (authStateData, currentUser) => {
         setState(authStateData);
+        setUser(currentUser);
     };
     return (
         <ThemeProvider theme={theme}>
@@ -28,7 +30,7 @@ export default function App() {
                     </PrivateRoute>
                     <PrivateRoute path="/submitFile" authState={authState}>
                         <CssBaseline />
-                        <SubmitFile />
+                        <SubmitFile user={user} />
                     </PrivateRoute>
                     <Route path="/">
                         <AuthComponent appCallback={callbackState} />
