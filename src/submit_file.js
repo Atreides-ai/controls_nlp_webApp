@@ -42,15 +42,7 @@ export default function SubmitFile({ user }) {
     const [open, setOpen] = useState();
     const [success, setSuccess] = useState();
     const [fileName, selectedFileName] = useState('No File Selected');
-    const uploadManager = async e => {
-        if (file != null) {
-            handleUpload();
-            successMessage();
-            setDashboardButton(true);
-        } else {
-            failMessage();
-        }
-    };
+    const [showDashboardButton, setDashboardButton] = useState(false);
 
     const reduceFileForPilot = () => {
         d3.csv(file).then(parsedFile => {
@@ -65,7 +57,6 @@ export default function SubmitFile({ user }) {
             const userGroup = session.accessToken.payload['cognito:groups'][0];
             if (userGroup === 'pilot' || 'demo') {
                 reduceFileForPilot();
-                console.log(file);
             } else if (userGroup === 'atreides' || 'enterprise') {
             }
         });
@@ -94,7 +85,16 @@ export default function SubmitFile({ user }) {
     const handleDelete = async e => {
         window.location.reload(false);
     };
-    const [showDashboardButton, setDashboardButton] = useState(false);
+
+    const uploadManager = () => {
+        if (file != null) {
+            handleUpload();
+            successMessage();
+            setDashboardButton(true);
+        } else {
+            failMessage();
+        }
+    };
     return (
         <Box>
             <Grid container component="main" className={classes.root}>
