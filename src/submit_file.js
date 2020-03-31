@@ -44,22 +44,14 @@ export default function SubmitFile({ user }) {
     const [fileName, selectedFileName] = useState('No File Selected');
     const [showDashboardButton, setDashboardButton] = useState(false);
 
-    const reduceFileForPilot = () => {
-        d3.csv(file).then(parsedFile => {
-            const sample = parsedFile.slice(0, 16);
-            const sampleCSV = d3.csvFormat(sample);
-            selectFile(sampleCSV);
-        });
+    const reduceFileForPilot = fileString => {
+        const parsedFile = d3.csvParse(fileString);
+        const sample = parsedFile.slice(0, 16);
+        console.log(sample);
+        return d3.csvFormat(sample);
     };
 
     const handleUpload = () => {
-        Auth.userSession(user).then(session => {
-            const userGroup = session.accessToken.payload['cognito:groups'][0];
-            if (userGroup === 'pilot' || 'demo') {
-                reduceFileForPilot();
-            } else if (userGroup === 'atreides' || 'enterprise') {
-            }
-        });
         Storage.put(fileName, file, 'private')
             .then(result => console.log(result))
             .catch(err => console.log(err));
@@ -78,9 +70,24 @@ export default function SubmitFile({ user }) {
         }
         setOpen(false);
     };
-    const handleSelectedFile = async e => {
+    const handleSelectedFile = e => {
         selectedFileName(e.target.files[0].name);
-        selectFile(e.target.files[0]);
+        const selectedFile = e.target.files[0];
+
+        Auth.userSession(user).then(session => {
+            const userGroup = session.accessToken.payload['cognito:groups'][0];
+            if (userGroup === 'pilot' || 'demo') {
+                const reader = new FileReader();
+                reader.onload = function() {
+                    console.log(reader.result);
+                    const csvFile = reduceFileForPilot(reader.result);
+                    selectFile(csvFile);
+                };
+                reader.readAsBinaryString(selectedFile);
+            } else if (userGroup === 'atreides' || 'enterprise') {
+                selectFile(selectedFile);
+            }
+        });
     };
     const handleDelete = async e => {
         window.location.reload(false);
