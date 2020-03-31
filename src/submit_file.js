@@ -47,7 +47,6 @@ export default function SubmitFile({ user }) {
     const reduceFileForPilot = fileString => {
         const parsedFile = d3.csvParse(fileString);
         const sample = parsedFile.slice(0, 16);
-        console.log(sample);
         return d3.csvFormat(sample);
     };
 
@@ -79,7 +78,6 @@ export default function SubmitFile({ user }) {
             if (userGroup === 'pilot' || 'demo') {
                 const reader = new FileReader();
                 reader.onload = function() {
-                    console.log(reader.result);
                     const csvFile = reduceFileForPilot(reader.result);
                     selectFile(csvFile);
                 };
