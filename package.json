@@ -68,9 +68,9 @@
             "last 1 chrome version",
             "last 1 firefox version",
             "last 1 safari version"
-        ],
-        "resolutions": {
-            "@babel/preset-env": "7.5.5"
-        }
+        ]
+    },
+    "resolutions": {
+        "@babel/preset-env": "7.5.5"
     }
 }
