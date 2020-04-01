@@ -54,6 +54,7 @@
         "extends": "react-app"
     },
     "devDependencies": {
+        "@babel/compat-data": "7.8.0",
         "@babel/helper-call-delegate": "^7.8.7",
         "eslint-plugin-react-hooks": "^2.5.0",
         "source-map-loader": "^0.2.4",
@@ -71,8 +72,5 @@
             "last 1 firefox version",
             "last 1 safari version"
         ]
-    },
-    "resolutions": {
-        "@babel/preset-env": "^7.8.7"
     }
 }
