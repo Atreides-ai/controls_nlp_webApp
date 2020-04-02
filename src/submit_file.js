@@ -92,7 +92,7 @@ export default function SubmitFile({ user }) {
         window.location.reload(false);
     };
 
-    const uploadManager = () => {
+    const uploadManager = async e => {
         if (file != null) {
             handleUpload();
             successMessage();
@@ -229,7 +229,7 @@ export default function SubmitFile({ user }) {
                         <MySnackbarContentWrapper
                             variant="error"
                             className={classes.margin}
-                            message="Please enter an email and select a file!"
+                            message="Please select a file!"
                         />
                     </Snackbar>
                 </div>
