@@ -24,6 +24,8 @@ import Copyright from './copyright';
 import { Link } from 'react-router-dom';
 import MySnackbarContentWrapper from './mySnackbarContentWrapper';
 import useStyles from './useStyles';
+import * as d3 from 'd3';
+import { Auth } from 'aws-amplify';
 
 Storage.configure({ level: 'private' });
 
@@ -34,31 +36,31 @@ MySnackbarContentWrapper.propTypes = {
     variant: PropTypes.oneOf(['error', 'success']).isRequired,
 };
 
-export default function SubmitFile() {
+export default function SubmitFile({ user }) {
     const classes = useStyles();
     const [file, selectFile] = useState(null);
     const [open, setOpen] = useState();
     const [success, setSuccess] = useState();
     const [fileName, selectedFileName] = useState('No File Selected');
-    const uploadManager = async e => {
-        if (file != null) {
-            handleUpload();
-            successMessage();
-            setDashboardButton(true);
-        } else {
-            failMessage();
-        }
+    const [showDashboardButton, setDashboardButton] = useState(false);
+
+    const reduceFileForPilot = fileString => {
+        const parsedFile = d3.csvParse(fileString);
+        const sample = parsedFile.slice(0, 50);
+
+        return d3.csvFormat(sample);
     };
-    const handleUpload = async e => {
+
+    const handleUpload = () => {
         Storage.put(fileName, file, 'private')
             .then(result => console.log(result))
             .catch(err => console.log(err));
     };
-    const successMessage = async e => {
+    const successMessage = () => {
         setSuccess(true);
         setOpen(true);
     };
-    const failMessage = async e => {
+    const failMessage = () => {
         setSuccess(false);
         setOpen(true);
     };
@@ -68,14 +70,37 @@ export default function SubmitFile() {
         }
         setOpen(false);
     };
-    const handleSelectedFile = async e => {
+    const handleSelectedFile = e => {
         selectedFileName(e.target.files[0].name);
-        selectFile(e.target.files[0]);
+        const selectedFile = e.target.files[0];
+
+        Auth.userSession(user).then(session => {
+            const userGroup = session.accessToken.payload['cognito:groups'][0];
+            if (userGroup === 'pilot' || 'demo') {
+                const reader = new FileReader();
+                reader.onload = function() {
+                    const csvFile = reduceFileForPilot(reader.result);
+                    selectFile(csvFile);
+                };
+                reader.readAsBinaryString(selectedFile);
+            } else if (userGroup === 'atreides' || 'enterprise') {
+                selectFile(selectedFile);
+            }
+        });
     };
     const handleDelete = async e => {
         window.location.reload(false);
     };
-    const [showDashboardButton, setDashboardButton] = useState(false);
+
+    const uploadManager = async e => {
+        if (file != null) {
+            handleUpload();
+            successMessage();
+            setDashboardButton(true);
+        } else {
+            failMessage();
+        }
+    };
     return (
         <Box>
             <Grid container component="main" className={classes.root}>
@@ -204,7 +229,7 @@ export default function SubmitFile() {
                         <MySnackbarContentWrapper
                             variant="error"
                             className={classes.margin}
-                            message="Please enter an email and select a file!"
+                            message="Please select a file!"
                         />
                     </Snackbar>
                 </div>
