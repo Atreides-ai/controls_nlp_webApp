@@ -72,21 +72,21 @@ export default function SubmitFile({ user }) {
     };
     const handleSelectedFile = async e => {
         selectedFileName(e.target.files[0].name);
-        const selectedFile = e.target.files[0];
+        selectFile(e.target.files[0]);
 
-        Auth.userSession(user).then(session => {
-            const userGroup = session.accessToken.payload['cognito:groups'][0];
-            if (userGroup === 'pilot' || 'demo') {
-                const reader = new FileReader();
-                reader.onload = function() {
-                    const csvFile = reduceFileForPilot(reader.result);
-                    selectFile(csvFile);
-                };
-                reader.readAsBinaryString(selectedFile);
-            } else if (userGroup === 'atreides' || 'enterprise') {
-                selectFile(selectedFile);
-            }
-        });
+        // Auth.userSession(user).then(session => {
+        //     const userGroup = session.accessToken.payload['cognito:groups'][0];
+        //     if (userGroup === 'pilot' || 'demo') {
+        //         const reader = new FileReader();
+        //         reader.onload = function() {
+        //             const csvFile = reduceFileForPilot(reader.result);
+        //             selectFile(csvFile);
+        //         };
+        //         reader.readAsBinaryString(selectedFile);
+        //     } else if (userGroup === 'atreides' || 'enterprise') {
+        //     
+        //     }
+        // });
     };
     const handleDelete = async e => {
         window.location.reload(false);
