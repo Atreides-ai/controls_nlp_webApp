@@ -51,16 +51,16 @@ export default function SubmitFile({ user }) {
         return d3.csvFormat(sample);
     };
 
-    const handleUpload = () => {
+    const handleUpload = async e => {
         Storage.put(fileName, file, 'private')
-            .then(result => console.log(result))
+            .then(() => console.log('Success'))
             .catch(err => console.log(err));
     };
-    const successMessage = () => {
+    const successMessage = async e => {
         setSuccess(true);
         setOpen(true);
     };
-    const failMessage = () => {
+    const failMessage = async e => {
         setSuccess(false);
         setOpen(true);
     };
@@ -70,7 +70,7 @@ export default function SubmitFile({ user }) {
         }
         setOpen(false);
     };
-    const handleSelectedFile = e => {
+    const handleSelectedFile = async e => {
         selectedFileName(e.target.files[0].name);
         const selectedFile = e.target.files[0];
 
