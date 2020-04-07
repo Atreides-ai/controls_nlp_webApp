@@ -53,7 +53,7 @@ export default function SubmitFile({ user }) {
 
     const handleUpload = async e => {
         Storage.put(fileName, file, 'private')
-            .then(result => console.log(result))
+            .then(() => console.log('Success'))
             .catch(err => console.log(err));
     };
     const successMessage = async e => {
@@ -83,7 +83,6 @@ export default function SubmitFile({ user }) {
                     selectFile(csvFile);
                 };
                 reader.readAsBinaryString(selectedFile);
-                console.log(file);
             } else if (userGroup === 'atreides' || 'enterprise') {
                 selectFile(selectedFile);
             }
