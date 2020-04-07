@@ -92,7 +92,7 @@ export default function SubmitFile({ user }) {
         window.location.reload(false);
     };
 
-    const uploadManager = async e => {
+    const uploadManager = () => {
         if (file != null) {
             handleUpload();
             successMessage();
