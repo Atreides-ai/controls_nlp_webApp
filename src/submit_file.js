@@ -84,7 +84,7 @@ export default function SubmitFile({ user }) {
         //         };
         //         reader.readAsBinaryString(selectedFile);
         //     } else if (userGroup === 'atreides' || 'enterprise') {
-        //     
+        //
         //     }
         // });
     };
