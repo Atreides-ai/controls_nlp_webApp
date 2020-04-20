@@ -67,6 +67,9 @@ export default function GuidanceDialogue() {
                             The file should not contain greater than <b>10,000</b> controls
                         </li>
                         <li>
+                            For best results run a spellcheck on your data prior to uploading.
+                        </li>
+                        <li>
                             The columns should be titled <b>exactly</b> as shown below:
                         </li>
                         <br></br>
