@@ -32,10 +32,8 @@ const useStyles = makeStyles((theme: Theme) =>
             backgroundPosition: 'center',
         },
         paper: {
-            height: '30vh',
             margin: theme.spacing(1.5, 3),
             display: 'flex',
-            flexDirection: 'column',
             alignItems: 'center',
         },
         mui_form: {

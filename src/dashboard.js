@@ -140,125 +140,107 @@ export default function Dashboard() {
             {dashboard && (
                 <div className={classes.root}>
                     <Grid container direction="row" space={3}>
-                        <Grid item xs>
+                        <Grid item xs={12} sm={4} md={4} lg={4}>
                             <div className={classes.pie}>
-                                <Paper className={classes.paper}>
-                                    <Typography variant="h6" align="center">
-                                        Control Relevance to Risk?
-                                    </Typography>
-                                    <MyResponsivePie
-                                        id="risk_relevance_pie"
-                                        data={generatePie(dashboardfile, 'control_relevance_to_risk')}
-                                    />
-                                </Paper>
+                                <Typography variant="h6" align="center">
+                                    Control Relevance to Risk?
+                                </Typography>
+                                <MyResponsivePie
+                                    id="risk_relevance_pie"
+                                    data={generatePie(dashboardfile, 'control_relevance_to_risk')}
+                                />
                             </div>
                         </Grid>
-                        <Grid item xs>
+                        <Grid item xs={12} sm={4} md={4} lg={4}>
                             <div className={classes.pie}>
-                                <Paper className={classes.paper}>
-                                    <Typography variant="h6" align="center">
-                                        Contains What?
-                                    </Typography>
-                                    <MyResponsivePie
-                                        id="contains_what_pie"
-                                        data={generatePie(dashboardfile, 'contains_whats')}
-                                    />{' '}
-                                </Paper>
+                                <Typography variant="h6" align="center">
+                                    Contains What?
+                                </Typography>
+                                <MyResponsivePie
+                                    id="contains_what_pie"
+                                    data={generatePie(dashboardfile, 'contains_whats')}
+                                />
                             </div>
                         </Grid>
-                        <Grid item xs>
+                        <Grid item xs={12} sm={4} md={4} lg={4}>
                             <div className={classes.pie}>
-                                <Paper className={classes.paper}>
-                                    <Typography variant="h6" align="center">
-                                        Contains How?
-                                    </Typography>
-                                    <MyResponsivePie
-                                        id="contains_how_pie"
-                                        data={generatePie(dashboardfile, 'contains_hows')}
-                                    />
-                                </Paper>
+                                <Typography variant="h6" align="center">
+                                    Contains How?
+                                </Typography>
+                                <MyResponsivePie
+                                    id="contains_how_pie"
+                                    data={generatePie(dashboardfile, 'contains_hows')}
+                                />
                             </div>
                         </Grid>
                     </Grid>
                     <Grid container direction="row" space={3}>
-                        <Grid item xs>
+                        <Grid item xs={12} sm={4} md={4} lg={4}>
                             <div className={classes.pie}>
-                                <Paper className={classes.paper}>
-                                    <Typography variant="h6" align="center">
-                                        Contains Multiple Whos?
-                                    </Typography>
-                                    <MyResponsivePie
-                                        id="multiple_who_pie"
-                                        data={generatePie(dashboardfile, 'multiple_whos')}
-                                    />
-                                </Paper>
+                                <Typography variant="h6" align="center">
+                                    Contains Multiple Whos?
+                                </Typography>
+                                <MyResponsivePie
+                                    id="multiple_who_pie"
+                                    data={generatePie(dashboardfile, 'multiple_whos')}
+                                />
                             </div>
                         </Grid>
-                        <Grid item xs>
+                        <Grid item xs={12} sm={4} md={4} lg={4}>
                             <div className={classes.pie}>
-                                <Paper className={classes.paper}>
-                                    <Typography variant="h6" align="center">
-                                        Contains Multiple Whats?
-                                    </Typography>
-                                    <MyResponsivePie
-                                        id="multiple_what_pie"
-                                        data={generatePie(dashboardfile, 'multiple_whats')}
-                                    />
-                                </Paper>
+                                <Typography variant="h6" align="center">
+                                    Contains Multiple Whats?
+                                </Typography>
+                                <MyResponsivePie
+                                    id="multiple_what_pie"
+                                    data={generatePie(dashboardfile, 'multiple_whats')}
+                                />
                             </div>
                         </Grid>
-                        <Grid item xs>
+                        <Grid item xs={12} sm={4} md={4} lg={4}>
                             <div className={classes.pie}>
-                                <Paper className={classes.paper}>
-                                    <Typography variant="h6" align="center">
-                                        Contains Multiple Hows?
-                                    </Typography>
-                                    <MyResponsivePie
-                                        id="multiple_how_pie"
-                                        data={generatePie(dashboardfile, 'multiple_hows')}
-                                    />
-                                </Paper>
+                                <Typography variant="h6" align="center">
+                                    Contains Multiple Hows?
+                                </Typography>
+                                <MyResponsivePie
+                                    id="multiple_how_pie"
+                                    data={generatePie(dashboardfile, 'multiple_hows')}
+                                />
                             </div>
                         </Grid>
                     </Grid>
                     <Grid container direction="row" space={3}>
-                        <Grid item xs>
+                        <Grid item xs={12} sm={4} md={4} lg={4}>
                             <div className={classes.pie}>
-                                <Paper className={classes.paper}>
-                                    <Typography variant="h6" align="center">
-                                        Contains Who?
-                                    </Typography>
-                                    <MyResponsivePie
-                                        id="contains_who_pie"
-                                        data={generatePie(dashboardfile, 'contains_whos')}
-                                    />
-                                </Paper>
+                                <Typography variant="h6" align="center">
+                                    Contains Who?
+                                </Typography>
+                                <MyResponsivePie
+                                    id="contains_who_pie"
+                                    data={generatePie(dashboardfile, 'contains_whos')}
+                                />
                             </div>
                         </Grid>
-                        <Grid item xs>
+                        <Grid item xs={12} sm={4} md={4} lg={4}>
                             <div className={classes.pie}>
-                                <Paper className={classes.paper}>
-                                    <Typography variant="h6" align="center">
-                                        Contains When?
-                                    </Typography>
-                                    <MyResponsivePie
-                                        id="when_piechart"
-                                        data={generatePie(dashboardfile, 'contains_whens')}
-                                    />
-                                </Paper>
+                                <Typography variant="h6" align="center">
+                                    Contains When?
+                                </Typography>
+                                <MyResponsivePie
+                                    id="when_piechart"
+                                    data={generatePie(dashboardfile, 'contains_whens')}
+                                />
                             </div>
                         </Grid>
-                        <Grid item xs>
+                        <Grid item xs={12} sm={4} md={4} lg={4}>
                             <div className={classes.pie}>
-                                <Paper className={classes.paper}>
-                                    <Typography variant="h6" align="center">
-                                        Contains Multiple Whens?
-                                    </Typography>
-                                    <MyResponsivePie
-                                        id="multiple_whens_pie"
-                                        data={generatePie(dashboardfile, 'multiple_whens')}
-                                    />
-                                </Paper>
+                                <Typography variant="h6" align="center">
+                                    Contains Multiple Whens?
+                                </Typography>
+                                <MyResponsivePie
+                                    id="multiple_whens_pie"
+                                    data={generatePie(dashboardfile, 'multiple_whens')}
+                                />
                             </div>
                         </Grid>
                     </Grid>
