@@ -1,4 +1,4 @@
-import { green, red } from '@material-ui/core/colors';
+import { green, red, grey } from '@material-ui/core/colors';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { Theme } from '@material-ui/core';
 
@@ -86,6 +86,53 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         table: {
             minWidth: 650,
+        },
+        cardRoot: {
+            height: 200,
+            margin: 'auto',
+            borderRadius: theme.spacing(2), // 16px
+            transition: '0.3s',
+            boxShadow: '0px 14px 80px rgba(34, 35, 58, 0.2)',
+            position: 'relative',
+            maxWidth: 500,
+            marginLeft: 'auto',
+            overflow: 'initial',
+            background: '#ffffff',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'top',
+            paddingBottom: theme.spacing(-10),
+            [theme.breakpoints.up('md')]: {
+                flexDirection: 'row',
+                padding: theme.spacing(2),
+            },
+        },
+        cardMedia: {
+            width: '88%',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            marginTop: theme.spacing(-3),
+            height: 0,
+            paddingBottom: '48%',
+            borderRadius: theme.spacing(2),
+            backgroundColor: '#fff',
+            position: 'relative',
+            [theme.breakpoints.up('md')]: {
+                width: '100%',
+                marginLeft: theme.spacing(2),
+                marginTop: 0,
+                transform: 'translateX(-8px)',
+            },
+            '&:after': {
+                content: '" "',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                borderRadius: theme.spacing(2), // 16
+                opacity: 0.5,
+            },
         },
     }),
 );

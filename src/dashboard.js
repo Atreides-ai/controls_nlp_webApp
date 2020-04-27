@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Storage } from 'aws-amplify';
-import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import * as d3 from 'd3';
@@ -16,6 +15,11 @@ import 'typeface-roboto';
 import Copyright from './copyright';
 import 'array.prototype.move';
 import { CSVLink } from 'react-csv';
+import DashboardCard from './Dashboard_Card';
+import SecurityIcon from '@material-ui/icons/Security';
+import ThumbUpIcon from '@material-ui/icons/ThumbUp';
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import ErrorIcon from '@material-ui/icons/Error';
 
 Storage.configure({ level: 'private' });
 
@@ -79,6 +83,10 @@ export default function Dashboard() {
                 obj['color'] = '#CFD8DC';
             } else if (obj['id'] === 'strong') {
                 obj['color'] = '#455A64';
+            } else if (obj['id'] === 'Manual') {
+                obj['color'] = '#7C4DFF';
+            } else if (obj['id'] === 'Automated') {
+                obj['color'] = '#607D8B';
             }
             return obj;
         });
@@ -139,15 +147,46 @@ export default function Dashboard() {
             )}
             {dashboard && (
                 <div className={classes.root}>
-                    <Grid container direction="row" space={3}>
+                    <Typography variant="h3">Control Relevance To Risk</Typography>
+                    <Grid container direction="row" spacing={1}>
+                        <Grid item xs={12} sm={3} md={3} lg={3}>
+                            <DashboardCard
+                                icon={<SecurityIcon style={{ fontSize: 150 }} />}
+                                header="Strong"
+                                body="123"
+                            ></DashboardCard>
+                        </Grid>
+                        <Grid item xs={12} sm={3} md={3} lg={3}>
+                            <DashboardCard
+                                icon={<ThumbUpIcon style={{ fontSize: 150 }} />}
+                                header="Good"
+                                body="123"
+                            ></DashboardCard>
+                        </Grid>
+                        <Grid item xs={12} sm={3} md={3} lg={3}>
+                            <DashboardCard
+                                icon={<NotificationsIcon style={{ fontSize: 150 }} />}
+                                header="Fair"
+                                body="123"
+                            ></DashboardCard>
+                        </Grid>
+                        <Grid item xs={12} sm={3} md={3} lg={3}>
+                            <DashboardCard
+                                icon={<ErrorIcon style={{ fontSize: 150 }} />}
+                                header="Poor"
+                                body="123"
+                            ></DashboardCard>
+                        </Grid>
+                    </Grid>
+                    <Grid container direction="row" spacing={1}>
                         <Grid item xs={12} sm={4} md={4} lg={4}>
                             <div className={classes.pie}>
                                 <Typography variant="h6" align="center">
-                                    Control Relevance to Risk?
+                                    Control Method?
                                 </Typography>
                                 <MyResponsivePie
-                                    id="risk_relevance_pie"
-                                    data={generatePie(dashboardfile, 'control_relevance_to_risk')}
+                                    id="automated_manual_pie"
+                                    data={generatePie(dashboardfile, 'Control Method')}
                                 />
                             </div>
                         </Grid>
@@ -174,7 +213,7 @@ export default function Dashboard() {
                             </div>
                         </Grid>
                     </Grid>
-                    <Grid container direction="row" space={3}>
+                    <Grid container direction="row" spacing={1}>
                         <Grid item xs={12} sm={4} md={4} lg={4}>
                             <div className={classes.pie}>
                                 <Typography variant="h6" align="center">
@@ -209,7 +248,7 @@ export default function Dashboard() {
                             </div>
                         </Grid>
                     </Grid>
-                    <Grid container direction="row" space={3}>
+                    <Grid container direction="row" spacing={1}>
                         <Grid item xs={12} sm={4} md={4} lg={4}>
                             <div className={classes.pie}>
                                 <Typography variant="h6" align="center">
