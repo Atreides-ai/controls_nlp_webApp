@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Button from '@material-ui/core/Button';
 import { Storage } from 'aws-amplify';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -27,10 +28,48 @@ import StarIcon from '@material-ui/icons/Star';
 import BuildIcon from '@material-ui/icons/Build';
 import BugReportIcon from '@material-ui/icons/BugReport';
 import PieChartCard from './PieChartCard';
+import MaterialTable, { Column } from 'material-table';
+import DataTablePopUp from './DataTablePopUp';
+import { forwardRef } from 'react';
+import AddBox from '@material-ui/icons/AddBox';
+import ArrowUpward from '@material-ui/icons/ArrowUpward';
+import Check from '@material-ui/icons/Check';
+import ChevronLeft from '@material-ui/icons/ChevronLeft';
+import ChevronRight from '@material-ui/icons/ChevronRight';
+import Clear from '@material-ui/icons/Clear';
+import DeleteOutline from '@material-ui/icons/DeleteOutline';
+import Edit from '@material-ui/icons/Edit';
+import FilterList from '@material-ui/icons/FilterList';
+import FirstPage from '@material-ui/icons/FirstPage';
+import LastPage from '@material-ui/icons/LastPage';
+import Remove from '@material-ui/icons/Remove';
+import SaveAlt from '@material-ui/icons/SaveAlt';
+import Search from '@material-ui/icons/Search';
+import ViewColumn from '@material-ui/icons/ViewColumn';
 
 Storage.configure({ level: 'private' });
 
 export default function Dashboard() {
+    const tableIcons = {
+        Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
+        Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
+        Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+        Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
+        DetailPanel: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+        Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
+        Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
+        Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
+        FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
+        LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
+        NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+        PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
+        ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+        Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
+        SortArrow: forwardRef((props, ref) => <ArrowUpward {...props} ref={ref} />),
+        ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
+        ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />),
+    };
+
     useEffect(() => {
         getFile();
     }, []);
@@ -49,6 +88,7 @@ export default function Dashboard() {
             .then(function(url) {
                 d3.csv(url)
                     .then(function(file) {
+                        console.log(file);
                         setFile(file);
                         showDashboard(true);
                     })
@@ -190,11 +230,24 @@ export default function Dashboard() {
             <AppBar position="static">
                 <Toolbar>
                     {dashboard && (
-                        <CSVLink data={dashboardfile} filename="Analysis.csv">
-                            <IconButton edge="start" color="secondary">
-                                <CloudDownloadIcon></CloudDownloadIcon>
-                            </IconButton>
-                        </CSVLink>
+                        <div>
+                            <Grid container direction="row" spacing={1}>
+                                <Grid item xs="auto" sm="auto" md="auto" lg="auto">
+                                    <CSVLink data={dashboardfile} filename="Analysis.csv">
+                                        <IconButton edge="start" color="secondary">
+                                            <CloudDownloadIcon></CloudDownloadIcon>
+                                        </IconButton>
+                                    </CSVLink>
+                                </Grid>
+                                <Grid item xs="auto" sm="auto" md="auto" lg="auto">
+                                    <CSVLink data={dashboardfile} filename="Analysis.csv">
+                                        <Button variant="outlined" color="secondary">
+                                            Download All Results
+                                        </Button>
+                                    </CSVLink>
+                                </Grid>
+                            </Grid>
+                        </div>
                     )}
                     <Typography variant="h6" className={classes.title} align="center">
                         Atreides Controls NLP Dashboard
@@ -210,11 +263,29 @@ export default function Dashboard() {
             {dashboard && (
                 <div className={classes.root}>
                     <Grid container direction="row" spacing={1}>
-                        <Grid item xs={12} sm={12} md={12} lg="auto">
+                        <Grid item xs={12} sm="auto" md="auto" lg="auto">
                             <Divider variant="middle" />
                             <Typography variant="h4" className={classes.dashboardHeader}>
                                 Overall Control Scores
                             </Typography>
+                        </Grid>
+                        <Grid item xs={12} sm="auto" md="auto" lg="auto">
+                            <DataTablePopUp
+                                table={
+                                    <MaterialTable
+                                        options={{
+                                            exportButton: true,
+                                        }}
+                                        icons={tableIcons}
+                                        columns={[
+                                            { title: 'Control Description', field: 'Control Description' },
+                                            { title: 'Overall Score', field: 'control_summary_rating' },
+                                        ]}
+                                        data={dashboardfile}
+                                        title="Analysis Summary"
+                                    />
+                                }
+                            />
                         </Grid>
                     </Grid>
                     <Grid container direction="row" spacing={3} justify="center">
@@ -329,6 +400,24 @@ export default function Dashboard() {
                                         data={generatePie(dashboardfile, 'Control Method')}
                                     />
                                 }
+                                table={
+                                    <DataTablePopUp
+                                        table={
+                                            <MaterialTable
+                                                options={{
+                                                    exportButton: true,
+                                                }}
+                                                icons={tableIcons}
+                                                columns={[
+                                                    { title: 'Control Description', field: 'Control Description' },
+                                                    { title: 'Control Method', field: 'Control Method' },
+                                                ]}
+                                                data={dashboardfile}
+                                                title="Analysis Summary"
+                                            />
+                                        }
+                                    />
+                                }
                                 header="Control Method"
                                 body="The split of controls that are automated or manual."
                             ></PieChartCard>
@@ -341,6 +430,25 @@ export default function Dashboard() {
                                         data={generatePie(dashboardfile, 'contains_whats')}
                                     />
                                 }
+                                table={
+                                    <DataTablePopUp
+                                        table={
+                                            <MaterialTable
+                                                options={{
+                                                    exportButton: true,
+                                                }}
+                                                icons={tableIcons}
+                                                columns={[
+                                                    { title: 'Control Description', field: 'Control Description' },
+                                                    { title: 'What Text', field: 'whats' },
+                                                    { title: 'Contains What', field: 'contains_whats' },
+                                                ]}
+                                                data={dashboardfile}
+                                                title="Analysis Summary"
+                                            />
+                                        }
+                                    />
+                                }
                                 header="What"
                                 body="Controls that define what is performed."
                             ></PieChartCard>
@@ -351,6 +459,25 @@ export default function Dashboard() {
                                     <MyResponsivePie
                                         id="contains_how_pie"
                                         data={generatePie(dashboardfile, 'contains_hows')}
+                                    />
+                                }
+                                table={
+                                    <DataTablePopUp
+                                        table={
+                                            <MaterialTable
+                                                options={{
+                                                    exportButton: true,
+                                                }}
+                                                icons={tableIcons}
+                                                columns={[
+                                                    { title: 'Control Description', field: 'Control Description' },
+                                                    { title: 'How Text', field: 'hows' },
+                                                    { title: 'Contains How', field: 'contains_hows' },
+                                                ]}
+                                                data={dashboardfile}
+                                                title="Analysis Summary"
+                                            />
+                                        }
                                     />
                                 }
                                 header="How"
@@ -367,6 +494,25 @@ export default function Dashboard() {
                                         data={generatePie(dashboardfile, 'contains_whos')}
                                     />
                                 }
+                                table={
+                                    <DataTablePopUp
+                                        table={
+                                            <MaterialTable
+                                                options={{
+                                                    exportButton: true,
+                                                }}
+                                                icons={tableIcons}
+                                                columns={[
+                                                    { title: 'Control Description', field: 'Control Description' },
+                                                    { title: 'Who Text', field: 'whos' },
+                                                    { title: 'Contains Who', field: 'contains_whos' },
+                                                ]}
+                                                data={dashboardfile}
+                                                title="Analysis Summary"
+                                            />
+                                        }
+                                    />
+                                }
                                 header="Who"
                                 body="Controls that define the operator."
                             ></PieChartCard>
@@ -379,6 +525,25 @@ export default function Dashboard() {
                                         data={generatePie(dashboardfile, 'contains_whens')}
                                     />
                                 }
+                                table={
+                                    <DataTablePopUp
+                                        table={
+                                            <MaterialTable
+                                                options={{
+                                                    exportButton: true,
+                                                }}
+                                                icons={tableIcons}
+                                                columns={[
+                                                    { title: 'Control Description', field: 'Control Description' },
+                                                    { title: 'When Text', field: 'whens' },
+                                                    { title: 'Contains When', field: 'contains_whens' },
+                                                ]}
+                                                data={dashboardfile}
+                                                title="Analysis Summary"
+                                            />
+                                        }
+                                    />
+                                }
                                 header="When"
                                 body="Controls that define the frequency of performance."
                             ></PieChartCard>
@@ -389,6 +554,28 @@ export default function Dashboard() {
                                     <MyResponsivePie
                                         id="multiple_what_pie"
                                         data={generatePie(dashboardfile, 'multiple_whats')}
+                                    />
+                                }
+                                table={
+                                    <DataTablePopUp
+                                        table={
+                                            <MaterialTable
+                                                options={{
+                                                    exportButton: true,
+                                                }}
+                                                icons={tableIcons}
+                                                columns={[
+                                                    { title: 'Control Description', field: 'Control Description' },
+                                                    { title: 'Multiple Whats', field: 'whats' },
+                                                    {
+                                                        title: 'Contains Multiple Whats',
+                                                        field: 'multiple_whats',
+                                                    },
+                                                ]}
+                                                data={dashboardfile}
+                                                title="Analysis Summary"
+                                            />
+                                        }
                                     />
                                 }
                                 header="Multiple Whats"
@@ -405,6 +592,25 @@ export default function Dashboard() {
                                         data={generatePie(dashboardfile, 'multiple_hows')}
                                     />
                                 }
+                                table={
+                                    <DataTablePopUp
+                                        table={
+                                            <MaterialTable
+                                                options={{
+                                                    exportButton: true,
+                                                }}
+                                                icons={tableIcons}
+                                                columns={[
+                                                    { title: 'Control Description', field: 'Control Description' },
+                                                    { title: 'How Text', field: 'hows' },
+                                                    { title: 'Contains Multiple Hows', field: 'contains_hows' },
+                                                ]}
+                                                data={dashboardfile}
+                                                title="Analysis Summary"
+                                            />
+                                        }
+                                    />
+                                }
                                 header="Multiple Hows"
                                 body="Controls that define how multiple activities are performed."
                             ></PieChartCard>
@@ -417,6 +623,25 @@ export default function Dashboard() {
                                         data={generatePie(dashboardfile, 'multiple_whos')}
                                     />
                                 }
+                                table={
+                                    <DataTablePopUp
+                                        table={
+                                            <MaterialTable
+                                                options={{
+                                                    exportButton: true,
+                                                }}
+                                                icons={tableIcons}
+                                                columns={[
+                                                    { title: 'Control Description', field: 'Control Description' },
+                                                    { title: 'Who Text', field: 'whos' },
+                                                    { title: 'Contains Multiple Who', field: 'contains_whos' },
+                                                ]}
+                                                data={dashboardfile}
+                                                title="Analysis Summary"
+                                            />
+                                        }
+                                    />
+                                }
                                 header="Multiple Whos"
                                 body="Controls with multiple operators likely defined."
                             ></PieChartCard>
@@ -427,6 +652,25 @@ export default function Dashboard() {
                                     <MyResponsivePie
                                         id="multiple_whens_pie"
                                         data={generatePie(dashboardfile, 'multiple_whens')}
+                                    />
+                                }
+                                table={
+                                    <DataTablePopUp
+                                        table={
+                                            <MaterialTable
+                                                options={{
+                                                    exportButton: true,
+                                                }}
+                                                icons={tableIcons}
+                                                columns={[
+                                                    { title: 'Control Description', field: 'Control Description' },
+                                                    { title: 'When Text', field: 'whens' },
+                                                    { title: 'Contains Multiple Whens', field: 'multiple_whens' },
+                                                ]}
+                                                data={dashboardfile}
+                                                title="Analysis Summary"
+                                            />
+                                        }
                                     />
                                 }
                                 header="Multiple Whens"

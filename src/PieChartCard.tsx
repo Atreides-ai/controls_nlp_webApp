@@ -4,8 +4,9 @@ import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import useStyles from './useStyles';
 import { Typography, Divider } from '@material-ui/core';
+import DataTablePopUp from 'DataTablePopUp';
 
-const MusicCard = (props: { chart: JSX.Element; header: string; body: string }): JSX.Element => {
+const PieChartCard = (props: { chart: JSX.Element; table: JSX.Element; header: string; body: string }): JSX.Element => {
     const classes = useStyles();
     return (
         <Card className={classes.pieCardRoot}>
@@ -20,9 +21,10 @@ const MusicCard = (props: { chart: JSX.Element; header: string; body: string }):
                 <Typography variant="body1" color="secondary">
                     {props.body}
                 </Typography>
+                {props.table}
             </CardContent>
         </Card>
     );
 };
 
-export default MusicCard;
+export default PieChartCard;
