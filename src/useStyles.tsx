@@ -24,13 +24,6 @@ const useStyles = makeStyles((theme: Theme) =>
             display: 'flex',
             alignItems: 'center',
         },
-        image: {
-            backgroundImage: 'url(https://source.unsplash.com/8WFnEehJWso)',
-            backgroundRepeat: 'no-repeat',
-            backgroundColor: theme.palette.primary.light,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-        },
         paper: {
             height: '30vh',
             margin: theme.spacing(1.5, 3),
