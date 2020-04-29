@@ -64,10 +64,11 @@ export default function GuidanceDialogue() {
                         </li>
                         <li>The file name must have no spaces.</li>
                         <li>
-                            The file should not contain greater than <b>10,000</b> controls
+                            The file should not contain greater than <b>10,000</b> controls.
                         </li>
                         <li>
-                            For best results run a spellcheck on your data prior to uploading.
+                            For best results run a spellcheck on your data prior to uploading and remove any annotations
+                            in [square brackets].
                         </li>
                         <li>
                             The columns should be titled <b>exactly</b> as shown below:
