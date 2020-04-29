@@ -241,7 +241,7 @@ export default function Dashboard() {
                                 </Grid>
                                 <Grid item xs="auto" sm="auto" md="auto" lg="auto">
                                     <CSVLink data={dashboardfile} filename="Analysis.csv">
-                                        <Button variant="outlined" color="secondary">
+                                        <Button variant="outlined" color="secondary" className={classes.summaryButton}>
                                             Download All Results
                                         </Button>
                                     </CSVLink>
@@ -342,11 +342,30 @@ export default function Dashboard() {
                         </Grid>
                     </Grid>
                     <Grid container direction="row" spacing={1}>
-                        <Grid item xs={12} sm={12} md={12} lg={12}>
+                        <Grid item xs={12} sm="auto" md="auto" lg="auto">
                             <Divider variant="middle" />
                             <Typography variant="h4" className={classes.dashboardHeader}>
                                 Control Relevance To Risk
                             </Typography>
+                        </Grid>
+                        <Grid item xs={12} sm="auto" md="auto" lg="auto">
+                            <DataTablePopUp
+                                table={
+                                    <MaterialTable
+                                        options={{
+                                            exportButton: true,
+                                        }}
+                                        icons={tableIcons}
+                                        columns={[
+                                            { title: 'Control Description', field: 'Control Description' },
+                                            { title: 'Risk Description', field: 'Risk Description' },
+                                            { title: 'Control Relevance To Risk', field: 'control_relevance_to_risk' },
+                                        ]}
+                                        data={dashboardfile}
+                                        title="Analysis Summary"
+                                    />
+                                }
+                            />
                         </Grid>
                     </Grid>
                     <Grid container direction="row" spacing={1}>

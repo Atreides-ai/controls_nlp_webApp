@@ -164,6 +164,9 @@ const useStyles = makeStyles((theme: Theme) =>
         pieCardmedia: {
             borderRadius: 6,
         },
+        summaryButton: {
+            marginTop: theme.spacing(1),
+        },
     }),
 );
 

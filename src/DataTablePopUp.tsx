@@ -7,6 +7,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import { TransitionProps } from '@material-ui/core/transitions';
+import useStyles from './useStyles';
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & { children?: React.ReactElement<any, any> },
@@ -17,6 +18,7 @@ const Transition = React.forwardRef(function Transition(
 
 const DataTablePopUp = (props: { table: JSX.Element }): JSX.Element => {
     const [open, setOpen] = React.useState(false);
+    const classes = useStyles();
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -28,7 +30,7 @@ const DataTablePopUp = (props: { table: JSX.Element }): JSX.Element => {
 
     return (
         <div>
-            <Button variant="outlined" color="secondary" onClick={handleClickOpen}>
+            <Button variant="outlined" color="secondary" onClick={handleClickOpen} className={classes.summaryButton}>
                 View Data
             </Button>
             <Dialog

@@ -4,7 +4,6 @@ import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import useStyles from './useStyles';
 import { Typography, Divider } from '@material-ui/core';
-import DataTablePopUp from 'DataTablePopUp';
 
 const PieChartCard = (props: { chart: JSX.Element; table: JSX.Element; header: string; body: string }): JSX.Element => {
     const classes = useStyles();
