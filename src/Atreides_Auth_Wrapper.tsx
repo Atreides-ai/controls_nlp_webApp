@@ -38,10 +38,10 @@ export default function AuthComponent(props: { appCallback: any }): JSX.Element 
                     <LockOutlinedIcon />
                 </Avatar>
                 {authStage === 'SignedOut' && <AtreidesSignIn signInStatus={manageAuthStage} user={getUser} />}
+                {authStage === 'NewPassword' && <AtreidesNewPassword signInStatus={manageAuthStage} user={user} />}
                 {authStage === 'ConfirmSignIn' && <AtreidesMFA signInStatus={manageAuthStage} user={user} />}
                 {authStage === 'TOTPSetup' && <AtreidesTOTPSetup signInStatus={manageAuthStage} user={user} />}
                 {authStage === 'ForgotPassword' && <AtreidesForgotPassword signInStatus={manageAuthStage} />}
-                {authStage === 'NewPassword' && <AtreidesNewPassword signInStatus={manageAuthStage} user={user} />}
             </div>
             <Box mt={8}>
                 <Copyright />

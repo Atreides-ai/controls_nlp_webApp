@@ -8,6 +8,7 @@ import { Auth } from 'aws-amplify';
 import QRCode from 'qrcode.react';
 import Snackbar from '@material-ui/core/Snackbar';
 import MySnackbarContentWrapper from './mySnackbarContentWrapper';
+import Grid from '@material-ui/core/Grid';
 
 export default function AtreidesTOTPSetup(props: { signInStatus: (stage: string) => void; user: any }): JSX.Element {
     const theme = useTheme<Theme>();
@@ -55,7 +56,11 @@ export default function AtreidesTOTPSetup(props: { signInStatus: (stage: string)
                 Please scan this QR Code with your authentication app of choice
             </Typography>
             <form className={classes.muiform} noValidate>
-                <QRCode value={qrCode} />
+                <Grid container direction="row" spacing={1} justify="center">
+                    <Grid item xs={'auto'} sm="auto" md="auto" lg="auto">
+                        <QRCode value={qrCode} />
+                    </Grid>
+                </Grid>
                 <TextField
                     style={{ backgroundColor: 'white' }}
                     variant="outlined"

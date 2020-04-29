@@ -14,36 +14,57 @@ export default function AtreidesNewPassword(props: { signInStatus: (stage: strin
     const [preferredName, setPreferredName] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
-    const [email, setEmail] = useState<string>('');
     const [error, setError] = useState<boolean>(false);
     const [policyErrorOpen, setPolicyErrorOpen] = useState<boolean>(false);
 
+    /**
+     * Listens to the input of preferred name field and stores it in state.
+     *
+     * @param {React.ChangeEvent<HTMLInputElement>} event
+     */
     const handlePreferredName = (event: React.ChangeEvent<HTMLInputElement>): void => {
         setPreferredName(event.target.value);
     };
 
+    /**
+     * Listens to the input of the password field and stores it in state.
+     *
+     * @param {React.ChangeEvent<HTMLInputElement>} event
+     */
     const handlePassword = (event: React.ChangeEvent<HTMLInputElement>): void => {
         setPassword(event.target.value);
     };
 
+    /**
+     * Listens to the input of the confirm password field and stores it in state.
+     *
+     * @param {React.ChangeEvent<HTMLInputElement>} event
+     */
     const handleConfirmPassword = (event: React.ChangeEvent<HTMLInputElement>): void => {
         setConfirmPassword(event.target.value);
     };
 
-    const setEmailInput = (event: React.ChangeEvent<HTMLInputElement>): void => {
-        setEmail(event.target.value);
-    };
-
+    /**
+     * Submits the new password to cognito via API and sets status to TOTPSetUp
+     *
+     */
     const submitPassword = (): void => {
         if (password !== confirmPassword) {
             setError(true);
         } else {
             Auth.completeNewPassword(props.user, password, { name: preferredName })
-                .then(() => props.signInStatus('TOTPSetUp'))
+                .then(() => props.signInStatus('TOTPSetup'))
                 .catch(() => setPolicyErrorOpen(true));
         }
     };
 
+    /**
+     * Closes the snackbar messages
+     *
+     * @param {*} event
+     * @param {*} reason
+     * @returns {void}
+     */
     const handleClose = (event: any, reason: any): void => {
         if (reason === 'clickaway') {
             return;
@@ -69,18 +90,6 @@ export default function AtreidesNewPassword(props: { signInStatus: (stage: strin
                     autoComplete="Name"
                     label="Preferred Name"
                     onChange={handlePreferredName}
-                />
-                <TextField
-                    style={{ backgroundColor: 'white' }}
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="Email"
-                    name="Email"
-                    autoComplete="Email"
-                    label="Email Address"
-                    onChange={setEmailInput}
                 />
                 <Typography variant="caption" display="block">
                     Your password must be at least 8 characters long and contain numbers, upper and lower case letters.
