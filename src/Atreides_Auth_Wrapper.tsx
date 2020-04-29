@@ -18,13 +18,24 @@ export default function AuthComponent(props: { appCallback: any }): JSX.Element 
     const [authStage, setAuthStage] = useState<string>('SignedOut');
     const [user, setUser] = useState();
 
+    /**
+     * Manages the authorisation state by passing it back to the App.TSX
+     *
+     * @param {string} stage
+     */
     const manageAuthStage = (stage: string): void => {
+
         setAuthStage(stage);
         if (stage === 'SignedIn') {
             props.appCallback(true, user);
         }
     };
 
+    /**
+     * Callback function that is passed to AtreidesSignIn to get the user
+     *
+     * @param {*} user
+     */
     const getUser = (user: any): void => {
         setUser(user);
     };

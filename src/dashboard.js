@@ -20,6 +20,12 @@ import SecurityIcon from '@material-ui/icons/Security';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import ErrorIcon from '@material-ui/icons/Error';
+import Divider from '@material-ui/core/Divider';
+import FeedbackIcon from '@material-ui/icons/Feedback';
+import FlagIcon from '@material-ui/icons/Flag';
+import StarIcon from '@material-ui/icons/Star';
+import BuildIcon from '@material-ui/icons/Build';
+import BugReportIcon from '@material-ui/icons/BugReport';
 
 Storage.configure({ level: 'private' });
 
@@ -32,6 +38,10 @@ export default function Dashboard() {
     const [dashboard, showDashboard] = useState(false);
     const [dashboardfile, setFile] = useState();
 
+    /**
+     * Downloads the file from s3 by recursively calling until it is found
+     *
+     */
     const getFile = async () => {
         get_url()
             .catch(err => getFile())
@@ -45,13 +55,25 @@ export default function Dashboard() {
             });
     };
 
+    /**
+     * gets the output file signed url from s3 using Amplify Storage.get
+     *
+     * @returns {string} url
+     */
     const get_url = () => {
         const url = Storage.get('output.csv', { level: 'private' }, { expires: 60 });
         return url;
     };
 
+    /**
+     * Takes a file and relevant column name and returns obj counting all keys
+     *
+     * @param {[object]} file
+     * @param {string} column
+     * @returns {[object]}
+     */
     const countColumnValues = (file, column) => {
-        const data_count = d3
+        const dataCount = d3
             .nest()
             .key(function(d) {
                 return d[column];
@@ -61,14 +83,17 @@ export default function Dashboard() {
             })
             .entries(file);
 
-        const output_data = formatData(data_count);
-        const ordered_data = orderData(output_data);
-
-        return ordered_data;
+        return dataCount;
     };
 
-    const formatData = data_count => {
-        return data_count.map(function(obj) {
+    /**
+     * Takes an array of objects of pie chart data and sets colors for each key
+     *
+     * @param {[object]} dataCount
+     * @returns {[object]} formattedData
+     */
+    const formatData = dataCount => {
+        return dataCount.map(function(obj) {
             obj['id'] = obj['key'];
             delete obj['key'];
             if (obj['id'] === 'True') {
@@ -92,6 +117,12 @@ export default function Dashboard() {
         });
     };
 
+    /**
+     * Takes the data for pie chart and orders for legend to ensure consistency
+     *
+     * @param {[object]} data
+     * @returns {[object]} filtered
+     */
     const orderData = data => {
         data.forEach(function(element) {
             if (element != undefined) {
@@ -118,9 +149,39 @@ export default function Dashboard() {
         return filtered;
     };
 
+    /**
+     * Takes the file and the column name and generates pie chart data array
+     *
+     * @param {string} column
+     * @returns {[object]} data
+     */
     const generatePie = (file, column) => {
-        const data = countColumnValues(file, column);
-        return data;
+        const dataCount = countColumnValues(file, column);
+        const rawData = formatData(dataCount);
+        const orderedData = orderData(rawData);
+        return orderedData;
+    };
+
+    /**
+     * Finds the column in the data and returns the count for a given key
+     *
+     * @param {string} column
+     * @param {string} key
+     * @return {integer} value
+     */
+    const generateCardMetric = (file, column, key) => {
+        const countData = countColumnValues(file, column);
+        const fieldCount = countData.filter(function(el) {
+            return el['key'] == key;
+        });
+
+        console.log(fieldCount);
+
+        if (fieldCount[0] != undefined) {
+            return fieldCount[0]['value'].toString();
+        }
+
+        return '0';
     };
 
     return (
@@ -147,35 +208,115 @@ export default function Dashboard() {
             )}
             {dashboard && (
                 <div className={classes.root}>
-                    <Typography variant="h3">Control Relevance To Risk</Typography>
+                    <Grid container direction="row" spacing={1}>
+                        <Grid item xs={12} sm={12} md={12} lg="auto">
+                            <Divider variant="middle" />
+                            <Typography variant="h4" className={classes.dashboardHeader}>
+                                Overall Control Scores
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                    <Grid container direction="row" spacing={5} justify="center">
+                        <Grid item xs={12} sm="auto" md="auto" lg="auto">
+                            <DashboardCard
+                                icon={<StarIcon style={{ fontSize: 120 }} />}
+                                header="cat1"
+                                body={generateCardMetric(
+                                    dashboardfile,
+                                    'control_summary_rating',
+                                    'Requirements Met Fully',
+                                )}
+                            ></DashboardCard>
+                        </Grid>
+                        <Grid item xs={12} sm="auto" md="auto" lg="auto">
+                            <DashboardCard
+                                icon={<BuildIcon style={{ fontSize: 120 }} />}
+                                header="Good"
+                                body={generateCardMetric(dashboardfile, 'control_summary_rating', 'Requirements Met')}
+                            ></DashboardCard>
+                        </Grid>
+                        <Grid item xs={12} sm="auto" md="auto" lg="auto">
+                            <DashboardCard
+                                icon={<BugReportIcon style={{ fontSize: 120 }} />}
+                                header="Fair"
+                                body={generateCardMetric(
+                                    dashboardfile,
+                                    'control_summary_rating',
+                                    'Requirements Partially Met',
+                                )}
+                            ></DashboardCard>
+                        </Grid>
+                        <Grid item xs={12} sm="auto" md="auto" lg="auto">
+                            <DashboardCard
+                                icon={<FeedbackIcon style={{ fontSize: 120 }} />}
+                                header="Poor"
+                                body={generateCardMetric(
+                                    dashboardfile,
+                                    'control_summary_rating',
+                                    'Requirements Substantially Not Met',
+                                )}
+                            ></DashboardCard>
+                        </Grid>
+                        <Grid item xs={12} sm="auto" md="auto" lg="auto">
+                            <DashboardCard
+                                icon={<FlagIcon style={{ fontSize: 120 }} />}
+                                header="Poor"
+                                body={generateCardMetric(
+                                    dashboardfile,
+                                    'control_summary_rating',
+                                    'No Requirements Met',
+                                )}
+                            ></DashboardCard>
+                        </Grid>
+                    </Grid>
+                    <Grid container direction="row" spacing={1}>
+                        <Grid item xs={12} sm={12} md={12} lg={12}>
+                            <Divider variant="middle" />
+                            <Typography variant="h4" className={classes.dashboardHeader}>
+                                Control Relevance To Risk
+                            </Typography>
+                        </Grid>
+                    </Grid>
                     <Grid container direction="row" spacing={1}>
                         <Grid item xs={12} sm={3} md={3} lg={3}>
                             <DashboardCard
-                                icon={<SecurityIcon style={{ fontSize: 150 }} />}
+                                icon={<SecurityIcon style={{ fontSize: 120 }} />}
                                 header="Strong"
-                                body="123"
+                                body={generateCardMetric(dashboardfile, 'control_relevance_to_risk', 'strong')}
                             ></DashboardCard>
                         </Grid>
                         <Grid item xs={12} sm={3} md={3} lg={3}>
                             <DashboardCard
-                                icon={<ThumbUpIcon style={{ fontSize: 150 }} />}
+                                icon={<ThumbUpIcon style={{ fontSize: 120 }} />}
                                 header="Good"
-                                body="123"
+                                body={generateCardMetric(dashboardfile, 'control_relevance_to_risk', 'good')}
                             ></DashboardCard>
                         </Grid>
                         <Grid item xs={12} sm={3} md={3} lg={3}>
                             <DashboardCard
-                                icon={<NotificationsIcon style={{ fontSize: 150 }} />}
+                                icon={<NotificationsIcon style={{ fontSize: 120 }} />}
                                 header="Fair"
-                                body="123"
+                                body={generateCardMetric(dashboardfile, 'control_relevance_to_risk', 'fair')}
                             ></DashboardCard>
                         </Grid>
                         <Grid item xs={12} sm={3} md={3} lg={3}>
                             <DashboardCard
-                                icon={<ErrorIcon style={{ fontSize: 150 }} />}
+                                icon={<ErrorIcon style={{ fontSize: 120 }} />}
                                 header="Poor"
-                                body="123"
+                                body={generateCardMetric(dashboardfile, 'control_relevance_to_risk', 'poor')}
                             ></DashboardCard>
+                        </Grid>
+                        <Grid container direction="row" spacing={1}>
+                            <Grid item xs={12} sm={12} md={12} lg={12}>
+                                <Divider variant="middle" />
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    <Grid container direction="row" spacing={1}>
+                        <Grid item xs={12} sm={12} md={12} lg="auto">
+                            <Typography variant="h4" className={classes.dashboardHeader}>
+                                Detailed Metrics
+                            </Typography>
                         </Grid>
                     </Grid>
                     <Grid container direction="row" spacing={1}>

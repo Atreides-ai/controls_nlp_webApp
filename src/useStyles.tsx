@@ -88,23 +88,29 @@ const useStyles = makeStyles((theme: Theme) =>
             minWidth: 650,
         },
         cardRoot: {
-            height: 200,
-            margin: 'auto',
+            height: 170,
             borderRadius: theme.spacing(2), // 16px
             transition: '0.3s',
             boxShadow: '0px 14px 80px rgba(34, 35, 58, 0.2)',
             position: 'relative',
             maxWidth: 500,
-            marginLeft: 'auto',
+            marginLeft: theme.spacing(1),
+            marginRight: theme.spacing(1),
             overflow: 'initial',
             background: '#ffffff',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'top',
             paddingBottom: theme.spacing(-10),
-            [theme.breakpoints.up('md')]: {
+            marginBottom: theme.spacing(2),
+            [theme.breakpoints.up('lg')]: {
                 flexDirection: 'row',
                 padding: theme.spacing(2),
+            },
+            [theme.breakpoints.down('md')]: {
+                flexDirection: 'column',
+                padding: theme.spacing(2),
+                height: 300,
             },
         },
         cardMedia: {
@@ -133,6 +139,19 @@ const useStyles = makeStyles((theme: Theme) =>
                 borderRadius: theme.spacing(2), // 16
                 opacity: 0.5,
             },
+            [theme.breakpoints.down('md')]: {
+                paddingTop: '0%',
+                paddingBottom: '50%',
+            },
+        },
+        dashboardHeader: {
+            marginLeft: theme.spacing(2),
+            marginBottom: theme.spacing(2),
+            marginTop: theme.spacing(2),
+        },
+        centerGrid: {
+            flexGrow: 1,
+            alignItems: 'center',
         },
     }),
 );
