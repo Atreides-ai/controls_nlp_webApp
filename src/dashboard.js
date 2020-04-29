@@ -26,6 +26,7 @@ import FlagIcon from '@material-ui/icons/Flag';
 import StarIcon from '@material-ui/icons/Star';
 import BuildIcon from '@material-ui/icons/Build';
 import BugReportIcon from '@material-ui/icons/BugReport';
+import PieChartCard from './PieChartCard';
 
 Storage.configure({ level: 'private' });
 
@@ -216,7 +217,7 @@ export default function Dashboard() {
                             </Typography>
                         </Grid>
                     </Grid>
-                    <Grid container direction="row" spacing={5} justify="center">
+                    <Grid container direction="row" spacing={3} justify="center">
                         <Grid item xs={12} sm="auto" md="auto" lg="auto">
                             <DashboardCard
                                 icon={<StarIcon style={{ fontSize: 120 }} />}
@@ -321,107 +322,116 @@ export default function Dashboard() {
                     </Grid>
                     <Grid container direction="row" spacing={1}>
                         <Grid item xs={12} sm={4} md={4} lg={4}>
-                            <div className={classes.pie}>
-                                <Typography variant="h6" align="center">
-                                    Control Method?
-                                </Typography>
-                                <MyResponsivePie
-                                    id="automated_manual_pie"
-                                    data={generatePie(dashboardfile, 'Control Method')}
-                                />
-                            </div>
+                            <PieChartCard
+                                chart={
+                                    <MyResponsivePie
+                                        id="automated_manual_pie"
+                                        data={generatePie(dashboardfile, 'Control Method')}
+                                    />
+                                }
+                                header="Control Method"
+                                body="The split of controls that are automated or manual."
+                            ></PieChartCard>
                         </Grid>
                         <Grid item xs={12} sm={4} md={4} lg={4}>
-                            <div className={classes.pie}>
-                                <Typography variant="h6" align="center">
-                                    Contains What?
-                                </Typography>
-                                <MyResponsivePie
-                                    id="contains_what_pie"
-                                    data={generatePie(dashboardfile, 'contains_whats')}
-                                />
-                            </div>
+                            <PieChartCard
+                                chart={
+                                    <MyResponsivePie
+                                        id="contains_what_pie"
+                                        data={generatePie(dashboardfile, 'contains_whats')}
+                                    />
+                                }
+                                header="What"
+                                body="Controls that define what is performed."
+                            ></PieChartCard>
                         </Grid>
                         <Grid item xs={12} sm={4} md={4} lg={4}>
-                            <div className={classes.pie}>
-                                <Typography variant="h6" align="center">
-                                    Contains How?
-                                </Typography>
-                                <MyResponsivePie
-                                    id="contains_how_pie"
-                                    data={generatePie(dashboardfile, 'contains_hows')}
-                                />
-                            </div>
-                        </Grid>
-                    </Grid>
-                    <Grid container direction="row" spacing={1}>
-                        <Grid item xs={12} sm={4} md={4} lg={4}>
-                            <div className={classes.pie}>
-                                <Typography variant="h6" align="center">
-                                    Contains Multiple Whos?
-                                </Typography>
-                                <MyResponsivePie
-                                    id="multiple_who_pie"
-                                    data={generatePie(dashboardfile, 'multiple_whos')}
-                                />
-                            </div>
-                        </Grid>
-                        <Grid item xs={12} sm={4} md={4} lg={4}>
-                            <div className={classes.pie}>
-                                <Typography variant="h6" align="center">
-                                    Contains Multiple Whats?
-                                </Typography>
-                                <MyResponsivePie
-                                    id="multiple_what_pie"
-                                    data={generatePie(dashboardfile, 'multiple_whats')}
-                                />
-                            </div>
-                        </Grid>
-                        <Grid item xs={12} sm={4} md={4} lg={4}>
-                            <div className={classes.pie}>
-                                <Typography variant="h6" align="center">
-                                    Contains Multiple Hows?
-                                </Typography>
-                                <MyResponsivePie
-                                    id="multiple_how_pie"
-                                    data={generatePie(dashboardfile, 'multiple_hows')}
-                                />
-                            </div>
+                            <PieChartCard
+                                chart={
+                                    <MyResponsivePie
+                                        id="contains_how_pie"
+                                        data={generatePie(dashboardfile, 'contains_hows')}
+                                    />
+                                }
+                                header="How"
+                                body="Controls that define how the activity is done or evidenced."
+                            ></PieChartCard>
                         </Grid>
                     </Grid>
                     <Grid container direction="row" spacing={1}>
                         <Grid item xs={12} sm={4} md={4} lg={4}>
-                            <div className={classes.pie}>
-                                <Typography variant="h6" align="center">
-                                    Contains Who?
-                                </Typography>
-                                <MyResponsivePie
-                                    id="contains_who_pie"
-                                    data={generatePie(dashboardfile, 'contains_whos')}
-                                />
-                            </div>
+                            <PieChartCard
+                                chart={
+                                    <MyResponsivePie
+                                        id="contains_who_pie"
+                                        data={generatePie(dashboardfile, 'contains_whos')}
+                                    />
+                                }
+                                header="Who"
+                                body="Controls that define the operator."
+                            ></PieChartCard>
                         </Grid>
                         <Grid item xs={12} sm={4} md={4} lg={4}>
-                            <div className={classes.pie}>
-                                <Typography variant="h6" align="center">
-                                    Contains When?
-                                </Typography>
-                                <MyResponsivePie
-                                    id="when_piechart"
-                                    data={generatePie(dashboardfile, 'contains_whens')}
-                                />
-                            </div>
+                            <PieChartCard
+                                chart={
+                                    <MyResponsivePie
+                                        id="when_piechart"
+                                        data={generatePie(dashboardfile, 'contains_whens')}
+                                    />
+                                }
+                                header="When"
+                                body="Controls that define the frequency of performance."
+                            ></PieChartCard>
                         </Grid>
                         <Grid item xs={12} sm={4} md={4} lg={4}>
-                            <div className={classes.pie}>
-                                <Typography variant="h6" align="center">
-                                    Contains Multiple Whens?
-                                </Typography>
-                                <MyResponsivePie
-                                    id="multiple_whens_pie"
-                                    data={generatePie(dashboardfile, 'multiple_whens')}
-                                />
-                            </div>
+                            <PieChartCard
+                                chart={
+                                    <MyResponsivePie
+                                        id="multiple_what_pie"
+                                        data={generatePie(dashboardfile, 'multiple_whats')}
+                                    />
+                                }
+                                header="Multiple Whats"
+                                body="Controls with multiple activities."
+                            ></PieChartCard>
+                        </Grid>
+                    </Grid>
+                    <Grid container direction="row" spacing={1}>
+                        <Grid item xs={12} sm={4} md={4} lg={4}>
+                            <PieChartCard
+                                chart={
+                                    <MyResponsivePie
+                                        id="multiple_how_pie"
+                                        data={generatePie(dashboardfile, 'multiple_hows')}
+                                    />
+                                }
+                                header="Multiple Hows"
+                                body="Controls that define how multiple activities are performed."
+                            ></PieChartCard>
+                        </Grid>
+                        <Grid item xs={12} sm={4} md={4} lg={4}>
+                            <PieChartCard
+                                chart={
+                                    <MyResponsivePie
+                                        id="multiple_who_pie"
+                                        data={generatePie(dashboardfile, 'multiple_whos')}
+                                    />
+                                }
+                                header="Multiple Whos"
+                                body="Controls with multiple operators likely defined."
+                            ></PieChartCard>
+                        </Grid>
+                        <Grid item xs={12} sm={4} md={4} lg={4}>
+                            <PieChartCard
+                                chart={
+                                    <MyResponsivePie
+                                        id="multiple_whens_pie"
+                                        data={generatePie(dashboardfile, 'multiple_whens')}
+                                    />
+                                }
+                                header="Multiple Whens"
+                                body="Controls with multiple frequencies."
+                            ></PieChartCard>
                         </Grid>
                     </Grid>
                 </div>

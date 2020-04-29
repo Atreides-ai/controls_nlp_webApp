@@ -32,8 +32,8 @@ const MyResponsivePie = ({ data }) => (
                 motionDamping={15}
                 legends={[
                     {
-                        anchor: 'top-left',
-                        direction: 'column',
+                        anchor: 'bottom',
+                        direction: 'row',
                         translateY: 56,
                         itemWidth: 100,
                         itemHeight: 18,

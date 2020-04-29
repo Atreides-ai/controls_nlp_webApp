@@ -91,7 +91,6 @@ const useStyles = makeStyles((theme: Theme) =>
             height: 170,
             borderRadius: theme.spacing(2), // 16px
             transition: '0.3s',
-            boxShadow: '0px 14px 80px rgba(34, 35, 58, 0.2)',
             position: 'relative',
             maxWidth: 500,
             marginLeft: theme.spacing(1),
@@ -152,6 +151,18 @@ const useStyles = makeStyles((theme: Theme) =>
         centerGrid: {
             flexGrow: 1,
             alignItems: 'center',
+        },
+        pieCardRoot: {
+            flexDirection: 'column',
+            maxWidth: 500,
+            margin: 'auto',
+            borderRadius: 12,
+            padding: 12,
+            marginLeft: theme.spacing(1),
+            marginRight: theme.spacing(1),
+        },
+        pieCardmedia: {
+            borderRadius: 6,
         },
     }),
 );
