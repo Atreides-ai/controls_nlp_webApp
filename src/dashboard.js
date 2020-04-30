@@ -266,10 +266,10 @@ export default function Dashboard() {
                         <Grid item xs={12} sm="auto" md="auto" lg="auto">
                             <Divider variant="middle" />
                             <Typography variant="h4" className={classes.dashboardHeader}>
-                                Overall Control Scores
+                                How well do the controls cover the core design requirements?
                             </Typography>
                         </Grid>
-                        <Grid item xs={12} sm="auto" md="auto" lg="auto">
+                        <Grid item xs={12} sm={2} md={2} lg={2}>
                             <DataTablePopUp
                                 table={
                                     <MaterialTable
@@ -289,10 +289,10 @@ export default function Dashboard() {
                         </Grid>
                     </Grid>
                     <Grid container direction="row" spacing={3} justify="center">
-                        <Grid item xs={12} sm="auto" md="auto" lg="auto">
+                        <Grid item xs={12} sm={2} md={2} lg={2}>
                             <DashboardCard
                                 icon={<StarIcon style={{ fontSize: 120 }} />}
-                                header="cat1"
+                                header="Fully"
                                 body={generateCardMetric(
                                     dashboardfile,
                                     'control_summary_rating',
@@ -300,17 +300,17 @@ export default function Dashboard() {
                                 )}
                             ></DashboardCard>
                         </Grid>
-                        <Grid item xs={12} sm="auto" md="auto" lg="auto">
+                        <Grid item xs={12} sm={2} md={2} lg={2}>
                             <DashboardCard
                                 icon={<BuildIcon style={{ fontSize: 120 }} />}
-                                header="Good"
+                                header="Mostly"
                                 body={generateCardMetric(dashboardfile, 'control_summary_rating', 'Requirements Met')}
                             ></DashboardCard>
                         </Grid>
-                        <Grid item xs={12} sm="auto" md="auto" lg="auto">
+                        <Grid item xs={12} sm={2} md={2} lg={2}>
                             <DashboardCard
                                 icon={<BugReportIcon style={{ fontSize: 120 }} />}
-                                header="Fair"
+                                header="Partially"
                                 body={generateCardMetric(
                                     dashboardfile,
                                     'control_summary_rating',
@@ -318,10 +318,10 @@ export default function Dashboard() {
                                 )}
                             ></DashboardCard>
                         </Grid>
-                        <Grid item xs={12} sm="auto" md="auto" lg="auto">
+                        <Grid item xs={12} sm={2} md={2} lg={2}>
                             <DashboardCard
                                 icon={<FeedbackIcon style={{ fontSize: 120 }} />}
-                                header="Poor"
+                                header="Poorly"
                                 body={generateCardMetric(
                                     dashboardfile,
                                     'control_summary_rating',
@@ -329,10 +329,10 @@ export default function Dashboard() {
                                 )}
                             ></DashboardCard>
                         </Grid>
-                        <Grid item xs={12} sm="auto" md="auto" lg="auto">
+                        <Grid item xs={12} sm={2} md={2} lg={2}>
                             <DashboardCard
                                 icon={<FlagIcon style={{ fontSize: 120 }} />}
-                                header="Poor"
+                                header="None"
                                 body={generateCardMetric(
                                     dashboardfile,
                                     'control_summary_rating',
@@ -348,7 +348,7 @@ export default function Dashboard() {
                                 Control Relevance To Risk
                             </Typography>
                         </Grid>
-                        <Grid item xs={12} sm="auto" md="auto" lg="auto">
+                        <Grid item xs={12} sm={2} md={2} lg={2}>
                             <DataTablePopUp
                                 table={
                                     <MaterialTable
