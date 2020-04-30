@@ -289,7 +289,7 @@ export default function Dashboard() {
                         </Grid>
                     </Grid>
                     <Grid container direction="row" spacing={3} justify="center">
-                        <Grid item xs={12} sm={2} md={2} lg={2}>
+                        <Grid item xs={12} sm="auto" md="auto" lg="auto">
                             <DashboardCard
                                 icon={<StarIcon style={{ fontSize: 120 }} />}
                                 header="Fully"
@@ -300,14 +300,14 @@ export default function Dashboard() {
                                 )}
                             ></DashboardCard>
                         </Grid>
-                        <Grid item xs={12} sm={2} md={2} lg={2}>
+                        <Grid item xs={12} sm="auto" md="auto" lg="auto">
                             <DashboardCard
                                 icon={<BuildIcon style={{ fontSize: 120 }} />}
                                 header="Mostly"
                                 body={generateCardMetric(dashboardfile, 'control_summary_rating', 'Requirements Met')}
                             ></DashboardCard>
                         </Grid>
-                        <Grid item xs={12} sm={2} md={2} lg={2}>
+                        <Grid item xs={12} sm="auto" md="auto" lg="auto">
                             <DashboardCard
                                 icon={<BugReportIcon style={{ fontSize: 120 }} />}
                                 header="Partially"
@@ -318,7 +318,7 @@ export default function Dashboard() {
                                 )}
                             ></DashboardCard>
                         </Grid>
-                        <Grid item xs={12} sm={2} md={2} lg={2}>
+                        <Grid item xs={12} sm="auto" md="auto" lg="auto">
                             <DashboardCard
                                 icon={<FeedbackIcon style={{ fontSize: 120 }} />}
                                 header="Poorly"
@@ -329,7 +329,7 @@ export default function Dashboard() {
                                 )}
                             ></DashboardCard>
                         </Grid>
-                        <Grid item xs={12} sm={2} md={2} lg={2}>
+                        <Grid item xs={12} sm="auto" md="auto" lg="auto">
                             <DashboardCard
                                 icon={<FlagIcon style={{ fontSize: 120 }} />}
                                 header="None"
