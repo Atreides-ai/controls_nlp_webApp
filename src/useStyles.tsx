@@ -1,4 +1,4 @@
-import { green, red } from '@material-ui/core/colors';
+import { green, red, grey } from '@material-ui/core/colors';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { Theme } from '@material-ui/core';
 
@@ -25,10 +25,8 @@ const useStyles = makeStyles((theme: Theme) =>
             alignItems: 'center',
         },
         paper: {
-            height: '30vh',
             margin: theme.spacing(1.5, 3),
             display: 'flex',
-            flexDirection: 'column',
             alignItems: 'center',
         },
         mui_form: {
@@ -81,6 +79,86 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         table: {
             minWidth: 650,
+        },
+        cardRoot: {
+            height: 170,
+            borderRadius: theme.spacing(2), // 16px
+            transition: '0.3s',
+            position: 'relative',
+            maxWidth: 500,
+            marginLeft: theme.spacing(1),
+            marginRight: theme.spacing(1),
+            overflow: 'initial',
+            background: '#ffffff',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'top',
+            paddingBottom: theme.spacing(-10),
+            marginBottom: theme.spacing(2),
+            [theme.breakpoints.up('lg')]: {
+                flexDirection: 'row',
+                padding: theme.spacing(2),
+            },
+            [theme.breakpoints.down('md')]: {
+                flexDirection: 'column',
+                padding: theme.spacing(2),
+                height: 300,
+            },
+        },
+        cardMedia: {
+            width: '88%',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            marginTop: theme.spacing(-3),
+            height: 0,
+            paddingBottom: '48%',
+            borderRadius: theme.spacing(2),
+            backgroundColor: '#fff',
+            position: 'relative',
+            [theme.breakpoints.up('md')]: {
+                width: '100%',
+                marginLeft: theme.spacing(2),
+                marginTop: 0,
+                transform: 'translateX(-8px)',
+            },
+            '&:after': {
+                content: '" "',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                borderRadius: theme.spacing(2), // 16
+                opacity: 0.5,
+            },
+            [theme.breakpoints.down('md')]: {
+                paddingTop: '0%',
+                paddingBottom: '50%',
+            },
+        },
+        dashboardHeader: {
+            marginLeft: theme.spacing(2),
+            marginBottom: theme.spacing(2),
+            marginTop: theme.spacing(2),
+        },
+        centerGrid: {
+            flexGrow: 1,
+            alignItems: 'center',
+        },
+        pieCardRoot: {
+            flexDirection: 'column',
+            maxWidth: 500,
+            margin: 'auto',
+            borderRadius: 12,
+            padding: 12,
+            marginLeft: theme.spacing(1),
+            marginRight: theme.spacing(1),
+        },
+        pieCardmedia: {
+            borderRadius: 6,
+        },
+        summaryButton: {
+            marginTop: theme.spacing(1),
         },
     }),
 );
