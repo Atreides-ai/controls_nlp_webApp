@@ -73,20 +73,6 @@ export default function SubmitFile({ user }) {
     const handleSelectedFile = async e => {
         selectedFileName(e.target.files[0].name);
         selectFile(e.target.files[0]);
-
-        // Auth.userSession(user).then(session => {
-        //     const userGroup = session.accessToken.payload['cognito:groups'][0];
-        //     if (userGroup === 'pilot' || 'demo') {
-        //         const reader = new FileReader();
-        //         reader.onload = function() {
-        //             const csvFile = reduceFileForPilot(reader.result);
-        //             selectFile(csvFile);
-        //         };
-        //         reader.readAsBinaryString(selectedFile);
-        //     } else if (userGroup === 'atreides' || 'enterprise') {
-        //
-        //     }
-        // });
     };
     const handleDelete = async e => {
         window.location.reload(false);
@@ -102,138 +88,125 @@ export default function SubmitFile({ user }) {
         }
     };
     return (
-        <Box>
-            <Grid container component="main" className={classes.root}>
-                <CssBaseline />
-                <Grid item xs={false} sm={4} md={7} className={classes.image} />
-                <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-                    <div className={classes.paper}>
-                        <form className={classes.muiform} noValidate>
-                            <Grid item xs={12}>
-                                <Container>
-                                    <Card className={classes.card}>
-                                        <CardActionArea>
-                                            <CardMedia className={classes.media} image={logo} title="Atreides.ai" />
-                                            <CardContent>
-                                                <Typography gutterBottom variant="h5" component="h2">
-                                                    Controls Natural Language Processing
-                                                </Typography>
-                                                <Typography variant="body2" color="textSecondary" component="p">
-                                                    Welcome to the Atreides.ai Controls NLP Portal. We are a cutting
-                                                    edge data science start up applying Machine Learning to the risk
-                                                    management domain.
-                                                </Typography>
-                                            </CardContent>
-                                        </CardActionArea>
-                                        <CardActions>
-                                            <Button size="small" color="primary" href="https://www.atreides.ai/">
-                                                About us
-                                            </Button>
-                                            <GuidanceDiaglogue />
-                                            <SignOut />
-                                        </CardActions>
-                                    </Card>
-                                </Container>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <input
-                                    accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                                    id="contained-button-file"
-                                    type="file"
-                                    onChange={handleSelectedFile}
-                                />
-                            </Grid>
-                            <Grid container direction="row" justify="space-between" alignItems="center">
-                                <Grid item>
-                                    <label htmlFor="contained-button-file">
-                                        <Button
-                                            variant="contained"
-                                            color="primary"
-                                            component="span"
-                                            className={classes.muisubmit}
-                                            fullwidth
-                                        >
-                                            Select File
-                                        </Button>
-                                    </label>
-                                </Grid>
-                                <Grid item>
-                                    <label htmlFor="UploadButton">
-                                        <Button
-                                            type="submit"
-                                            variant="contained"
-                                            color="primary"
-                                            component="span"
-                                            fullwidth
-                                            className={classes.muisubmit}
-                                            onClick={uploadManager}
-                                        >
-                                            Upload
-                                        </Button>
-                                    </label>
-                                </Grid>
-                                {showDashboardButton && (
-                                    <Grid item>
-                                        <Link to="/dashboard">
-                                            <Button
-                                                type="submit"
-                                                variant="contained"
-                                                color="secondary"
-                                                component="span"
-                                                fullwidth
-                                                className={classes.muisubmit}
-                                            >
-                                                View Results
-                                            </Button>
-                                        </Link>
-                                    </Grid>
-                                )}
-                                <Grid item>
-                                    <Chip
-                                        color="primary"
-                                        onDelete={handleDelete}
-                                        icon={<FileCopyIcon />}
-                                        label={fileName}
-                                    />
-                                </Grid>
-                            </Grid>
-                            <Grid />
-                            <Grid item></Grid>
-                            <Box mt={5}>
-                                <Copyright />
-                            </Box>
-                        </form>
-                    </div>
-                </Grid>
-                <div>
-                    <Snackbar
-                        anchorOrigin={{
-                            vertical: 'bottom',
-                            horizontal: 'left',
-                        }}
-                        open={open & success}
-                        autoHideDuration={6000}
-                        onClose={handleClose}
-                    >
-                        <MySnackbarContentWrapper onClose={handleClose} variant="success" message="Upload Success!" />
-                    </Snackbar>
-                    <Snackbar
-                        anchorOrigin={{
-                            vertical: 'bottom',
-                            horizontal: 'left',
-                        }}
-                        open={open & !success}
-                        autoHideDuration={6000}
-                        onClose={handleClose}
-                    >
-                        <MySnackbarContentWrapper
-                            variant="error"
-                            className={classes.margin}
-                            message="Please select a file!"
+        <Container component="main" maxWidth="lg">
+            <div className={classes.loginSurface}>
+                <form className={classes.mui_form} noValidate>
+                    <Grid container direction="row" spacing={3} justify="center">
+                        <Grid item xs={12} sm="auto" md="auto" lg="auto">
+                            <Card className={classes.card}>
+                                <CardActionArea>
+                                    <CardMedia className={classes.media} image={logo} title="Atreides.ai" />
+                                    <CardContent>
+                                        <Typography gutterBottom variant="h5" component="h2">
+                                            Controls Natural Language Processing
+                                        </Typography>
+                                        <Typography variant="body2" color="textSecondary" component="p">
+                                            Welcome to the Atreides.ai Controls NLP Portal. We are a cutting edge data
+                                            science start up applying Machine Learning to the risk management domain.
+                                        </Typography>
+                                    </CardContent>
+                                </CardActionArea>
+                                <CardActions>
+                                    <Button size="small" color="primary" href="https://www.atreides.ai/">
+                                        About us
+                                    </Button>
+                                    <GuidanceDiaglogue />
+                                    <SignOut />
+                                </CardActions>
+                            </Card>
+                        </Grid>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <input
+                            accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                            id="contained-button-file"
+                            type="file"
+                            onChange={handleSelectedFile}
                         />
-                    </Snackbar>
-                </div>
-            </Grid>
-        </Box>
+                    </Grid>
+                    <Grid container direction="row" justify="space-between" alignItems="center">
+                        <Grid item>
+                            <label htmlFor="contained-button-file">
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    component="span"
+                                    className={classes.muisubmit}
+                                    fullwidth
+                                >
+                                    Select File
+                                </Button>
+                            </label>
+                        </Grid>
+                        <Grid item>
+                            <label htmlFor="UploadButton">
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    color="primary"
+                                    component="span"
+                                    fullwidth
+                                    className={classes.muisubmit}
+                                    onClick={uploadManager}
+                                >
+                                    Upload
+                                </Button>
+                            </label>
+                        </Grid>
+                        {showDashboardButton && (
+                            <Grid item>
+                                <Link to="/dashboard">
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        color="secondary"
+                                        component="span"
+                                        fullwidth
+                                        className={classes.muisubmit}
+                                    >
+                                        View Results
+                                    </Button>
+                                </Link>
+                            </Grid>
+                        )}
+                        <Grid item>
+                            <Chip color="primary" onDelete={handleDelete} icon={<FileCopyIcon />} label={fileName} />
+                        </Grid>
+                    </Grid>
+                    <Grid />
+                    <Box mt={5}>
+                        <Copyright />
+                    </Box>
+                </form>
+            </div>
+            <div>
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                    }}
+                    open={open & success}
+                    autoHideDuration={6000}
+                    onClose={handleClose}
+                >
+                    <MySnackbarContentWrapper onClose={handleClose} variant="success" message="Upload Success!" />
+                </Snackbar>
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                    }}
+                    open={open & !success}
+                    autoHideDuration={6000}
+                    onClose={handleClose}
+                >
+                    <MySnackbarContentWrapper
+                        variant="error"
+                        className={classes.margin}
+                        message="Please select a file!"
+                    />
+                </Snackbar>
+            </div>
+        </Container>
     );
 }
