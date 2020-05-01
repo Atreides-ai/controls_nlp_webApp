@@ -653,7 +653,7 @@ export default function Dashboard() {
                                                 columns={[
                                                     { title: 'Control Description', field: 'Control Description' },
                                                     { title: 'Who Text', field: 'whos' },
-                                                    { title: 'Contains Multiple Who', field: 'contains_whos' },
+                                                    { title: 'Contains Multiple Who', field: 'multiple_whos' },
                                                 ]}
                                                 data={dashboardfile}
                                                 title="Analysis Summary"
