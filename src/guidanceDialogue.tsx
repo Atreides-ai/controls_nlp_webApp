@@ -62,7 +62,6 @@ export default function GuidanceDialogue() {
                             added at the beginning showing which original sheet the row is from. The single file is then
                             analysed in the dashboard, and is what you can download.
                         </li>
-                        <li>The file name must have no spaces.</li>
                         <li>
                             The file should not contain greater than <b>7,500</b> controls
                         </li>
