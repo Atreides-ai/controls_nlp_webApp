@@ -197,7 +197,8 @@ export default function Dashboard() {
      */
     const generatePie = (file, column) => {
         const dataCount = countColumnValues(file, column);
-        if (dataCount['id'] != undefined) {
+        console.log(dataCount);
+        if (dataCount[0]['key'] != 'undefined') {
             const rawData = formatData(dataCount);
             const orderedData = orderData(rawData);
             return orderedData;
@@ -216,7 +217,6 @@ export default function Dashboard() {
         const fieldCount = countData.filter(function(el) {
             return el['key'] == key;
         });
-
 
         if (fieldCount[0] != undefined) {
             return fieldCount[0]['value'].toString();
