@@ -88,7 +88,6 @@ export default function Dashboard() {
             .then(function(url) {
                 d3.csv(url)
                     .then(function(file) {
-                        console.log(file);
                         setFile(file);
                         showDashboard(true);
                     })
@@ -198,9 +197,12 @@ export default function Dashboard() {
      */
     const generatePie = (file, column) => {
         const dataCount = countColumnValues(file, column);
-        const rawData = formatData(dataCount);
-        const orderedData = orderData(rawData);
-        return orderedData;
+        console.log(dataCount);
+        if (dataCount[0]['key'] != 'undefined') {
+            const rawData = formatData(dataCount);
+            const orderedData = orderData(rawData);
+            return orderedData;
+        } else return [{ id: 'No Data Provided', value: 20 }];
     };
 
     /**
@@ -215,8 +217,6 @@ export default function Dashboard() {
         const fieldCount = countData.filter(function(el) {
             return el['key'] == key;
         });
-
-        console.log(fieldCount);
 
         if (fieldCount[0] != undefined) {
             return fieldCount[0]['value'].toString();
