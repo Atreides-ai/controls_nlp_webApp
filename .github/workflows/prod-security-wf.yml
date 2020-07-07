@@ -1,11 +1,11 @@
-name: perform-security-checks
+name: perform-security-checks-dev-prod
 on:
   push:
     branches:
-      - development
+      - master
 jobs:
   owasp:
-    name: OWASP Scan
+    name: OWASP Scan Prod
     runs-on: ubuntu-latest
     steps:
       - name: OWASP ZAP Baseline Scan

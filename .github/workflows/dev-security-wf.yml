@@ -1,0 +1,14 @@
+name: perform-security-checks-dev
+on:
+  push:
+    branches:
+      - development
+jobs:
+  owasp:
+    name: OWASP Scan Dev
+    runs-on: ubuntu-latest
+    steps:
+      - name: OWASP ZAP Baseline Scan
+        uses: zaproxy/action-baseline@v0.3.0
+        with:
+          target: "https://development.d6iatpfdnpx9p.amplifyapp.com/"
