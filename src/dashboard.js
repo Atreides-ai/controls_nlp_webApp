@@ -266,7 +266,7 @@ export default function Dashboard() {
                         <Grid item xs={12} sm="auto" md="auto" lg="auto">
                             <Divider variant="middle" />
                             <Typography variant="h4" className={classes.dashboardHeader}>
-                                How well do the controls cover the core design requirements?
+                                How well do the controls cover the design requirements?
                             </Typography>
                         </Grid>
                         <Grid item xs={12} sm={2} md={2} lg={2}>
