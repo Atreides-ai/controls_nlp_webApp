@@ -1,0 +1,13 @@
+name: perform-security-checks
+on:
+  push:
+    branches:
+      - development
+jobs:
+  owasp:
+    runs-on: ubuntu-latest
+    steps:
+      - name: OWASP ZAP Baseline Scan
+        uses: zaproxy/action-baseline@v0.3.0
+        with:
+          target: "https://controls.atreides.ai/"
