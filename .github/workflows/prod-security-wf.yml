@@ -1,6 +1,6 @@
 name: perform-security-checks-dev-prod
 on:
-  push:
+  deployment_status:
     branches:
       - master
 jobs:

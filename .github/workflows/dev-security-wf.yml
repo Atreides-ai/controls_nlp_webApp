@@ -1,6 +1,6 @@
 name: perform-security-checks-dev
 on:
-  push:
+  deployment_status:
     branches:
       - development
 jobs:
