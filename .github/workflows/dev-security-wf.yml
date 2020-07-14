@@ -1,8 +1,8 @@
-name: perform-security-checks-dev
+name: perform-security-checks
 on:
-  deployment_status:
+  pull_request:
     branches:
-      - development
+      - master
 jobs:
   owasp:
     name: OWASP Scan Dev
