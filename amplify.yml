@@ -30,7 +30,7 @@ frontend:
         - key: "X-Content-Type-Options"
           value: "nosniff"
         - key: "Content-Security-Policy"
-          value: "script-src 'self' 'unsafe-inline'; image-src 'self'; font-src 'https://fonts.googleapis.com/'; style-src 'self'; manifest-src 'self'"
+          value: "script-src 'self' 'unsafe-inline'; image-src 'self'; font-src 'self' 'https://fonts.googleapis.com/css?family=Roboto:300,400,600,700'; style-src 'self' 'unsafe-inline' 'https://fonts.googleapis.com/css?family=Roboto:300,400,600,700'; manifest-src 'self'"
   cache:
     paths:
       - node_modules/**/*
