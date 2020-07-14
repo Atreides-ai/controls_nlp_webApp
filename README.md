@@ -1,3 +1,5 @@
+![perform-security-checks](https://github.com/Atreides-ai/controls_nlp_webApp/workflows/perform-security-checks/badge.svg)
+
 # ControlsNLP WebApp
 
 ## Background
@@ -6,21 +8,21 @@ This is a serverless web app for interacting with the Atreides Controls NLP serv
 
 ## Stack
 
-This web app is an AWS Amplify Web App which has a React Front End (bootstrapped with create-react-app) and a node.js back end. 
+This web app is an AWS Amplify Web App which has a React Front End (bootstrapped with create-react-app) and a node.js back end.
 
-The package manager in use is npm. 
+The package manager in use is npm.
 
-The Material-UI Library is used throughout to provide components that are compatible with the Google Material Style Guidelines. 
+The Material-UI Library is used throughout to provide components that are compatible with the Google Material Style Guidelines.
 
 ## Authentication
 
-Authentication is provider by the AWS Cognito Service. 
+Authentication is provider by the AWS Cognito Service.
 
 Authentication is 2FA and is provided by user email, password and SMS token.
 
 ## Components
 
-All components (unless specified) have been created using React Hooks and ES6 JS Syntax. 
+All components (unless specified) have been created using React Hooks and ES6 JS Syntax.
 
 ### AuthComponent
 
@@ -40,7 +42,7 @@ Provides a dashboard to interact with the data returned by the Atreides Controls
 
 ### GuidanceDialogue
 
-A material-ui Dialogue box that pops onto the SubmitFile view to guide users on how to upload data. 
+A material-ui Dialogue box that pops onto the SubmitFile view to guide users on how to upload data.
 
 ### MySnackbarContentWrapper
 
@@ -70,4 +72,4 @@ Stores the theme for the Atreides.ai branding.
 
 Creates the style guidelines for the app using the class system provided by Material-UI.
 
-## 
+##
