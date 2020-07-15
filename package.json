@@ -26,6 +26,8 @@
         "array.prototype.move": "0.0.4",
         "aws-amplify": "^2.2.6",
         "aws-amplify-react": "^3.1.7",
+        "csp-html-webpack-plugin": "^4.0.0",
+        "customize-cra": "^1.0.0",
         "d3": "^5.15.0",
         "eslint": "^6.8.0",
         "eslint-config-google": "^0.14.0",
@@ -38,6 +40,7 @@
         "nivo": "^0.31.0",
         "prettier": "^1.19.1",
         "react": "^16.13.0",
+        "react-app-rewired": "^2.1.6",
         "react-csv": "^2.0.1",
         "react-dom": "^16.13.0",
         "react-router-dom": "^5.1.2",
@@ -46,9 +49,9 @@
         "typeface-roboto": "0.0.75"
     },
     "scripts": {
-        "start": "react-scripts start",
-        "build": "react-scripts build",
-        "test": "react-scripts test",
+        "start": "react-app-rewired start",
+        "build": "react-app-rewired build",
+        "test": "react-app-rewired test",
         "eject": "react-scripts eject",
         "lint:ts": "“eslint --ext=jsx,ts,ts,tsx src”"
     },
