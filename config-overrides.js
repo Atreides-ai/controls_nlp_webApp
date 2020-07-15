@@ -19,9 +19,7 @@ const cspConfigPolicy = {
 };
 
 function addCspHtmlWebpackPlugin(config) {
-    if (process.env.NODE_ENV === 'production') {
-        config.plugins.push(new cspHtmlWebpackPlugin(cspConfigPolicy));
-    }
+    config.plugins.push(new cspHtmlWebpackPlugin(cspConfigPolicy));
 
     return config;
 }
