@@ -13,7 +13,7 @@ frontend:
         - yarn install
     build:
       commands:
-        - yarn run build
+        - INLINE_RUNTIME_CHUNK=false yarn run build
   artifacts:
     baseDirectory: build
     files:
@@ -30,7 +30,12 @@ frontend:
         - key: "X-Content-Type-Options"
           value: "nosniff"
         - key: "Content-Security-Policy"
-          value: "script-src 'self' 'unsafe-inline'; img-src 'self'; font-src 'self' https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; manifest-src 'self'"
+          value: >
+            "script-src 'self'; img-src 'self'; font-src 'self'
+            https://fonts.gstatic.com; style-src 'self';
+            https://fonts.googleapis.com; manifest-src 'self'; connect-src
+            'self'; frame-src self; frame-ancestors 'self'; media-src 'self';
+            object-src 'self'; prefetch-src 'self'"
   cache:
     paths:
       - node_modules/**/*
