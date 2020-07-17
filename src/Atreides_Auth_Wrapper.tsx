@@ -24,7 +24,6 @@ export default function AuthComponent(props: { appCallback: any }): JSX.Element 
      * @param {string} stage
      */
     const manageAuthStage = (stage: string): void => {
-
         setAuthStage(stage);
         if (stage === 'SignedIn') {
             props.appCallback(true, user);
