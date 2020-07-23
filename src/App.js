@@ -15,25 +15,34 @@ Amplify.configure(awsmobile);
 
 export default function App() {
     const [authState, setState] = useState(false);
-    const [user, setUser] = useState();
-    const callbackState = (authStateData, currentUser) => {
+    const [jobId, setJobId] = useState();
+    const [token, setToken] = useState();
+    const [apiKey, setApiKey] = useState();
+
+    const authCallbackState = authStateData => {
         setState(authStateData);
-        setUser(currentUser);
     };
+
+    const jobCallback = (jobId, token, apiKey) => {
+        setJobId(jobId);
+        setToken(token);
+        setApiKey(apikey);
+    };
+
     return (
         <ThemeProvider theme={theme}>
             <Router>
                 <Switch>
                     <PrivateRoute path="/dashboard" authState={authState}>
                         <CssBaseline />
-                        <Dashboard />
+                        <Dashboard jobId={jobId} token={token} apiKey={apiKey} />
                     </PrivateRoute>
                     <PrivateRoute path="/submitFile" authState={authState}>
                         <CssBaseline />
-                        <SubmitFile user={user} />
+                        <SubmitFile dbCallback={jobCallback} />
                     </PrivateRoute>
                     <Route path="/">
-                        <AuthComponent appCallback={callbackState} />
+                        <AuthComponent appCallback={authCallbackState} />
                     </Route>
                 </Switch>
             </Router>

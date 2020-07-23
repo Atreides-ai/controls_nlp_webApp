@@ -39,6 +39,7 @@ export default function AtreidesSignIn(props: {
     };
 
     const handleChallenge = (user: any): void => {
+        console.log(user);
         try {
             if (user.challengeName === 'SOFTWARE_TOKEN_MFA') {
                 props.user(user);

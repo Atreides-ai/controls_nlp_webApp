@@ -46,10 +46,11 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
+import axios from 'axios';
 
 Storage.configure({ level: 'private' });
 
-export default function Dashboard() {
+export default function Dashboard(jobId, token, apiKey) {
     const tableIcons = {
         Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
         Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
@@ -77,22 +78,26 @@ export default function Dashboard() {
     const classes = useStyles();
     const [dashboard, showDashboard] = useState(false);
     const [dashboardfile, setFile] = useState();
+    const baseUrl = 'https://api.atreides.ai/dev/atreides-app/controls-nlp/v1';
 
     /**
      * Downloads the file from s3 by recursively calling until it is found
      *
      */
     const getFile = async () => {
-        get_url()
-            .catch(err => getFile())
-            .then(function(url) {
-                d3.csv(url)
-                    .then(function(file) {
-                        setFile(file);
-                        showDashboard(true);
-                    })
-                    .catch(err => setTimeout(getFile(), 60000));
-            });
+        url = baseUrl + '/get_results';
+        const headers = { headers: { 'x-api-key': apiKey, Authorization: token } };
+        axios.get(url, jobId, headers).then(response => {
+            if (response.status === 200) {
+                // process the data using papaparse
+            }
+            if (response.status === 202) {
+                // process the data using papaparse
+            }
+            if (response.status === 400 || 403 || 404) {
+                // show some error message
+            }
+        });
     };
 
     /**

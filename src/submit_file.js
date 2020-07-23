@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { Storage } from 'aws-amplify';
 import SignOut from './sign_out';
 import GuidanceDiaglogue from './guidanceDialogue';
 import './button_hider.css';
@@ -24,10 +21,9 @@ import Copyright from './copyright';
 import { Link } from 'react-router-dom';
 import MySnackbarContentWrapper from './mySnackbarContentWrapper';
 import useStyles from './useStyles';
-import * as d3 from 'd3';
 import { Auth } from 'aws-amplify';
-
-Storage.configure({ level: 'private' });
+import axios from 'axios';
+import papaparse from 'papaparse';
 
 MySnackbarContentWrapper.propTypes = {
     className: PropTypes.string,
@@ -36,26 +32,75 @@ MySnackbarContentWrapper.propTypes = {
     variant: PropTypes.oneOf(['error', 'success']).isRequired,
 };
 
-export default function SubmitFile({ user }) {
+export default function SubmitFile(dbCallback) {
+    const baseUrl = 'https://api.atreides.ai/dev/atreides-app/controls-nlp/v1';
     const classes = useStyles();
+    const [token, setToken] = useState();
+    const [apiKey, setApiKey] = useState();
     const [file, selectFile] = useState(null);
     const [open, setOpen] = useState();
     const [success, setSuccess] = useState();
+    const [badData, setBadData] = useState();
+    const [unauthorized, setUnauthorized] = useState();
     const [fileName, selectedFileName] = useState('No File Selected');
     const [showDashboardButton, setDashboardButton] = useState(false);
 
-    const reduceFileForPilot = fileString => {
-        const parsedFile = d3.csvParse(fileString);
-        const sample = parsedFile.slice(0, 50);
+    const papaPromise = () =>
+        new Promise((resolve, reject) => {
+            papaparse.parse(file, {
+                header: true,
+                complete: function(results) {
+                    resolve(results);
+                },
+                error: function(error) {
+                    reject(error);
+                },
+            });
+        });
 
-        return d3.csvFormat(sample);
+    const formatData = rawData => {
+        return rawData.map(function(obj) {
+            delete obj[''];
+            obj['control_description'] = obj['Control Description'];
+            delete obj['Control Description'];
+            obj['risk_description'] = obj['Risk Description'];
+            delete obj['Risk Description'];
+            if (obj['Control Frequency']) {
+                obj['control_frequency'] = obj['Control Frequency'];
+                delete obj['Control Frequency'];
+            }
+            if (obj['Control Operator']) {
+                obj['control_operator'] = obj['Control Operator'];
+                delete obj['Control Operator'];
+            }
+            return obj;
+        });
     };
 
-    const handleUpload = async e => {
-        Storage.put(fileName, file, 'private')
-            .then(() => console.log('Success'))
-            .catch(err => console.log(err));
+    const convertCsvToJson = async e => {
+        const rawData = await papaPromise().then(obj => {
+            return obj['data'];
+        });
+        const data = await formatData(rawData);
+        return { data: data };
     };
+
+    const generateHeaders = async e => {
+        const token = await Auth.currentSession().then(data => {
+            return data['idToken']['jwtToken'];
+        });
+
+        setToken(token);
+
+        const apiKey = await Auth.currentUserInfo().then(data => {
+            return data['attributes']['custom:api-key'];
+        });
+
+        setApiKey(apiKey);
+
+        return { headers: { 'x-api-key': apiKey, Authorization: token } };
+    };
+
     const successMessage = async e => {
         setSuccess(true);
         setOpen(true);
@@ -78,15 +123,42 @@ export default function SubmitFile({ user }) {
         window.location.reload(false);
     };
 
+    const handleUpload = async e => {
+        const headers = await generateHeaders();
+        const data = await convertCsvToJson();
+        console.log(data);
+        const url = baseUrl + '/control';
+        axios.post(url, data, headers).then(response => {
+            if (response.status === 400) {
+                setOpen(true);
+                setBadData(true);
+            }
+            if (response.status === 403) {
+                setOpen(true);
+                setUnauthorized(true);
+            }
+            if (response.status === 202) {
+                successMessage();
+                setOpen(true);
+                dbCallback(response['data']['job_id'], token, apiKey);
+                setDashboardButton(true);
+            }
+            if (response.status === 200) {
+                successMessage();
+                setOpen(true);
+                setDashboardButton(true);
+            }
+        });
+    };
+
     const uploadManager = async e => {
         if (file != null) {
             handleUpload();
-            successMessage();
-            setDashboardButton(true);
         } else {
             failMessage();
         }
     };
+
     return (
         <Container component="main" maxWidth="lg">
             <div className={classes.loginSurface}>
@@ -204,6 +276,36 @@ export default function SubmitFile({ user }) {
                         variant="error"
                         className={classes.margin}
                         message="Please select a file!"
+                    />
+                </Snackbar>
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                    }}
+                    open={open & badData}
+                    autoHideDuration={6000}
+                    onClose={handleClose}
+                >
+                    <MySnackbarContentWrapper
+                        onClose={handleClose}
+                        variant="success"
+                        message="Oops! There was a problem with your data"
+                    />
+                </Snackbar>
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                    }}
+                    open={open & unauthorized}
+                    autoHideDuration={6000}
+                    onClose={handleClose}
+                >
+                    <MySnackbarContentWrapper
+                        onClose={handleClose}
+                        variant="success"
+                        message="Subscription limit Reached!"
                     />
                 </Snackbar>
             </div>
