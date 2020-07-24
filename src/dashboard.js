@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import { Storage } from 'aws-amplify';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import * as d3 from 'd3';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import MyResponsivePie from './pieConfig';
 import useStyles from './useStyles';
 import AppBar from '@material-ui/core/AppBar';
@@ -47,30 +52,11 @@ import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 import axios from 'axios';
+import tableIcons from './tableIcons';
 
 Storage.configure({ level: 'private' });
 
 export default function Dashboard(jobId, token, apiKey) {
-    const tableIcons = {
-        Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
-        Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
-        Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-        Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
-        DetailPanel: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-        Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
-        Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
-        Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
-        FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
-        LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
-        NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-        PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
-        ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-        Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
-        SortArrow: forwardRef((props, ref) => <ArrowUpward {...props} ref={ref} />),
-        ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
-        ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />),
-    };
-
     useEffect(() => {
         getFile();
     }, []);
@@ -79,35 +65,43 @@ export default function Dashboard(jobId, token, apiKey) {
     const [dashboard, showDashboard] = useState(false);
     const [dashboardfile, setFile] = useState();
     const baseUrl = 'https://api.atreides.ai/dev/atreides-app/controls-nlp/v1';
+    const [progress, setProgress] = useState(0);
+    const [waitMessage, showWaitMessage] = useState(false);
+    const [ackWaitMessage, setAckWaitMessage] = useState(false);
 
-    /**
-     * Downloads the file from s3 by recursively calling until it is found
-     *
-     */
-    const getFile = async () => {
-        url = baseUrl + '/get_results';
-        const headers = { headers: { 'x-api-key': apiKey, Authorization: token } };
-        axios.get(url, jobId, headers).then(response => {
-            if (response.status === 200) {
-                // process the data using papaparse
-            }
-            if (response.status === 202) {
-                // process the data using papaparse
-            }
-            if (response.status === 400 || 403 || 404) {
-                // show some error message
-            }
-        });
+    const handleClose = () => {
+        showWaitMessage(false);
+        setAckWaitMessage(true);
     };
 
     /**
-     * gets the output file signed url from s3 using Amplify Storage.get
+     * Polls the API at 30 second intervals to check job status
      *
-     * @returns {string} url
      */
-    const get_url = () => {
-        const url = Storage.get('output.csv', { level: 'private' }, { expires: 60 });
-        return url;
+    const getFile = async e => {
+        url = baseUrl + '/get_results';
+        const headers = { headers: { 'x-api-key': apiKey, Authorization: token } };
+        const interval = setInterval(() => {
+            axios.get(url, jobId, headers).then(response => {
+                if (response.status === 200) {
+                    setProgress(100);
+                    showWaitMessage(false);
+                    setFile(response.data);
+                    clearInterval(interval);
+                }
+                if (response.status === 202) {
+                    if (progress < 100) {
+                        setProgress(progress + 10);
+                    } else if (!ackWaitMessage) {
+                        showWaitMessage(true);
+                    }
+                }
+                if (response.status === 400 || 403 || 404) {
+                    // show some error message
+                    clearInterval(interval);
+                }
+            });
+        }, 30000);
     };
 
     /**
@@ -261,8 +255,33 @@ export default function Dashboard(jobId, token, apiKey) {
                 </Toolbar>
             </AppBar>
             {dashboard === false && (
-                <div className={classes.circle} align="centre">
-                    <CircularProgress size={40} left={-20} top={10} style={{ marginLeft: '50%' }} />
+                <div className={classes.progress} align="centre">
+                    <LinearProgress
+                        variant="determinate"
+                        value={progress}
+                        left={-20}
+                        top={10}
+                        style={{ marginLeft: '50%' }}
+                    />
+                    <Dialog
+                        open={waitMessage}
+                        onClose={handleClose}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                    >
+                        <DialogTitle id="alert-dialog-title">{'Woah, thats a big file!'}</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText id="alert-dialog-description">
+                                Sorry for the wait. It looks like you uploaded quite a large file, our AI is reading as
+                                fast as it can! We will be right with you.
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={handleClose} color="primary">
+                                Thanks!
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
                 </div>
             )}
             {dashboard && (

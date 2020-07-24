@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) =>
         media: {
             height: 500,
         },
-        circle: {
+        progress: {
             display: 'flex',
             '& > * + *': {
                 marginLeft: theme.spacing(2),
