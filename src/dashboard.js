@@ -35,32 +35,12 @@ import BugReportIcon from '@material-ui/icons/BugReport';
 import PieChartCard from './PieChartCard';
 import MaterialTable, { Column } from 'material-table';
 import DataTablePopUp from './DataTablePopUp';
-import { forwardRef } from 'react';
-import AddBox from '@material-ui/icons/AddBox';
-import ArrowUpward from '@material-ui/icons/ArrowUpward';
-import Check from '@material-ui/icons/Check';
-import ChevronLeft from '@material-ui/icons/ChevronLeft';
-import ChevronRight from '@material-ui/icons/ChevronRight';
-import Clear from '@material-ui/icons/Clear';
-import DeleteOutline from '@material-ui/icons/DeleteOutline';
-import Edit from '@material-ui/icons/Edit';
-import FilterList from '@material-ui/icons/FilterList';
-import FirstPage from '@material-ui/icons/FirstPage';
-import LastPage from '@material-ui/icons/LastPage';
-import Remove from '@material-ui/icons/Remove';
-import SaveAlt from '@material-ui/icons/SaveAlt';
-import Search from '@material-ui/icons/Search';
-import ViewColumn from '@material-ui/icons/ViewColumn';
 import axios from 'axios';
 import tableIcons from './tableIcons';
 
 Storage.configure({ level: 'private' });
 
 export default function Dashboard(jobId, token, apiKey) {
-    useEffect(() => {
-        getFile();
-    }, []);
-
     const classes = useStyles();
     const [dashboard, showDashboard] = useState(false);
     const [dashboardfile, setFile] = useState();
@@ -68,6 +48,8 @@ export default function Dashboard(jobId, token, apiKey) {
     const [progress, setProgress] = useState(0);
     const [waitMessage, showWaitMessage] = useState(false);
     const [ackWaitMessage, setAckWaitMessage] = useState(false);
+    const [errorMessage, showErrorMessage] = useState(false);
+    const [limitMessage, showLimitMessage] = useState(false);
 
     const handleClose = () => {
         showWaitMessage(false);
@@ -79,7 +61,7 @@ export default function Dashboard(jobId, token, apiKey) {
      *
      */
     const getFile = async e => {
-        url = baseUrl + '/get_results';
+        const url = baseUrl + '/get_results';
         const headers = { headers: { 'x-api-key': apiKey, Authorization: token } };
         const interval = setInterval(() => {
             axios.get(url, jobId, headers).then(response => {
@@ -96,13 +78,21 @@ export default function Dashboard(jobId, token, apiKey) {
                         showWaitMessage(true);
                     }
                 }
-                if (response.status === 400 || 403 || 404) {
+                if (response.status === 403) {
                     // show some error message
+                    clearInterval(interval);
+                }
+                if (response.status === 400 || 404) {
+                    showErrorMessage(true);
                     clearInterval(interval);
                 }
             });
         }, 30000);
     };
+
+    useEffect(() => {
+        getFile();
+    }, []);
 
     /**
      * Takes a file and relevant column name and returns obj counting all keys
@@ -164,7 +154,7 @@ export default function Dashboard(jobId, token, apiKey) {
      */
     const orderData = data => {
         data.forEach(function(element) {
-            if (element != undefined) {
+            if (element !== undefined) {
                 if (element['id'] === 'True') {
                     data.move(data.indexOf(element), 0);
                 } else if (element['id'] === 'False') {
@@ -197,7 +187,7 @@ export default function Dashboard(jobId, token, apiKey) {
     const generatePie = (file, column) => {
         const dataCount = countColumnValues(file, column);
         console.log(dataCount);
-        if (dataCount[0]['key'] != 'undefined') {
+        if (dataCount[0]['key'] !== 'undefined') {
             const rawData = formatData(dataCount);
             const orderedData = orderData(rawData);
             return orderedData;
@@ -214,10 +204,10 @@ export default function Dashboard(jobId, token, apiKey) {
     const generateCardMetric = (file, column, key) => {
         const countData = countColumnValues(file, column);
         const fieldCount = countData.filter(function(el) {
-            return el['key'] == key;
+            return el['key'] === key;
         });
 
-        if (fieldCount[0] != undefined) {
+        if (fieldCount[0] !== undefined) {
             return fieldCount[0]['value'].toString();
         }
 
@@ -274,6 +264,44 @@ export default function Dashboard(jobId, token, apiKey) {
                             <DialogContentText id="alert-dialog-description">
                                 Sorry for the wait. It looks like you uploaded quite a large file, our AI is reading as
                                 fast as it can! We will be right with you.
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={handleClose} color="primary">
+                                Thanks!
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                    <Dialog
+                        open={limitMessage}
+                        onClose={handleClose}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                    >
+                        <DialogTitle id="alert-dialog-title">{'Woah, thats a big file!'}</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText id="alert-dialog-description">
+                                It seems that you have used up the number of controls that can be processed in your
+                                plan. Please contact support at support@atreides.ai for help upgrading to your plan.
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={handleClose} color="primary">
+                                Thanks!
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                    <Dialog
+                        open={errorMessage}
+                        onClose={handleClose}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                    >
+                        <DialogTitle id="alert-dialog-title">{'Woah, thats a big file!'}</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText id="alert-dialog-description">
+                                Sorry an error has occured when processing the job, please can you contact support at
+                                support@atreides.ai.
                             </DialogContentText>
                         </DialogContent>
                         <DialogActions>

@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useRef } from 'react';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -25,29 +24,25 @@ import { Auth } from 'aws-amplify';
 import axios from 'axios';
 import papaparse from 'papaparse';
 
-MySnackbarContentWrapper.propTypes = {
-    className: PropTypes.string,
-    message: PropTypes.string,
-    onClose: PropTypes.func,
-    variant: PropTypes.oneOf(['error', 'success']).isRequired,
-};
-
-export default function SubmitFile(dbCallback) {
+export default function SubmitFile(props: {
+    dbCallback: (jobID: string, token: string, apiKey: string) => void;
+}): JSX.Element {
     const baseUrl = 'https://api.atreides.ai/dev/atreides-app/controls-nlp/v1';
     const classes = useStyles();
-    const [token, setToken] = useState();
-    const [apiKey, setApiKey] = useState();
-    const [file, selectFile] = useState(null);
-    const [open, setOpen] = useState();
-    const [success, setSuccess] = useState();
-    const [badData, setBadData] = useState();
-    const [unauthorized, setUnauthorized] = useState();
-    const [fileName, selectedFileName] = useState('No File Selected');
-    const [showDashboardButton, setDashboardButton] = useState(false);
+    const [token, setToken] = useState<string>('No Token');
+    const [apiKey, setApiKey] = useState<string>('No API Key');
+    const [file, selectFile] = useState<File>();
+    const [open, setOpen] = useState<boolean>(false);
+    const [success, setSuccess] = useState<boolean>(false);
+    const [badData, setBadData] = useState<boolean>(false);
+    const [unauthorized, setUnauthorized] = useState<boolean>(false);
+    const [fileName, selectedFileName] = useState<string>('No File Selected');
+    const [showDashboardButton, setDashboardButton] = useState<boolean>(false);
+    const inputFileRef: any = useRef<HTMLInputElement>(null);
 
-    const papaPromise = () =>
-        new Promise((resolve, reject) => {
-            papaparse.parse(file, {
+    const papaPromise = async (rawFile: File): Promise<object | Error> => {
+        return new Promise((resolve, reject) => {
+            papaparse.parse(rawFile, {
                 header: true,
                 complete: function(results) {
                     resolve(results);
@@ -57,8 +52,9 @@ export default function SubmitFile(dbCallback) {
                 },
             });
         });
+    };
 
-    const formatData = rawData => {
+    const formatData = (rawData: any[]): any[] => {
         return rawData.map(function(obj) {
             delete obj[''];
             obj['control_description'] = obj['Control Description'];
@@ -77,15 +73,16 @@ export default function SubmitFile(dbCallback) {
         });
     };
 
-    const convertCsvToJson = async e => {
-        const rawData = await papaPromise().then(obj => {
+    const convertCsvToJson = async (file: File): Promise<Record<string, any>> => {
+        console.log(file);
+        const rawData = await papaPromise(file).then((obj: object | void) => {
             return obj['data'];
         });
         const data = await formatData(rawData);
         return { data: data };
     };
 
-    const generateHeaders = async e => {
+    const generateHeaders = async (): Promise<Record<string, any>> => {
         const token = await Auth.currentSession().then(data => {
             return data['idToken']['jwtToken'];
         });
@@ -101,31 +98,36 @@ export default function SubmitFile(dbCallback) {
         return { headers: { 'x-api-key': apiKey, Authorization: token } };
     };
 
-    const successMessage = async e => {
+    const successMessage = async (): Promise<void> => {
         setSuccess(true);
         setOpen(true);
     };
-    const failMessage = async e => {
+    const failMessage = async (): Promise<void> => {
         setSuccess(false);
         setOpen(true);
     };
-    const handleClose = (event, reason) => {
+    const handleClose = (event: React.SyntheticEvent | React.MouseEvent, reason?: string): void => {
         if (reason === 'clickaway') {
             return;
         }
         setOpen(false);
     };
-    const handleSelectedFile = async e => {
-        selectedFileName(e.target.files[0].name);
-        selectFile(e.target.files[0]);
+
+    const handleSelectedFile = async (e: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
+        const element = e.target as HTMLInputElement;
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const theFile = element!.files![0];
+        selectFile(theFile);
+        selectedFileName(theFile['name']);
     };
-    const handleDelete = async e => {
+
+    const handleDelete = (): void => {
         window.location.reload(false);
     };
 
-    const handleUpload = async e => {
+    const handleUpload = async (file: File): Promise<void> => {
         const headers = await generateHeaders();
-        const data = await convertCsvToJson();
+        const data = await convertCsvToJson(file);
         console.log(data);
         const url = baseUrl + '/control';
         axios.post(url, data, headers).then(response => {
@@ -138,9 +140,10 @@ export default function SubmitFile(dbCallback) {
                 setUnauthorized(true);
             }
             if (response.status === 202) {
+                console.log(response);
                 successMessage();
                 setOpen(true);
-                dbCallback(response['data']['job_id'], token, apiKey);
+                props.dbCallback(response['data']['job_id'], token, apiKey);
                 setDashboardButton(true);
             }
             if (response.status === 200) {
@@ -151,12 +154,19 @@ export default function SubmitFile(dbCallback) {
         });
     };
 
-    const uploadManager = async e => {
-        if (file != null) {
-            handleUpload();
+    const uploadManager = async (): Promise<void> => {
+        if (file !== null || undefined) {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            handleUpload(file!);
         } else {
             failMessage();
         }
+    };
+
+    const onBtnClick = () => {
+        /*Collecting node-element and performing click*/
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        inputFileRef!.current!.click();
     };
 
     return (
@@ -192,38 +202,21 @@ export default function SubmitFile(dbCallback) {
                         <input
                             accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                             id="contained-button-file"
+                            ref={inputFileRef}
                             type="file"
-                            onChange={handleSelectedFile}
+                            onChange={e => handleSelectedFile(e)}
                         />
                     </Grid>
                     <Grid container direction="row" justify="space-between" alignItems="center">
                         <Grid item>
-                            <label htmlFor="contained-button-file">
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    component="span"
-                                    className={classes.muisubmit}
-                                    fullwidth
-                                >
-                                    Select File
-                                </Button>
-                            </label>
+                            <Button variant="contained" color="primary" onClick={onBtnClick}>
+                                Select File
+                            </Button>
                         </Grid>
                         <Grid item>
-                            <label htmlFor="UploadButton">
-                                <Button
-                                    type="submit"
-                                    variant="contained"
-                                    color="primary"
-                                    component="span"
-                                    fullwidth
-                                    className={classes.muisubmit}
-                                    onClick={uploadManager}
-                                >
-                                    Upload
-                                </Button>
-                            </label>
+                            <Button variant="contained" color="primary" onClick={uploadManager}>
+                                Upload
+                            </Button>
                         </Grid>
                         {showDashboardButton && (
                             <Grid item>
@@ -232,8 +225,6 @@ export default function SubmitFile(dbCallback) {
                                         type="submit"
                                         variant="contained"
                                         color="secondary"
-                                        component="span"
-                                        fullwidth
                                         className={classes.muisubmit}
                                     >
                                         View Results
@@ -257,7 +248,7 @@ export default function SubmitFile(dbCallback) {
                         vertical: 'bottom',
                         horizontal: 'left',
                     }}
-                    open={open & success}
+                    open={open && success}
                     autoHideDuration={6000}
                     onClose={handleClose}
                 >
@@ -268,28 +259,24 @@ export default function SubmitFile(dbCallback) {
                         vertical: 'bottom',
                         horizontal: 'left',
                     }}
-                    open={open & !success}
+                    open={open && !success}
                     autoHideDuration={6000}
                     onClose={handleClose}
                 >
-                    <MySnackbarContentWrapper
-                        variant="error"
-                        className={classes.margin}
-                        message="Please select a file!"
-                    />
+                    <MySnackbarContentWrapper variant="error" message="Please select a file!" />
                 </Snackbar>
                 <Snackbar
                     anchorOrigin={{
                         vertical: 'bottom',
                         horizontal: 'left',
                     }}
-                    open={open & badData}
+                    open={open && badData}
                     autoHideDuration={6000}
                     onClose={handleClose}
                 >
                     <MySnackbarContentWrapper
                         onClose={handleClose}
-                        variant="success"
+                        variant="error"
                         message="Oops! There was a problem with your data"
                     />
                 </Snackbar>
@@ -298,13 +285,13 @@ export default function SubmitFile(dbCallback) {
                         vertical: 'bottom',
                         horizontal: 'left',
                     }}
-                    open={open & unauthorized}
+                    open={open && unauthorized}
                     autoHideDuration={6000}
                     onClose={handleClose}
                 >
                     <MySnackbarContentWrapper
                         onClose={handleClose}
-                        variant="success"
+                        variant="error"
                         message="Subscription limit Reached!"
                     />
                 </Snackbar>

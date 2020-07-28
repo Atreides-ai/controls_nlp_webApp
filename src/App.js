@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './App.css';
-import SubmitFile from './submit_file.js';
+import SubmitFile from './Submit_File';
 import Dashboard from './dashboard.js';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import PrivateRoute from './private_route.js';
@@ -26,7 +26,7 @@ export default function App() {
     const jobCallback = (jobId, token, apiKey) => {
         setJobId(jobId);
         setToken(token);
-        setApiKey(apikey);
+        setApiKey(apiKey);
     };
 
     return (
