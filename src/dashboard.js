@@ -33,14 +33,14 @@ import StarIcon from '@material-ui/icons/Star';
 import BuildIcon from '@material-ui/icons/Build';
 import BugReportIcon from '@material-ui/icons/BugReport';
 import PieChartCard from './PieChartCard';
-import MaterialTable, { Column } from 'material-table';
+import MaterialTable from 'material-table';
 import DataTablePopUp from './DataTablePopUp';
 import axios from 'axios';
 import tableIcons from './tableIcons';
 
 Storage.configure({ level: 'private' });
 
-export default function Dashboard(jobId, token, apiKey) {
+export default function Dashboard(props) {
     const classes = useStyles();
     const [dashboard, showDashboard] = useState(false);
     const [dashboardfile, setFile] = useState();
@@ -60,10 +60,13 @@ export default function Dashboard(jobId, token, apiKey) {
      * Polls the API at 30 second intervals to check job status
      *
      */
-    const getFile = async e => {
+    const getFile = async (jobId, apiKey, token) => {
         const url = baseUrl + '/get_results';
         const headers = { headers: { 'x-api-key': apiKey, Authorization: token } };
+        console.log(jobId);
+        console.log(headers);
         const interval = setInterval(() => {
+            console.log(jobId);
             axios.get(url, jobId, headers).then(response => {
                 if (response.status === 200) {
                     setProgress(100);
@@ -91,8 +94,8 @@ export default function Dashboard(jobId, token, apiKey) {
     };
 
     useEffect(() => {
-        getFile();
-    }, []);
+        getFile(props.jobId, props.apiKey, props.token);
+    }, [props.jobId, props.apiKey, props.token]);
 
     /**
      * Takes a file and relevant column name and returns obj counting all keys

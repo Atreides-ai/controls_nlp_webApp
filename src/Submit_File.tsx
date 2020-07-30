@@ -86,7 +86,6 @@ export default function SubmitFile(props: {
         const token = await Auth.currentSession().then(data => {
             return data['idToken']['jwtToken'];
         });
-
         setToken(token);
 
         const apiKey = await Auth.currentUserInfo().then(data => {
@@ -128,7 +127,7 @@ export default function SubmitFile(props: {
     const handleUpload = async (file: File): Promise<void> => {
         const headers = await generateHeaders();
         const data = await convertCsvToJson(file);
-        console.log(data);
+        console.log(headers);
         const url = baseUrl + '/control';
         axios.post(url, data, headers).then(response => {
             if (response.status === 400) {
@@ -143,7 +142,11 @@ export default function SubmitFile(props: {
                 console.log(response);
                 successMessage();
                 setOpen(true);
-                props.dbCallback(response['data']['job_id'], token, apiKey);
+                props.dbCallback(
+                    response['data']['job_id'],
+                    headers['headers']['Authorization'],
+                    headers['headers']['x-api-key'],
+                );
                 setDashboardButton(true);
             }
             if (response.status === 200) {

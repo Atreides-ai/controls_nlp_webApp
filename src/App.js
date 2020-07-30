@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import SubmitFile from './Submit_File';
 import Dashboard from './dashboard.js';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, withRouter } from 'react-router-dom';
 import PrivateRoute from './private_route.js';
 import Amplify from 'aws-amplify';
 import awsmobile from './aws-exports';
@@ -15,18 +15,18 @@ Amplify.configure(awsmobile);
 
 export default function App() {
     const [authState, setState] = useState(false);
-    const [jobId, setJobId] = useState();
-    const [token, setToken] = useState();
-    const [apiKey, setApiKey] = useState();
+    const [jobId, setJobId] = useState(false);
+    const [token, setToken] = useState(false);
+    const [apiKey, setApiKey] = useState(false);
 
     const authCallbackState = authStateData => {
         setState(authStateData);
     };
 
-    const jobCallback = (jobId, token, apiKey) => {
-        setJobId(jobId);
-        setToken(token);
-        setApiKey(apiKey);
+    const jobCallback = (jobId_, token_, apiKey_) => {
+        setJobId(jobId_);
+        setToken(token_);
+        setApiKey(apiKey_);
     };
 
     return (
