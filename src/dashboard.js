@@ -61,31 +61,29 @@ export default function Dashboard(props) {
      *
      */
     const getFile = async (jobId, apiKey, token) => {
-        const url = baseUrl + '/get_results';
+        const url = baseUrl + '/get_results/' + jobId;
         const headers = { headers: { 'x-api-key': apiKey, Authorization: token } };
-        console.log(jobId);
         console.log(headers);
         const interval = setInterval(() => {
-            console.log(jobId);
-            axios.get(url, jobId, headers).then(response => {
+            axios.get(url, headers).then(response => {
                 if (response.status === 200) {
                     setProgress(100);
                     showWaitMessage(false);
                     setFile(response.data);
                     clearInterval(interval);
-                }
-                if (response.status === 202) {
+                    showDashboard(true);
+                    console.log(response);
+                } else if (response.status === 202) {
                     if (progress < 100) {
                         setProgress(progress + 10);
                     } else if (!ackWaitMessage) {
                         showWaitMessage(true);
                     }
-                }
-                if (response.status === 403) {
+                } else if (response.status === 403) {
                     // show some error message
                     clearInterval(interval);
-                }
-                if (response.status === 400 || 404) {
+                } else if (response.status === 400 || 404) {
+                    console.log(response);
                     showErrorMessage(true);
                     clearInterval(interval);
                 }
