@@ -75,12 +75,13 @@ export default function Dashboard(props) {
                     console.log(response);
                 } else if (response.status === 202) {
                     if (progress < 100) {
+                        console.log(response);
                         setProgress(progress + 10);
                     } else if (!ackWaitMessage) {
                         showWaitMessage(true);
                     }
                 } else if (response.status === 403) {
-                    // show some error message
+                    showLimitMessage(true);
                     clearInterval(interval);
                 } else if (response.status === 400 || 404) {
                     console.log(response);
@@ -246,14 +247,16 @@ export default function Dashboard(props) {
                 </Toolbar>
             </AppBar>
             {dashboard === false && (
-                <div className={classes.progress} align="centre">
-                    <LinearProgress
-                        variant="determinate"
-                        value={progress}
-                        left={-20}
-                        top={10}
-                        style={{ marginLeft: '50%' }}
-                    />
+                <div>
+                    <div className={classes.progress} align="centre">
+                        <LinearProgress
+                            variant="determinate"
+                            value={progress}
+                            left={-20}
+                            top={10}
+                            style={{ marginLeft: '50%' }}
+                        />
+                    </div>
                     <Dialog
                         open={waitMessage}
                         onClose={handleClose}
