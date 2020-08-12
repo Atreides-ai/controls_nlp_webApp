@@ -293,51 +293,35 @@ export default function Dashboard() {
                             <DashboardCard
                                 icon={<StarIcon style={{ fontSize: 120 }} />}
                                 header="Fully"
-                                body={generateCardMetric(
-                                    dashboardfile,
-                                    'control_summary_rating',
-                                    'Requirements Met Fully',
-                                )}
+                                body={generateCardMetric(dashboardfile, 'control_summary_rating', 'Fully')}
                             ></DashboardCard>
                         </Grid>
                         <Grid item xs={12} sm="auto" md="auto" lg="auto">
                             <DashboardCard
                                 icon={<BuildIcon style={{ fontSize: 120 }} />}
                                 header="Mostly"
-                                body={generateCardMetric(dashboardfile, 'control_summary_rating', 'Requirements Met')}
+                                body={generateCardMetric(dashboardfile, 'control_summary_rating', 'Mostly')}
                             ></DashboardCard>
                         </Grid>
                         <Grid item xs={12} sm="auto" md="auto" lg="auto">
                             <DashboardCard
                                 icon={<BugReportIcon style={{ fontSize: 120 }} />}
                                 header="Partially"
-                                body={generateCardMetric(
-                                    dashboardfile,
-                                    'control_summary_rating',
-                                    'Requirements Partially Met',
-                                )}
+                                body={generateCardMetric(dashboardfile, 'control_summary_rating', 'Partially')}
                             ></DashboardCard>
                         </Grid>
                         <Grid item xs={12} sm="auto" md="auto" lg="auto">
                             <DashboardCard
                                 icon={<FeedbackIcon style={{ fontSize: 120 }} />}
                                 header="Poorly"
-                                body={generateCardMetric(
-                                    dashboardfile,
-                                    'control_summary_rating',
-                                    'Requirements Substantially Not Met',
-                                )}
+                                body={generateCardMetric(dashboardfile, 'control_summary_rating', 'Poorly')}
                             ></DashboardCard>
                         </Grid>
                         <Grid item xs={12} sm="auto" md="auto" lg="auto">
                             <DashboardCard
                                 icon={<FlagIcon style={{ fontSize: 120 }} />}
                                 header="None"
-                                body={generateCardMetric(
-                                    dashboardfile,
-                                    'control_summary_rating',
-                                    'No Requirements Met',
-                                )}
+                                body={generateCardMetric(dashboardfile, 'control_summary_rating', 'None')}
                             ></DashboardCard>
                         </Grid>
                     </Grid>
