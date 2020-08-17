@@ -251,7 +251,11 @@ export default function Dashboard() {
                                     </CSVLink>
                                 </Grid>
                                 <Grid item xs="auto" sm="auto" md="auto" lg="auto">
-                                    <PrintButton descriptions={descriptions} label="Download Dashboard" />
+                                    <PrintButton
+                                        descriptions={descriptions}
+                                        label="Download Dashboard"
+                                        className={classes.summaryButton}
+                                    />
                                 </Grid>
                             </Grid>
                         </div>
