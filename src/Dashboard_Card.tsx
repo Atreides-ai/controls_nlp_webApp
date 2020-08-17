@@ -5,20 +5,22 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import useStyles from './useStyles';
 
-const DashboardCard = (props: { icon: JSX.Element; header: string; body: string }): JSX.Element => {
+const DashboardCard = (props: { icon: JSX.Element; header: string; body: string; id: string }): JSX.Element => {
     const classes = useStyles();
     return (
-        <Card className={classes.cardRoot}>
-            <CardMedia className={classes.cardMedia}>{props.icon}</CardMedia>
-            <CardContent>
-                <Typography variant="h4" className={classes.title} color="primary">
-                    {props.header}
-                </Typography>
-                <Typography variant="h2" className={classes.title} color="secondary">
-                    {props.body}
-                </Typography>
-            </CardContent>
-        </Card>
+        <div id={props.id}>
+            <Card className={classes.cardRoot}>
+                <CardMedia className={classes.cardMedia}>{props.icon}</CardMedia>
+                <CardContent>
+                    <Typography variant="h4" className={classes.title} color="primary">
+                        {props.header}
+                    </Typography>
+                    <Typography variant="h2" className={classes.title} color="secondary">
+                        {props.body}
+                    </Typography>
+                </CardContent>
+            </Card>
+        </div>
     );
 };
 
