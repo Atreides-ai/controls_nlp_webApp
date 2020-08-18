@@ -92,7 +92,7 @@ export default function AtreidesNewPassword(props: { signInStatus: (stage: strin
                     onChange={handlePreferredName}
                 />
                 <Typography variant="caption" display="block">
-                    Your password must be at least 8 characters long and contain numbers, upper and lower case letters.
+                    Your password must be at least 8 characters long and contain numbers, upper and lower case letters and a symbol.
                 </Typography>
                 <TextField
                     style={{ backgroundColor: 'white' }}
