@@ -245,17 +245,13 @@ export default function Dashboard() {
                                 </Grid>
                                 <Grid item xs="auto" sm="auto" md="auto" lg="auto">
                                     <CSVLink data={dashboardfile} filename="Analysis.csv">
-                                        <Button variant="outlined" color="secondary" className={classes.summaryButton}>
+                                        <Button variant="outlined" color="secondary">
                                             Download All Results
                                         </Button>
                                     </CSVLink>
                                 </Grid>
                                 <Grid item xs="auto" sm="auto" md="auto" lg="auto">
-                                    <PrintButton
-                                        descriptions={descriptions}
-                                        label="Download Dashboard"
-                                        className={classes.summaryButton}
-                                    />
+                                    <PrintButton descriptions={descriptions} label="Download Dashboard" />
                                 </Grid>
                             </Grid>
                         </div>
