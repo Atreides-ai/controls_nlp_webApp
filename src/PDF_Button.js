@@ -12,13 +12,11 @@ const PrintButton = ({ descriptions, label }) => (
             pdf.setFont('helvetica', 'normal');
             pdf.setFontSize(12);
             pdf.text('Atreides Controls Analysis Report', 70, 10);
-            pdf.setFontSize(12);
             pdf.text('Overall Control Score', 70, 20);
             pdf.setFontSize(10);
             let cellHeight = 0;
             const margin = 5;
             const pageWidth = 210;
-            const pageHeight = 297;
             let start = 30;
             let counter = 0;
             const svgElements = document.body.querySelectorAll('svg');
