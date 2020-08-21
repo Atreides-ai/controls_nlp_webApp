@@ -5,10 +5,10 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import useStyles from './useStyles';
 
-const DashboardCard = (props: { icon: JSX.Element; header: string; body: string; id: string }): JSX.Element => {
+const DashboardContent = (props: { icon: JSX.Element; header: string; body: string }): JSX.Element => {
     const classes = useStyles();
     return (
-        <div id={props.id}>
+        <div>
             <Card className={classes.cardRoot}>
                 <CardMedia className={classes.cardMedia}>{props.icon}</CardMedia>
                 <CardContent>
@@ -24,4 +24,4 @@ const DashboardCard = (props: { icon: JSX.Element; header: string; body: string;
     );
 };
 
-export default DashboardCard;
+export default DashboardContent;

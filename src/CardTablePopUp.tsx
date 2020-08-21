@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -6,6 +6,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import { TransitionProps } from '@material-ui/core/transitions';
+import MaterialTable from 'material-table';
 import useStyles from './useStyles';
 
 const Transition = React.forwardRef(function Transition(
@@ -15,7 +16,13 @@ const Transition = React.forwardRef(function Transition(
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const DataTablePopUp = (props: { table: JSX.Element }): JSX.Element => {
+const CardTablePopUp = (props: {
+    DashboardContent: JSX.Element;
+    analysisField: string;
+    dashboardFile: any;
+    filter: any;
+    tableIcons: any;
+}): JSX.Element => {
     const [open, setOpen] = React.useState(false);
     const classes = useStyles();
 
@@ -29,9 +36,7 @@ const DataTablePopUp = (props: { table: JSX.Element }): JSX.Element => {
 
     return (
         <div>
-            <Button variant="outlined" color="secondary" onClick={handleClickOpen} className={classes.summaryButton}>
-                View Data
-            </Button>
+            <div onClick={handleClickOpen}>{props.DashboardContent}</div>
             <Dialog
                 open={open}
                 TransitionComponent={Transition}
@@ -43,7 +48,22 @@ const DataTablePopUp = (props: { table: JSX.Element }): JSX.Element => {
                 maxWidth={'xl'}
             >
                 <DialogTitle id="alert-dialog-slide-title">{'Atreides.ai'}</DialogTitle>
-                <DialogContent>{props.table}</DialogContent>
+                <DialogContent>
+                    <MaterialTable
+                        options={{
+                            exportButton: true,
+                            filtering: true,
+                        }}
+                        icons={props.tableIcons}
+                        columns={[
+                            { title: 'Control Description', field: 'Control Description', filtering: false },
+                            { title: 'Risk Description', field: 'Risk Description', filtering: false },
+                            { title: 'Overall Score', field: props.analysisField, defaultFilter: props.filter },
+                        ]}
+                        data={props.dashboardFile}
+                        title="Analysis Summary"
+                    />
+                </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">
                         Done
@@ -54,4 +74,4 @@ const DataTablePopUp = (props: { table: JSX.Element }): JSX.Element => {
     );
 };
 
-export default DataTablePopUp;
+export default CardTablePopUp;
