@@ -5,7 +5,13 @@ import CardContent from '@material-ui/core/CardContent';
 import useStyles from './useStyles';
 import { Typography, Divider } from '@material-ui/core';
 
-const PieChartCard = (props: { chart: JSX.Element; header: string; body: string; id: string }): JSX.Element => {
+const PieChartCard = (props: {
+    chart: JSX.Element;
+    table: JSX.Element;
+    header: string;
+    body: string;
+    id: string;
+}): JSX.Element => {
     const classes = useStyles();
     return (
         <div id={props.id}>
@@ -21,6 +27,7 @@ const PieChartCard = (props: { chart: JSX.Element; header: string; body: string;
                     <Typography variant="body1" color="secondary">
                         {props.body}
                     </Typography>
+                    {props.table}
                 </CardContent>
             </Card>
         </div>

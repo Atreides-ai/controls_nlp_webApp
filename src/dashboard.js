@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, forwardRef } from 'react';
 import Button from '@material-ui/core/Button';
 import { Storage } from 'aws-amplify';
 import Box from '@material-ui/core/Box';
@@ -28,11 +28,26 @@ import StarIcon from '@material-ui/icons/Star';
 import BuildIcon from '@material-ui/icons/Build';
 import BugReportIcon from '@material-ui/icons/BugReport';
 import PieChartCard from './PieChartCard';
-import MaterialTable, { Column } from 'material-table';
+import MaterialTable from 'material-table';
 import DataTablePopUp from './DataTablePopUp';
 import CardTablePopUp from './CardTablePopUp';
 import PrintButton from 'PDF_Button';
 import dashboardDescriptions from 'Dashboard_Descriptions';
+import AddBox from '@material-ui/icons/AddBox';
+import ArrowUpward from '@material-ui/icons/ArrowUpward';
+import Check from '@material-ui/icons/Check';
+import ChevronLeft from '@material-ui/icons/ChevronLeft';
+import ChevronRight from '@material-ui/icons/ChevronRight';
+import Clear from '@material-ui/icons/Clear';
+import DeleteOutline from '@material-ui/icons/DeleteOutline';
+import Edit from '@material-ui/icons/Edit';
+import FilterList from '@material-ui/icons/FilterList';
+import FirstPage from '@material-ui/icons/FirstPage';
+import LastPage from '@material-ui/icons/LastPage';
+import Remove from '@material-ui/icons/Remove';
+import SaveAlt from '@material-ui/icons/SaveAlt';
+import Search from '@material-ui/icons/Search';
+import ViewColumn from '@material-ui/icons/ViewColumn';
 
 Storage.configure({ level: 'private' });
 
@@ -40,6 +55,26 @@ export default function Dashboard() {
     useEffect(() => {
         getFile();
     }, []);
+
+    const tableIcons = {
+        Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
+        Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
+        Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+        Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
+        DetailPanel: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+        Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
+        Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
+        Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
+        FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
+        LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
+        NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+        PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
+        ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+        Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
+        SortArrow: forwardRef((props, ref) => <ArrowUpward {...props} ref={ref} />),
+        ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
+        ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />),
+    };
 
     const classes = useStyles();
     const [dashboard, showDashboard] = useState(false);
@@ -241,73 +276,91 @@ export default function Dashboard() {
                                 How well do the controls cover the design requirements?
                             </Typography>
                         </Grid>
-                    <Grid container direction="row" spacing={3} justify="center">
-                        <Grid item xs={12} sm="auto" md="auto" lg="auto">
-                            <DataTablePopUp
-                                analysisField="control_summary_rating"
-                                dashboardFile={dashboardfile}
-                                filter='Fully'
-                                DashboardContent={
-                                    <DashboardContent
-                                        id="fully_card"
-                                        icon={<StarIcon style={{ fontSize: 120 }} />}
-                                        header="Fully"
-                                        body={generateCardMetric(dashboardfile, 'control_summary_rating', 'Fully')}
-                                    />
-                                }
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm="auto" md="auto" lg="auto">
-                        <DataTablePopUp
-                                analysisField="control_summary_rating"
-                                dashboardFile={dashboardfile}
-                                filter='Mostly'
-                                DashboardContent={
-                            <DashboardContent
-                                id="mostly_card"
-                                icon={<BuildIcon style={{ fontSize: 120 }} />}
-                                header="Mostly"
-                                body={generateCardMetric(dashboardfile, 'control_summary_rating', 'Mostly')}
-                                ></DashboardContent>}/>
-                        </Grid>
-                        <Grid item xs={12} sm="auto" md="auto" lg="auto">
-                        <DataTablePopUp
-                                analysisField="control_summary_rating"
-                                dashboardFile={dashboardfile}
-                                filter='Partially'
-                                DashboardContent={
-                            <DashboardContent
-                                id="partially_card"
-                                icon={<BugReportIcon style={{ fontSize: 120 }} />}
-                                header="Partially"
-                                body={generateCardMetric(dashboardfile, 'control_summary_rating', 'Partially')}
-                            ></DashboardContent>}/>
-                        </Grid>
-                        <Grid item xs={12} sm="auto" md="auto" lg="auto">
-                        <DataTablePopUp
-                                analysisField="control_summary_rating"
-                                dashboardFile={dashboardfile}
-                                filter='Poorly'
-                                DashboardContent={
-                            <DashboardContent
-                                id="poorly_card"
-                                icon={<FeedbackIcon style={{ fontSize: 120 }} />}
-                                header="Poorly"
-                                body={generateCardMetric(dashboardfile, 'control_summary_rating', 'Poorly')}
-                            ></DashboardContent>}/>
-                        </Grid>
-                        <Grid item xs={12} sm="auto" md="auto" lg="auto">
-                        <DataTablePopUp
-                                analysisField="control_summary_rating"
-                                dashboardFile={dashboardfile}
-                                filter='None'
-                                DashboardContent={
-                            <DashboardContent
-                                id="none_card"
-                                icon={<FlagIcon style={{ fontSize: 120 }} />}
-                                header="None"
-                                body={generateCardMetric(dashboardfile, 'control_summary_rating', 'None')}
-                            ></DashboardContent>}/>
+                        <Grid container direction="row" spacing={3} justify="center">
+                            <Grid item xs={12} sm="auto" md="auto" lg="auto">
+                                <CardTablePopUp
+                                    analysisField="control_summary_rating"
+                                    dashboardFile={dashboardfile}
+                                    filter="Fully"
+                                    tableIcons={tableIcons}
+                                    DashboardContent={
+                                        <DashboardContent
+                                            id="fully_card"
+                                            icon={<StarIcon style={{ fontSize: 120 }} />}
+                                            header="Fully"
+                                            body={generateCardMetric(dashboardfile, 'control_summary_rating', 'Fully')}
+                                        />
+                                    }
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm="auto" md="auto" lg="auto">
+                                <CardTablePopUp
+                                    analysisField="control_summary_rating"
+                                    dashboardFile={dashboardfile}
+                                    filter="Mostly"
+                                    tableIcons={tableIcons}
+                                    DashboardContent={
+                                        <DashboardContent
+                                            id="mostly_card"
+                                            icon={<BuildIcon style={{ fontSize: 120 }} />}
+                                            header="Mostly"
+                                            body={generateCardMetric(dashboardfile, 'control_summary_rating', 'Mostly')}
+                                        ></DashboardContent>
+                                    }
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm="auto" md="auto" lg="auto">
+                                <CardTablePopUp
+                                    analysisField="control_summary_rating"
+                                    dashboardFile={dashboardfile}
+                                    filter="Partially"
+                                    tableIcons={tableIcons}
+                                    DashboardContent={
+                                        <DashboardContent
+                                            id="partially_card"
+                                            icon={<BugReportIcon style={{ fontSize: 120 }} />}
+                                            header="Partially"
+                                            body={generateCardMetric(
+                                                dashboardfile,
+                                                'control_summary_rating',
+                                                'Partially',
+                                            )}
+                                        ></DashboardContent>
+                                    }
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm="auto" md="auto" lg="auto">
+                                <CardTablePopUp
+                                    analysisField="control_summary_rating"
+                                    dashboardFile={dashboardfile}
+                                    filter="Poorly"
+                                    tableIcons={tableIcons}
+                                    DashboardContent={
+                                        <DashboardContent
+                                            id="poorly_card"
+                                            icon={<FeedbackIcon style={{ fontSize: 120 }} />}
+                                            header="Poorly"
+                                            body={generateCardMetric(dashboardfile, 'control_summary_rating', 'Poorly')}
+                                        ></DashboardContent>
+                                    }
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm="auto" md="auto" lg="auto">
+                                <CardTablePopUp
+                                    analysisField="control_summary_rating"
+                                    dashboardFile={dashboardfile}
+                                    filter="None"
+                                    tableIcons={tableIcons}
+                                    DashboardContent={
+                                        <DashboardContent
+                                            id="none_card"
+                                            icon={<FlagIcon style={{ fontSize: 120 }} />}
+                                            header="None"
+                                            body={generateCardMetric(dashboardfile, 'control_summary_rating', 'None')}
+                                        ></DashboardContent>
+                                    }
+                                />
+                            </Grid>
                         </Grid>
                     </Grid>
                     <Grid container direction="row" spacing={1}>
@@ -320,56 +373,68 @@ export default function Dashboard() {
                     </Grid>
                     <Grid container direction="row" spacing={1}>
                         <Grid item xs={12} sm={3} md={3} lg={3}>
-                        <DataTablePopUp
+                            <CardTablePopUp
                                 analysisField="control_relevance_to_risk"
                                 dashboardFile={dashboardfile}
-                                filter='Strong'
+                                filter="Strong"
+                                tableIcons={tableIcons}
                                 DashboardContent={
-                            <DashboardContent
-                                id="strong_risk_card"
-                                icon={<SecurityIcon style={{ fontSize: 120 }} />}
-                                header="Strong"
-                                body={generateCardMetric(dashboardfile, 'control_relevance_to_risk', 'strong')}
-                                ></DashboardContent>}/>
+                                    <DashboardContent
+                                        id="strong_risk_card"
+                                        icon={<SecurityIcon style={{ fontSize: 120 }} />}
+                                        header="Strong"
+                                        body={generateCardMetric(dashboardfile, 'control_relevance_to_risk', 'strong')}
+                                    ></DashboardContent>
+                                }
+                            />
                         </Grid>
                         <Grid item xs={12} sm={3} md={3} lg={3}>
-                        <DataTablePopUp
+                            <CardTablePopUp
                                 analysisField="control_relevance_to_risk"
                                 dashboardFile={dashboardfile}
-                                filter='Good'
+                                filter="Good"
+                                tableIcons={tableIcons}
                                 DashboardContent={
-                            <DashboardContent
-                                id="good_risk_card"
-                                icon={<ThumbUpIcon style={{ fontSize: 120 }} />}
-                                header="Good"
-                                body={generateCardMetric(dashboardfile, 'control_relevance_to_risk', 'good')}
-                            ></DashboardContent>}/>
+                                    <DashboardContent
+                                        id="good_risk_card"
+                                        icon={<ThumbUpIcon style={{ fontSize: 120 }} />}
+                                        header="Good"
+                                        body={generateCardMetric(dashboardfile, 'control_relevance_to_risk', 'good')}
+                                    ></DashboardContent>
+                                }
+                            />
                         </Grid>
                         <Grid item xs={12} sm={3} md={3} lg={3}>
-                        <DataTablePopUp
+                            <CardTablePopUp
                                 analysisField="control_relevance_to_risk"
                                 dashboardFile={dashboardfile}
-                                filter='fair'
+                                filter="Fair"
+                                tableIcons={tableIcons}
                                 DashboardContent={
-                            <DashboardContent
-                                id="fair_risk_card"
-                                icon={<NotificationsIcon style={{ fontSize: 120 }} />}
-                                header="Fair"
-                                body={generateCardMetric(dashboardfile, 'control_relevance_to_risk', 'fair')}
-                            ></DashboardContent>}/>
+                                    <DashboardContent
+                                        id="fair_risk_card"
+                                        icon={<NotificationsIcon style={{ fontSize: 120 }} />}
+                                        header="Fair"
+                                        body={generateCardMetric(dashboardfile, 'control_relevance_to_risk', 'fair')}
+                                    ></DashboardContent>
+                                }
+                            />
                         </Grid>
                         <Grid item xs={12} sm={3} md={3} lg={3}>
-                        <DataTablePopUp
+                            <CardTablePopUp
                                 analysisField="control_relevance_to_risk"
                                 dashboardFile={dashboardfile}
-                                filter='Poor'
+                                filter="Poor"
+                                tableIcons={tableIcons}
                                 DashboardContent={
-                            <DashboardContent
-                                id="poor_risk_card"
-                                icon={<ErrorIcon style={{ fontSize: 120 }} />}
-                                header="Poor"
-                                body={generateCardMetric(dashboardfile, 'control_relevance_to_risk', 'poor')}
-                            ></DashboardContent>}/>
+                                    <DashboardContent
+                                        id="poor_risk_card"
+                                        icon={<ErrorIcon style={{ fontSize: 120 }} />}
+                                        header="Poor"
+                                        body={generateCardMetric(dashboardfile, 'control_relevance_to_risk', 'poor')}
+                                    ></DashboardContent>
+                                }
+                            />
                         </Grid>
                         <Grid container direction="row" spacing={1}>
                             <Grid item xs={12} sm={12} md={12} lg={12}>
