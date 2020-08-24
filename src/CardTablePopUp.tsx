@@ -22,9 +22,9 @@ const CardTablePopUp = (props: {
     dashboardFile: any;
     filter: any;
     tableIcons: any;
+    id: string;
 }): JSX.Element => {
     const [open, setOpen] = React.useState(false);
-    const classes = useStyles();
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -36,7 +36,9 @@ const CardTablePopUp = (props: {
 
     return (
         <div>
-            <div onClick={handleClickOpen}>{props.DashboardContent}</div>
+            <div id={props.id} onClick={handleClickOpen}>
+                {props.DashboardContent}
+            </div>
             <Dialog
                 open={open}
                 TransitionComponent={Transition}

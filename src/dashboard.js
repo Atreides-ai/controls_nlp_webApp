@@ -279,13 +279,13 @@ export default function Dashboard() {
                         <Grid container direction="row" spacing={3} justify="center">
                             <Grid item xs={12} sm="auto" md="auto" lg="auto">
                                 <CardTablePopUp
+                                    id="fully_card"
                                     analysisField="control_summary_rating"
                                     dashboardFile={dashboardfile}
                                     filter="Fully"
                                     tableIcons={tableIcons}
                                     DashboardContent={
                                         <DashboardContent
-                                            id="fully_card"
                                             icon={<StarIcon style={{ fontSize: 120 }} />}
                                             header="Fully"
                                             body={generateCardMetric(dashboardfile, 'control_summary_rating', 'Fully')}
@@ -299,9 +299,9 @@ export default function Dashboard() {
                                     dashboardFile={dashboardfile}
                                     filter="Mostly"
                                     tableIcons={tableIcons}
+                                    id="mostly_card"
                                     DashboardContent={
                                         <DashboardContent
-                                            id="mostly_card"
                                             icon={<BuildIcon style={{ fontSize: 120 }} />}
                                             header="Mostly"
                                             body={generateCardMetric(dashboardfile, 'control_summary_rating', 'Mostly')}
@@ -315,9 +315,9 @@ export default function Dashboard() {
                                     dashboardFile={dashboardfile}
                                     filter="Partially"
                                     tableIcons={tableIcons}
+                                    id="partially_card"
                                     DashboardContent={
                                         <DashboardContent
-                                            id="partially_card"
                                             icon={<BugReportIcon style={{ fontSize: 120 }} />}
                                             header="Partially"
                                             body={generateCardMetric(
@@ -334,10 +334,10 @@ export default function Dashboard() {
                                     analysisField="control_summary_rating"
                                     dashboardFile={dashboardfile}
                                     filter="Poorly"
+                                    id="poorly_card"
                                     tableIcons={tableIcons}
                                     DashboardContent={
                                         <DashboardContent
-                                            id="poorly_card"
                                             icon={<FeedbackIcon style={{ fontSize: 120 }} />}
                                             header="Poorly"
                                             body={generateCardMetric(dashboardfile, 'control_summary_rating', 'Poorly')}
@@ -351,9 +351,9 @@ export default function Dashboard() {
                                     dashboardFile={dashboardfile}
                                     filter="None"
                                     tableIcons={tableIcons}
+                                    id="none_card"
                                     DashboardContent={
                                         <DashboardContent
-                                            id="none_card"
                                             icon={<FlagIcon style={{ fontSize: 120 }} />}
                                             header="None"
                                             body={generateCardMetric(dashboardfile, 'control_summary_rating', 'None')}
@@ -378,9 +378,9 @@ export default function Dashboard() {
                                 dashboardFile={dashboardfile}
                                 filter="Strong"
                                 tableIcons={tableIcons}
+                                id="strong_risk_card"
                                 DashboardContent={
                                     <DashboardContent
-                                        id="strong_risk_card"
                                         icon={<SecurityIcon style={{ fontSize: 120 }} />}
                                         header="Strong"
                                         body={generateCardMetric(dashboardfile, 'control_relevance_to_risk', 'strong')}
@@ -394,9 +394,9 @@ export default function Dashboard() {
                                 dashboardFile={dashboardfile}
                                 filter="Good"
                                 tableIcons={tableIcons}
+                                id="good_risk_card"
                                 DashboardContent={
                                     <DashboardContent
-                                        id="good_risk_card"
                                         icon={<ThumbUpIcon style={{ fontSize: 120 }} />}
                                         header="Good"
                                         body={generateCardMetric(dashboardfile, 'control_relevance_to_risk', 'good')}
@@ -410,9 +410,9 @@ export default function Dashboard() {
                                 dashboardFile={dashboardfile}
                                 filter="Fair"
                                 tableIcons={tableIcons}
+                                id="fair_risk_card"
                                 DashboardContent={
                                     <DashboardContent
-                                        id="fair_risk_card"
                                         icon={<NotificationsIcon style={{ fontSize: 120 }} />}
                                         header="Fair"
                                         body={generateCardMetric(dashboardfile, 'control_relevance_to_risk', 'fair')}
@@ -426,9 +426,9 @@ export default function Dashboard() {
                                 dashboardFile={dashboardfile}
                                 filter="Poor"
                                 tableIcons={tableIcons}
+                                id="poor_risk_card"
                                 DashboardContent={
                                     <DashboardContent
-                                        id="poor_risk_card"
                                         icon={<ErrorIcon style={{ fontSize: 120 }} />}
                                         header="Poor"
                                         body={generateCardMetric(dashboardfile, 'control_relevance_to_risk', 'poor')}
