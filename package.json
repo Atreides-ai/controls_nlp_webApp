@@ -38,7 +38,7 @@
         "levenary": "^1.1.1",
         "material-table": "^1.57.2",
         "nivo": "^0.31.0",
-        "papaparse": "^5.2.0",
+        "papaparse": "^5.3.0",
         "prettier": "^1.19.1",
         "react": "^16.13.0",
         "react-csv": "^2.0.1",
