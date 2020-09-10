@@ -71,7 +71,7 @@ export default function AtreidesForgotPassword(props: { signInStatus: (stage: st
                     onChange={setEmailInput}
                 />
                 <Typography variant="caption" display="block">
-                    Your password must be at least 8 characters long and contain numbers, upper and lower case letters.
+                    Your password must be at least 8 characters long and contain numbers and upper and lower case letters and a symbol.
                 </Typography>
                 <TextField
                     style={{ backgroundColor: 'white' }}
