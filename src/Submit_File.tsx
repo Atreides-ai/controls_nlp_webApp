@@ -23,6 +23,7 @@ import useStyles from './useStyles';
 import { Auth } from 'aws-amplify';
 import axios from 'axios';
 import papaparse from 'papaparse';
+import XLSX from 'xlsx';
 
 export default function SubmitFile(props: {
     dbCallback: (jobID: string, token: string, apiKey: string) => void;
@@ -73,13 +74,55 @@ export default function SubmitFile(props: {
         });
     };
 
-    const convertCsvToJson = async (file: File): Promise<Record<string, any>> => {
-        console.log(file);
+    const convertCSVToJSON = async (file: File): Promise<Record<string, any>> => {
         const rawData = await papaPromise(file).then((obj: object | void) => {
             return obj['data'];
         });
         const data = await formatData(rawData);
         return { data: data };
+    };
+
+    const fileReaderPromise = async (file: File): Promise<string | ArrayBuffer | null> => {
+        const reader = new FileReader();
+        return new Promise((resolve, reject) => {
+            reader.onerror = (): any => {
+                reader.abort();
+                reject(new DOMException('Problem parsing input file.'));
+            };
+
+            reader.onload = (): any => {
+                resolve(reader.result);
+            };
+            reader.readAsBinaryString(file);
+        });
+    };
+    const convertXLToJSON = async (file: File): Promise<Record<string, any>> => {
+        const data = await fileReaderPromise(file)
+            .then(rawData => {
+                const rawWorkbook = XLSX.read(rawData, { type: 'binary' });
+                const jsonList: unknown[][] = [];
+                rawWorkbook.SheetNames.forEach(function(sheetName) {
+                    const sheet = XLSX.utils.sheet_to_json(rawWorkbook.Sheets[sheetName]);
+                    jsonList.push(sheet);
+                });
+                // This was used instead of .flat() to ensure compatability with IE
+                const mergedData = jsonList.reduce((accumulator, value) => accumulator.concat(value), []);
+                return mergedData;
+            })
+            .then(mergedData => {
+                const data = formatData(mergedData);
+                return data;
+            });
+
+        return { data: data };
+    };
+
+    const convertFileToJson = async (file: File): Promise<Record<string, any>> => {
+        if (fileName.split('.').pop() == '.csv') {
+            return convertCSVToJSON(file);
+        } else {
+            return convertXLToJSON(file);
+        }
     };
 
     const generateHeaders = async (): Promise<Record<string, any>> => {
@@ -126,8 +169,8 @@ export default function SubmitFile(props: {
 
     const handleUpload = async (file: File): Promise<void> => {
         const headers = await generateHeaders();
-        const data = await convertCsvToJson(file);
-        console.log(headers);
+        const data = await convertFileToJson(file);
+        console.log(data);
         const url = baseUrl + '/control';
         axios.post(url, data, headers).then(response => {
             if (response.status === 400) {

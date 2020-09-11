@@ -46,7 +46,8 @@
         "react-router-dom": "^5.1.2",
         "react-scripts": "^3.4.0",
         "react-virtualized-auto-sizer": "^1.0.2",
-        "typeface-roboto": "0.0.75"
+        "typeface-roboto": "0.0.75",
+        "xlsx": "^0.16.6"
     },
     "scripts": {
         "start": "react-scripts start",
