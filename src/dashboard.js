@@ -5,6 +5,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
+import Container from '@material-ui/core/Container';
 import { Storage } from 'aws-amplify';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -75,7 +76,6 @@ export default function Dashboard(props) {
                     console.log(response);
                 } else if (response.status === 202) {
                     if (progress < 100) {
-                        console.log(response);
                         setProgress(progress + 10);
                     } else if (!ackWaitMessage) {
                         showWaitMessage(true);
@@ -243,19 +243,13 @@ export default function Dashboard(props) {
                     <Typography variant="h6" className={classes.title} align="center">
                         Atreides Controls NLP Dashboard
                     </Typography>
-                    <Copyright align="right" color="secondary"></Copyright>
+                    <Copyright align="right" color="primary"></Copyright>
                 </Toolbar>
             </AppBar>
             {dashboard === false && (
-                <div>
+                <Container component="main" maxWidth="xs">
                     <div className={classes.progress} align="centre">
-                        <LinearProgress
-                            variant="determinate"
-                            value={progress}
-                            left={-20}
-                            top={10}
-                            style={{ marginLeft: '50%' }}
-                        />
+                        <LinearProgress color="secondary" variant="indeterminate" />
                     </div>
                     <Dialog
                         open={waitMessage}
@@ -314,7 +308,7 @@ export default function Dashboard(props) {
                             </Button>
                         </DialogActions>
                     </Dialog>
-                </div>
+                </Container>
             )}
             {dashboard && (
                 <div className={classes.root}>

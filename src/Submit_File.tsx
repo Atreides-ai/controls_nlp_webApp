@@ -53,8 +53,19 @@ export default function SubmitFile(props: {
         });
     };
 
-    const formatData = (rawData: any[]): any[] => {
+    const convertValuesToString = (rawData: any[]): any[] => {
         return rawData.map(function(obj) {
+            for (const key in obj) {
+                if (obj[key] !== undefined) {
+                    obj[key] = String(obj[key]);
+                }
+            }
+            return obj;
+        });
+    };
+
+    const formatData = (rawData: any[]): any[] => {
+        const data = rawData.map(function(obj) {
             delete obj[''];
             obj['control_description'] = obj['Control Description'];
             delete obj['Control Description'];
@@ -70,14 +81,17 @@ export default function SubmitFile(props: {
             }
             return obj;
         });
+
+        const formattedData = convertValuesToString(data);
+
+        return formattedData;
     };
 
     const convertCSVToJSON = async (file: File): Promise<Record<string, any>> => {
         const rawData = await papaPromise(file).then((obj: object | void) => {
             return obj['data'];
         });
-        const objData = await formatData(rawData);
-        const data = JSON.stringify(objData, (key, value) => (value ? value.toString() : value));
+        const data = await formatData(rawData);
         return { data: data };
     };
 
@@ -97,7 +111,7 @@ export default function SubmitFile(props: {
     };
 
     const convertXLToJSON = async (file: File): Promise<Record<string, any>> => {
-        const data = fileReaderPromise(file)
+        const data = await fileReaderPromise(file)
             .then(rawData => {
                 const rawWorkbook = XLSX.read(rawData, { type: 'binary' });
                 const jsonList: unknown[][] = [];

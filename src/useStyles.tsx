@@ -43,18 +43,20 @@ const useStyles = makeStyles((theme: Theme) =>
             height: 500,
         },
         progress: {
-            display: 'flex',
             '& > * + *': {
                 marginLeft: theme.spacing(2),
             },
             align: 'center',
+            width: '100%',
+            marginTop: theme.spacing(15),
+            flexDirection: 'column',
+            alignItems: 'center',
         },
         menuButton: {
             marginRight: theme.spacing(2),
         },
         title: {
             flexGrow: 1,
-            alignContent: 'center',
         },
         pie: {
             height: 250,
