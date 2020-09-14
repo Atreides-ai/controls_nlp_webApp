@@ -1,4 +1,4 @@
-import { green, red, grey } from '@material-ui/core/colors';
+import { green, red } from '@material-ui/core/colors';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { Theme } from '@material-ui/core';
 

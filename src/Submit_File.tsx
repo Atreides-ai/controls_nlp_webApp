@@ -30,8 +30,6 @@ export default function SubmitFile(props: {
 }): JSX.Element {
     const baseUrl = 'https://api.atreides.ai/dev/atreides-app/controls-nlp/v1';
     const classes = useStyles();
-    const [token, setToken] = useState<string>('No Token');
-    const [apiKey, setApiKey] = useState<string>('No API Key');
     const [file, selectFile] = useState<File>();
     const [open, setOpen] = useState<boolean>(false);
     const [success, setSuccess] = useState<boolean>(false);
@@ -78,7 +76,8 @@ export default function SubmitFile(props: {
         const rawData = await papaPromise(file).then((obj: object | void) => {
             return obj['data'];
         });
-        const data = await formatData(rawData);
+        const objData = await formatData(rawData);
+        const data = JSON.stringify(objData, (key, value) => (value ? value.toString() : value));
         return { data: data };
     };
 
@@ -96,8 +95,9 @@ export default function SubmitFile(props: {
             reader.readAsBinaryString(file);
         });
     };
+
     const convertXLToJSON = async (file: File): Promise<Record<string, any>> => {
-        const data = await fileReaderPromise(file)
+        const data = fileReaderPromise(file)
             .then(rawData => {
                 const rawWorkbook = XLSX.read(rawData, { type: 'binary' });
                 const jsonList: unknown[][] = [];
@@ -118,7 +118,7 @@ export default function SubmitFile(props: {
     };
 
     const convertFileToJson = async (file: File): Promise<Record<string, any>> => {
-        if (fileName.split('.').pop() == '.csv') {
+        if (fileName.split('.').pop() === '.csv') {
             return convertCSVToJSON(file);
         } else {
             return convertXLToJSON(file);
@@ -129,13 +129,10 @@ export default function SubmitFile(props: {
         const token = await Auth.currentSession().then(data => {
             return data['idToken']['jwtToken'];
         });
-        setToken(token);
 
         const apiKey = await Auth.currentUserInfo().then(data => {
             return data['attributes']['custom:api-key'];
         });
-
-        setApiKey(apiKey);
 
         return { headers: { 'x-api-key': apiKey, Authorization: token } };
     };

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import SubmitFile from './Submit_File';
 import Dashboard from './dashboard.js';
-import { BrowserRouter as Router, Switch, Route, withRouter } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import PrivateRoute from './private_route.js';
 import Amplify from 'aws-amplify';
 import awsmobile from './aws-exports';
