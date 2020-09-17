@@ -43,8 +43,7 @@ export default function App() {
                         <SubmitFile dbCallback={jobCallback} />
                     </PrivateRoute>
                     <Route path="/">
-                        <HomePage></HomePage>
-                        {/* <AuthComponent appCallback={authCallbackState} /> */}
+                        <AuthComponent appCallback={authCallbackState} />
                     </Route>
                 </Switch>
             </Router>
