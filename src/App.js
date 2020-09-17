@@ -10,6 +10,7 @@ import AuthComponent from './Atreides_Auth_Wrapper';
 import { ThemeProvider } from '@material-ui/core/styles';
 import theme from './theme';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import HomePage from './HomePage';
 
 Amplify.configure(awsmobile);
 
@@ -42,7 +43,8 @@ export default function App() {
                         <SubmitFile dbCallback={jobCallback} />
                     </PrivateRoute>
                     <Route path="/">
-                        <AuthComponent appCallback={authCallbackState} />
+                        <HomePage></HomePage>
+                        {/* <AuthComponent appCallback={authCallbackState} /> */}
                     </Route>
                 </Switch>
             </Router>

@@ -1,6 +1,7 @@
 import { green, red } from '@material-ui/core/colors';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { Theme } from '@material-ui/core';
+import { addScaleCorrection } from 'framer-motion';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -161,6 +162,21 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         summaryButton: {
             marginTop: theme.spacing(1),
+        },
+        homePageCard: {
+            marginLeft: theme.spacing(1),
+            marginRight: theme.spacing(1),
+            maxWidth: 500,
+        },
+        homePageSurface: {
+            marginTop: '5%',
+            marginLeft: '5%',
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+        },
+        atreidesLogo: {
+            marginLeft: '30%',
         },
     }),
 );
