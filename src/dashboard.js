@@ -70,12 +70,12 @@ export default function Dashboard(props) {
                 if (response.status === 200) {
                     setProgress(100);
                     showWaitMessage(false);
-                    setFile(response.data);
+                    setFile(response.data.controls);
                     clearInterval(interval);
                     showDashboard(true);
-                    console.log(response);
                 } else if (response.status === 202) {
                     if (progress < 100) {
+                        console.log(response);
                         setProgress(progress + 10);
                     } else if (!ackWaitMessage) {
                         showWaitMessage(true);
@@ -89,7 +89,7 @@ export default function Dashboard(props) {
                     clearInterval(interval);
                 }
             });
-        }, 30000);
+        }, 5000);
     };
 
     useEffect(() => {
@@ -127,9 +127,9 @@ export default function Dashboard(props) {
         return dataCount.map(function(obj) {
             obj['id'] = obj['key'];
             delete obj['key'];
-            if (obj['id'] === 'True') {
+            if (obj['id'] === 'true') {
                 obj['color'] = '#7C4DFF';
-            } else if (obj['id'] === 'False') {
+            } else if (obj['id'] === 'false') {
                 obj['color'] = '#607D8B';
             } else if (obj['id'] === 'poor') {
                 obj['color'] = '#7C4DFF';
@@ -189,9 +189,11 @@ export default function Dashboard(props) {
     const generatePie = (file, column) => {
         const dataCount = countColumnValues(file, column);
         console.log(dataCount);
-        if (dataCount[0]['key'] !== 'undefined') {
+        if (dataCount[0]['id'] !== 'undefined') {
             const rawData = formatData(dataCount);
+            console.log(rawData);
             const orderedData = orderData(rawData);
+            console.log(orderedData);
             return orderedData;
         } else return [{ id: 'No Data Provided', value: 20 }];
     };
@@ -210,6 +212,7 @@ export default function Dashboard(props) {
         });
 
         if (fieldCount[0] !== undefined) {
+            console.log(fieldCount);
             return fieldCount[0]['value'].toString();
         }
 
@@ -328,7 +331,8 @@ export default function Dashboard(props) {
                                         }}
                                         icons={tableIcons}
                                         columns={[
-                                            { title: 'Control Description', field: 'Control Description' },
+                                            { title: 'Control Description', field: 'control_description' },
+                                            { title: 'Risk Description', field: 'risk_description' },
                                             { title: 'Overall Score', field: 'control_summary_rating' },
                                         ]}
                                         data={dashboardfile}
@@ -343,51 +347,35 @@ export default function Dashboard(props) {
                             <DashboardCard
                                 icon={<StarIcon style={{ fontSize: 120 }} />}
                                 header="Fully"
-                                body={generateCardMetric(
-                                    dashboardfile,
-                                    'control_summary_rating',
-                                    'Requirements Met Fully',
-                                )}
+                                body={generateCardMetric(dashboardfile, 'control_summary_rating', 'Fully')}
                             ></DashboardCard>
                         </Grid>
                         <Grid item xs={12} sm="auto" md="auto" lg="auto">
                             <DashboardCard
                                 icon={<BuildIcon style={{ fontSize: 120 }} />}
                                 header="Mostly"
-                                body={generateCardMetric(dashboardfile, 'control_summary_rating', 'Requirements Met')}
+                                body={generateCardMetric(dashboardfile, 'control_summary_rating', 'Mostly')}
                             ></DashboardCard>
                         </Grid>
                         <Grid item xs={12} sm="auto" md="auto" lg="auto">
                             <DashboardCard
                                 icon={<BugReportIcon style={{ fontSize: 120 }} />}
                                 header="Partially"
-                                body={generateCardMetric(
-                                    dashboardfile,
-                                    'control_summary_rating',
-                                    'Requirements Partially Met',
-                                )}
+                                body={generateCardMetric(dashboardfile, 'control_summary_rating', 'Partially')}
                             ></DashboardCard>
                         </Grid>
                         <Grid item xs={12} sm="auto" md="auto" lg="auto">
                             <DashboardCard
                                 icon={<FeedbackIcon style={{ fontSize: 120 }} />}
                                 header="Poorly"
-                                body={generateCardMetric(
-                                    dashboardfile,
-                                    'control_summary_rating',
-                                    'Requirements Substantially Not Met',
-                                )}
+                                body={generateCardMetric(dashboardfile, 'control_summary_rating', 'Poorly')}
                             ></DashboardCard>
                         </Grid>
                         <Grid item xs={12} sm="auto" md="auto" lg="auto">
                             <DashboardCard
                                 icon={<FlagIcon style={{ fontSize: 120 }} />}
                                 header="None"
-                                body={generateCardMetric(
-                                    dashboardfile,
-                                    'control_summary_rating',
-                                    'No Requirements Met',
-                                )}
+                                body={generateCardMetric(dashboardfile, 'control_summary_rating', 'None')}
                             ></DashboardCard>
                         </Grid>
                     </Grid>
@@ -407,9 +395,9 @@ export default function Dashboard(props) {
                                         }}
                                         icons={tableIcons}
                                         columns={[
-                                            { title: 'Control Description', field: 'Control Description' },
-                                            { title: 'Risk Description', field: 'Risk Description' },
-                                            { title: 'Control Relevance To Risk', field: 'control_relevance_to_risk' },
+                                            { title: 'Control Description', field: 'control_description' },
+                                            { title: 'Risk Description', field: 'risk_description' },
+                                            { title: 'Control Relevance To Risk', field: 'relevance_to_risk' },
                                         ]}
                                         data={dashboardfile}
                                         title="Analysis Summary"
@@ -423,28 +411,28 @@ export default function Dashboard(props) {
                             <DashboardCard
                                 icon={<SecurityIcon style={{ fontSize: 120 }} />}
                                 header="Strong"
-                                body={generateCardMetric(dashboardfile, 'control_relevance_to_risk', 'strong')}
+                                body={generateCardMetric(dashboardfile, 'relevance_to_risk', 'strong')}
                             ></DashboardCard>
                         </Grid>
                         <Grid item xs={12} sm={3} md={3} lg={3}>
                             <DashboardCard
                                 icon={<ThumbUpIcon style={{ fontSize: 120 }} />}
                                 header="Good"
-                                body={generateCardMetric(dashboardfile, 'control_relevance_to_risk', 'good')}
+                                body={generateCardMetric(dashboardfile, 'relevance_to_risk', 'good')}
                             ></DashboardCard>
                         </Grid>
                         <Grid item xs={12} sm={3} md={3} lg={3}>
                             <DashboardCard
                                 icon={<NotificationsIcon style={{ fontSize: 120 }} />}
                                 header="Fair"
-                                body={generateCardMetric(dashboardfile, 'control_relevance_to_risk', 'fair')}
+                                body={generateCardMetric(dashboardfile, 'relevance_to_risk', 'fair')}
                             ></DashboardCard>
                         </Grid>
                         <Grid item xs={12} sm={3} md={3} lg={3}>
                             <DashboardCard
                                 icon={<ErrorIcon style={{ fontSize: 120 }} />}
                                 header="Poor"
-                                body={generateCardMetric(dashboardfile, 'control_relevance_to_risk', 'poor')}
+                                body={generateCardMetric(dashboardfile, 'relevance_to_risk', 'poor')}
                             ></DashboardCard>
                         </Grid>
                         <Grid container direction="row" spacing={1}>
@@ -478,7 +466,7 @@ export default function Dashboard(props) {
                                                 }}
                                                 icons={tableIcons}
                                                 columns={[
-                                                    { title: 'Control Description', field: 'Control Description' },
+                                                    { title: 'Control Description', field: 'control_description' },
                                                     { title: 'Control Method', field: 'Control Method' },
                                                 ]}
                                                 data={dashboardfile}
@@ -508,7 +496,7 @@ export default function Dashboard(props) {
                                                 }}
                                                 icons={tableIcons}
                                                 columns={[
-                                                    { title: 'Control Description', field: 'Control Description' },
+                                                    { title: 'Control Description', field: 'control_description' },
                                                     { title: 'What Text', field: 'whats' },
                                                     { title: 'Contains What', field: 'contains_whats' },
                                                 ]}
@@ -539,7 +527,7 @@ export default function Dashboard(props) {
                                                 }}
                                                 icons={tableIcons}
                                                 columns={[
-                                                    { title: 'Control Description', field: 'Control Description' },
+                                                    { title: 'Control Description', field: 'control_description' },
                                                     { title: 'How Text', field: 'hows' },
                                                     { title: 'Contains How', field: 'contains_hows' },
                                                 ]}
@@ -572,7 +560,7 @@ export default function Dashboard(props) {
                                                 }}
                                                 icons={tableIcons}
                                                 columns={[
-                                                    { title: 'Control Description', field: 'Control Description' },
+                                                    { title: 'Control Description', field: 'control_description' },
                                                     { title: 'Who Text', field: 'whos' },
                                                     { title: 'Contains Who', field: 'contains_whos' },
                                                 ]}
@@ -603,7 +591,7 @@ export default function Dashboard(props) {
                                                 }}
                                                 icons={tableIcons}
                                                 columns={[
-                                                    { title: 'Control Description', field: 'Control Description' },
+                                                    { title: 'Control Description', field: 'control_description' },
                                                     { title: 'When Text', field: 'whens' },
                                                     { title: 'Contains When', field: 'contains_whens' },
                                                 ]}
@@ -634,7 +622,7 @@ export default function Dashboard(props) {
                                                 }}
                                                 icons={tableIcons}
                                                 columns={[
-                                                    { title: 'Control Description', field: 'Control Description' },
+                                                    { title: 'Control Description', field: 'control_description' },
                                                     { title: 'Multiple Whats', field: 'whats' },
                                                     {
                                                         title: 'Contains Multiple Whats',
@@ -670,7 +658,7 @@ export default function Dashboard(props) {
                                                 }}
                                                 icons={tableIcons}
                                                 columns={[
-                                                    { title: 'Control Description', field: 'Control Description' },
+                                                    { title: 'Control Description', field: 'control_description' },
                                                     { title: 'How Text', field: 'hows' },
                                                     { title: 'Contains Multiple Hows', field: 'contains_hows' },
                                                 ]}
@@ -701,7 +689,7 @@ export default function Dashboard(props) {
                                                 }}
                                                 icons={tableIcons}
                                                 columns={[
-                                                    { title: 'Control Description', field: 'Control Description' },
+                                                    { title: 'Control Description', field: 'control_description' },
                                                     { title: 'Who Text', field: 'whos' },
                                                     { title: 'Contains Multiple Who', field: 'multiple_whos' },
                                                 ]}
@@ -732,7 +720,7 @@ export default function Dashboard(props) {
                                                 }}
                                                 icons={tableIcons}
                                                 columns={[
-                                                    { title: 'Control Description', field: 'Control Description' },
+                                                    { title: 'Control Description', field: 'control_description' },
                                                     { title: 'When Text', field: 'whens' },
                                                     { title: 'Contains Multiple Whens', field: 'multiple_whens' },
                                                 ]}
