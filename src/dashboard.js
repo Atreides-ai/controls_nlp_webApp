@@ -58,6 +58,9 @@ export default function Dashboard(props) {
         setAckWaitMessage(true);
     };
 
+    const createCSVDownload = async () => {};
+
+
     /**
      * Polls the API at 30 second intervals to check job status
      *
@@ -65,13 +68,13 @@ export default function Dashboard(props) {
     const getFile = async (jobId, apiKey, token) => {
         const url = baseUrl + '/get_results/' + jobId;
         const headers = { headers: { 'x-api-key': apiKey, Authorization: token } };
-        console.log(headers);
         const interval = setInterval(() => {
             axios.get(url, headers).then(response => {
                 if (response.status === 200) {
                     setProgress(100);
                     showWaitMessage(false);
                     setFile(response.data.controls);
+                    createCSVDownload(response);
                     clearInterval(interval);
                     showDashboard(true);
                 } else if (response.status === 202) {
