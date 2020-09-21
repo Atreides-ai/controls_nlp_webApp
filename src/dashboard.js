@@ -1,9 +1,16 @@
-import React, { useState, useEffect, forwardRef } from 'react';
+import React, { useState, useEffect } from 'react';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import CardTablePopUp from './CardTablePopUp';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
-import { Storage } from 'aws-amplify';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
+import PrintButton from './PDF_Button';
+import dashboardDescriptions from 'Dashboard_Descriptions';
 import * as d3 from 'd3';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import MyResponsivePie from './pieConfig';
@@ -35,7 +42,6 @@ import axios from 'axios';
 import tableIcons from './tableIcons';
 
 export default function Dashboard(props) {
-
     const classes = useStyles();
     const [dashboard, showDashboard] = useState(false);
     const [dashboardfile, setFile] = useState();
@@ -45,11 +51,11 @@ export default function Dashboard(props) {
     const [ackWaitMessage, setAckWaitMessage] = useState(false);
     const [errorMessage, showErrorMessage] = useState(false);
     const [limitMessage, showLimitMessage] = useState(false);
+    const descriptions = dashboardDescriptions;
 
     const handleClose = () => {
         showWaitMessage(false);
         setAckWaitMessage(true);
-
     };
 
     /**
@@ -479,7 +485,6 @@ export default function Dashboard(props) {
                                     ></DashboardContent>
                                 }
                             />
-
                         </Grid>
                         <Grid container direction="row" spacing={1}>
                             <Grid item xs={12} sm={12} md={12} lg={12}>
