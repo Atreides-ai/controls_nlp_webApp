@@ -40,6 +40,7 @@ import MaterialTable from 'material-table';
 import DataTablePopUp from './DataTablePopUp';
 import axios from 'axios';
 import tableIcons from './tableIcons';
+import flat from 'flat';
 
 export default function Dashboard(props) {
     const classes = useStyles();
@@ -58,8 +59,15 @@ export default function Dashboard(props) {
         setAckWaitMessage(true);
     };
 
-    const createCSVDownload = async () => {};
-
+    /**
+     * Takes the dashboard file and flattens it for .csv generation
+     *
+     * @param {*} dashboardfile
+     * @returns
+     */
+    const createCSVDownload = async dashboardfile => {
+        return flat(dashboardfile);
+    };
 
     /**
      * Polls the API at 30 second intervals to check job status
@@ -73,10 +81,13 @@ export default function Dashboard(props) {
                 if (response.status === 200) {
                     setProgress(100);
                     showWaitMessage(false);
-                    setFile(response.data.controls);
-                    createCSVDownload(response);
-                    clearInterval(interval);
-                    showDashboard(true);
+                    if (response.data.controls) {
+                        setFile(response.data.controls);
+                        clearInterval(interval);
+                        showDashboard(true);
+                    } else {
+                        showErrorMessage(true);
+                    }
                 } else if (response.status === 202) {
                     if (progress < 100) {
                         console.log(response);
@@ -231,14 +242,14 @@ export default function Dashboard(props) {
                         <div>
                             <Grid container direction="row" spacing={1}>
                                 <Grid item xs="auto" sm="auto" md="auto" lg="auto">
-                                    <CSVLink data={dashboardfile} filename="Analysis.csv">
+                                    <CSVLink data={createCSVDownload(dashboardfile)} filename="Analysis.csv">
                                         <IconButton edge="start" color="secondary">
                                             <CloudDownloadIcon></CloudDownloadIcon>
                                         </IconButton>
                                     </CSVLink>
                                 </Grid>
                                 <Grid item xs="auto" sm="auto" md="auto" lg="auto">
-                                    <CSVLink data={dashboardfile} filename="Analysis.csv">
+                                    <CSVLink data={createCSVDownload(dashboardfile)} filename="Analysis.csv">
                                         <Button variant="outlined" color="secondary">
                                             Download All Results
                                         </Button>
