@@ -40,7 +40,6 @@ import MaterialTable from 'material-table';
 import DataTablePopUp from './DataTablePopUp';
 import axios from 'axios';
 import tableIcons from './tableIcons';
-import flat from 'flat';
 
 export default function Dashboard(props) {
     const classes = useStyles();
@@ -59,14 +58,39 @@ export default function Dashboard(props) {
         setAckWaitMessage(true);
     };
 
+    const fillNulls = controls => {
+        return controls.map(function(obj) {
+            for (const key of Object.entries(obj)) {
+                if (obj[key] === null) {
+                    obj[key] = 'Not Provided';
+                }
+                return obj;
+            }
+        });
+    };
+
     /**
-     * Takes the dashboard file and flattens it for .csv generation
      *
-     * @param {*} dashboardfile
+     *
+     * @param {*} inputFile
      * @returns
      */
-    const createCSVDownload = async dashboardfile => {
-        return flat(dashboardfile);
+    const unwrapAdditionalData = inputFile => {
+        return inputFile.map(function(obj) {
+            if (obj['additional_data'] !== undefined) {
+                for (const [key, value] of Object.entries(obj['additional_data'])) {
+                    obj[key] = value;
+                }
+            }
+            delete obj['additional_data'];
+            return obj;
+        });
+    };
+
+    const createCSVDownload = rawFile => {
+        const file = unwrapAdditionalData(rawFile);
+        const processedFile = fillNulls(file);
+        return processedFile;
     };
 
     /**
@@ -82,6 +106,7 @@ export default function Dashboard(props) {
                     setProgress(100);
                     showWaitMessage(false);
                     if (response.data.controls) {
+                        console.log(response.data.controls);
                         setFile(response.data.controls);
                         clearInterval(interval);
                         showDashboard(true);
@@ -203,12 +228,9 @@ export default function Dashboard(props) {
      */
     const generatePie = (file, column) => {
         const dataCount = countColumnValues(file, column);
-        console.log(dataCount);
         if (dataCount[0]['id'] !== 'undefined') {
             const rawData = formatData(dataCount);
-            console.log(rawData);
             const orderedData = orderData(rawData);
-            console.log(orderedData);
             return orderedData;
         } else return [{ id: 'No Data Provided', value: 20 }];
     };
