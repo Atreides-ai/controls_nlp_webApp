@@ -58,6 +58,33 @@ export default function Dashboard(props) {
         setAckWaitMessage(true);
     };
 
+    const createRemediationList = dashboardfile => {
+        return dashboardfile.map(function(obj) {
+            const remediationText = [];
+            if (obj['contains_whats'] === false) {
+                remediationText.push('No what,');
+            }
+            if (obj['contains_hows'] === false) {
+                console.log('No how triggered...');
+                remediationText.push('No how, ');
+                console.log(remediationText);
+            }
+            if (obj['contains_whos'] === false) {
+                remediationText.push('No who, ');
+            }
+            if (obj['contains_whens'] === false) {
+                remediationText.push('No when, ');
+            }
+            if (remediationText === '') {
+                remediationText.push('No remediation required');
+            }
+            console.log(remediationText);
+            obj['Remediation'] = remediationText.join('');
+            console.log(obj);
+            return obj;
+        });
+    };
+
     const fillNulls = controls => {
         return controls.map(function(obj) {
             for (const key of Object.entries(obj)) {
@@ -367,7 +394,7 @@ export default function Dashboard(props) {
                                 <CardTablePopUp
                                     id="fully_card"
                                     analysisField="control_summary_rating"
-                                    dashboardFile={dashboardfile}
+                                    dashboardFile={createRemediationList(dashboardfile)}
                                     filter="Fully"
                                     tableIcons={tableIcons}
                                     showRemediation={true}
@@ -383,10 +410,11 @@ export default function Dashboard(props) {
                             <Grid item xs={12} sm="auto" md="auto" lg="auto">
                                 <CardTablePopUp
                                     analysisField="control_summary_rating"
-                                    dashboardFile={dashboardfile}
+                                    dashboardFile={createRemediationList(dashboardfile)}
                                     filter="Mostly"
                                     tableIcons={tableIcons}
                                     id="mostly_card"
+                                    showRemediation={true}
                                     DashboardContent={
                                         <DashboardContent
                                             icon={<BuildIcon style={{ fontSize: 120 }} />}
@@ -399,10 +427,11 @@ export default function Dashboard(props) {
                             <Grid item xs={12} sm="auto" md="auto" lg="auto">
                                 <CardTablePopUp
                                     analysisField="control_summary_rating"
-                                    dashboardFile={dashboardfile}
+                                    dashboardFile={createRemediationList(dashboardfile)}
                                     filter="Partially"
                                     tableIcons={tableIcons}
                                     id="partially_card"
+                                    showRemediation={true}
                                     DashboardContent={
                                         <DashboardContent
                                             icon={<BugReportIcon style={{ fontSize: 120 }} />}
@@ -419,9 +448,10 @@ export default function Dashboard(props) {
                             <Grid item xs={12} sm="auto" md="auto" lg="auto">
                                 <CardTablePopUp
                                     analysisField="control_summary_rating"
-                                    dashboardFile={dashboardfile}
+                                    dashboardFile={createRemediationList(dashboardfile)}
                                     filter="Poorly"
                                     id="poorly_card"
+                                    showRemediation={true}
                                     tableIcons={tableIcons}
                                     DashboardContent={
                                         <DashboardContent
@@ -435,10 +465,11 @@ export default function Dashboard(props) {
                             <Grid item xs={12} sm="auto" md="auto" lg="auto">
                                 <CardTablePopUp
                                     analysisField="control_summary_rating"
-                                    dashboardFile={dashboardfile}
+                                    dashboardFile={createRemediationList(dashboardfile)}
                                     filter="None"
                                     tableIcons={tableIcons}
                                     id="none_card"
+                                    showRemediation={true}
                                     DashboardContent={
                                         <DashboardContent
                                             icon={<FlagIcon style={{ fontSize: 120 }} />}
