@@ -7,7 +7,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import { TransitionProps } from '@material-ui/core/transitions';
 import MaterialTable from 'material-table';
-import useStyles from './useStyles';
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & { children?: React.ReactElement<any, any> },
@@ -23,6 +22,7 @@ const CardTablePopUp = (props: {
     filter: any;
     tableIcons: any;
     id: string;
+    showRemediation: boolean;
 }): JSX.Element => {
     const [open, setOpen] = useState(false);
 
@@ -51,20 +51,39 @@ const CardTablePopUp = (props: {
             >
                 <DialogTitle id="alert-dialog-slide-title">{'Atreides.ai'}</DialogTitle>
                 <DialogContent>
-                    <MaterialTable
-                        options={{
-                            exportButton: true,
-                            filtering: true,
-                        }}
-                        icons={props.tableIcons}
-                        columns={[
-                            { title: 'Control Description', field: 'Control Description', filtering: false },
-                            { title: 'Risk Description', field: 'Risk Description', filtering: false },
-                            { title: 'Overall Score', field: props.analysisField, defaultFilter: props.filter },
-                        ]}
-                        data={props.dashboardFile}
-                        title="Analysis Summary"
-                    />
+                    {props.showRemediation && (
+                        <MaterialTable
+                            options={{
+                                exportButton: true,
+                                filtering: true,
+                            }}
+                            icons={props.tableIcons}
+                            columns={[
+                                { title: 'Control Description', field: 'control_description', filtering: false },
+                                { title: 'Risk Description', field: 'risk_description', filtering: false },
+                                { title: 'Overall Score', field: props.analysisField, defaultFilter: props.filter },
+                                { title: 'Remediation', field: 'Remediation', filtering: false },
+                            ]}
+                            data={props.dashboardFile}
+                            title="Analysis Summary"
+                        />
+                    )}
+                    {!props.showRemediation && (
+                        <MaterialTable
+                            options={{
+                                exportButton: true,
+                                filtering: true,
+                            }}
+                            icons={props.tableIcons}
+                            columns={[
+                                { title: 'Control Description', field: 'control_description', filtering: false },
+                                { title: 'Risk Description', field: 'risk_description', filtering: false },
+                                { title: 'Overall Score', field: props.analysisField, defaultFilter: props.filter },
+                            ]}
+                            data={props.dashboardFile}
+                            title="Analysis Summary"
+                        />
+                    )}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">
@@ -74,6 +93,10 @@ const CardTablePopUp = (props: {
             </Dialog>
         </div>
     );
+};
+
+CardTablePopUp.defaultProps = {
+    showRemediation: false,
 };
 
 export default CardTablePopUp;

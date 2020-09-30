@@ -370,6 +370,7 @@ export default function Dashboard(props) {
                                     dashboardFile={dashboardfile}
                                     filter="Fully"
                                     tableIcons={tableIcons}
+                                    showRemediation={true}
                                     DashboardContent={
                                         <DashboardContent
                                             icon={<StarIcon style={{ fontSize: 120 }} />}
