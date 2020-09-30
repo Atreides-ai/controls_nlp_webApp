@@ -1,4 +1,4 @@
-import { green, red, grey } from '@material-ui/core/colors';
+import { green, red } from '@material-ui/core/colors';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { Theme } from '@material-ui/core';
 
@@ -42,19 +42,21 @@ const useStyles = makeStyles((theme: Theme) =>
         media: {
             height: 500,
         },
-        circle: {
-            display: 'flex',
+        progress: {
             '& > * + *': {
                 marginLeft: theme.spacing(2),
             },
             align: 'center',
+            width: '100%',
+            marginTop: theme.spacing(15),
+            flexDirection: 'column',
+            alignItems: 'center',
         },
         menuButton: {
             marginRight: theme.spacing(2),
         },
         title: {
             flexGrow: 1,
-            alignContent: 'center',
         },
         pie: {
             height: 250,
