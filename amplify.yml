@@ -8,12 +8,6 @@ backend:
                 - amplifyPush --simple
 frontend:
     phases:
-        preTest:
-            commands:
-                - yarn install --production=false
-        test:
-            commands:
-                - yarn test
         preBuild:
             commands:
                 - nvm use $VERSION_NODE_12
@@ -42,3 +36,12 @@ frontend:
     cache:
         paths:
             - node_modules/**/*
+
+test:
+    phases:
+        preTest:
+            commands:
+                - yarn install --production=false
+        test:
+            commands:
+                - yarn test
