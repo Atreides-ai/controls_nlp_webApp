@@ -10,7 +10,7 @@ frontend:
     phases:
         preTest:
             commands:
-                - 
+                - yarn install --production=false
         test:
             commands:
                 - yarn test
