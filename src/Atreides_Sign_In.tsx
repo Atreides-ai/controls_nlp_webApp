@@ -35,7 +35,9 @@ export default function AtreidesSignIn(props: {
     };
 
     const submitPasswordReset = (): void => {
-        Auth.forgotPassword(email).then(() => props.signInStatus('ForgotPassword'));
+        Auth.forgotPassword(email)
+            .then(() => props.signInStatus('ForgotPassword'))
+            .catch(() => setError(true));
     };
 
     const handleChallenge = (user: any): void => {
