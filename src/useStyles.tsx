@@ -215,6 +215,18 @@ const useStyles = makeStyles((theme: Theme) =>
             }),
             marginLeft: 0,
         },
+        homePageCard: {
+            marginLeft: theme.spacing(1),
+            marginRight: theme.spacing(1),
+            maxWidth: 500,
+        },
+        homePageSurface: {
+            marginTop: '5%',
+            marginLeft: '5%',
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+        },
     }),
 );
 
