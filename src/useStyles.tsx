@@ -227,6 +227,9 @@ const useStyles = makeStyles((theme: Theme) =>
             flexDirection: 'row',
             alignItems: 'center',
         },
+        atreidesLogo: {
+            marginLeft: '30%',
+        },
     }),
 );
 
