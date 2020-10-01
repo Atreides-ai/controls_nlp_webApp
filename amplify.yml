@@ -15,7 +15,7 @@ frontend:
         build:
             commands:
                 - nvm use $VERSION_NODE_12
-                - INLINE_RUNTIME_CHUNK=false yarn run test && yarn run build
+                - INLINE_RUNTIME_CHUNK=false yarn run build
     artifacts:
         baseDirectory: build
         files:
@@ -36,3 +36,15 @@ frontend:
     cache:
         paths:
             - node_modules/**/*
+test:
+    phases:
+        preTest:
+            commands:
+                - yarn install --production=false
+        test:
+            commands:
+                - yarn test
+    artifacts:
+        baseDirectory: build
+        files:
+            - '**/*'
