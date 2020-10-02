@@ -3,7 +3,7 @@ backend:
     phases:
         build:
             commands:
-                - '# Execute Amplify CLI with the helper script'
+                - "# Execute Amplify CLI with the helper script"
                 - envCache --set stackInfo ""
                 - amplifyPush --simple
 frontend:
@@ -19,19 +19,19 @@ frontend:
     artifacts:
         baseDirectory: build
         files:
-            - '**/*'
+            - "**/*"
     customHeaders:
-        - pattern: '**/*'
+        - pattern: "**/*"
           headers:
-              - key: 'Strict-Transport-Security'
-                value: 'max-age=31536000; includeSubDomains'
-              - key: 'X-Frame-Options'
-                value: 'SAMEORIGIN'
-              - key: 'X-XSS-Protection'
-                value: '1; mode=block'
-              - key: 'X-Content-Type-Options'
-                value: 'nosniff'
-              - key: 'Content-Security-Policy'
+              - key: "Strict-Transport-Security"
+                value: "max-age=31536000; includeSubDomains"
+              - key: "X-Frame-Options"
+                value: "SAMEORIGIN"
+              - key: "X-XSS-Protection"
+                value: "1; mode=block"
+              - key: "X-Content-Type-Options"
+                value: "nosniff"
+              - key: "Content-Security-Policy"
                 value: "script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data:; font-src 'self' https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; manifest-src 'self'"
     cache:
         paths:
@@ -45,6 +45,8 @@ test:
             commands:
                 - yarn test
     artifacts:
-        baseDirectory: build
+        baseDirectory: src
+        configFilePath: "**/jest.json"
         files:
-            - '**/*'
+            - "**/*.png"
+            - "**/*.mp4"
