@@ -44,9 +44,3 @@ test:
         test:
             commands:
                 - yarn test
-    artifacts:
-        baseDirectory: src
-        configFilePath: "**/jest.json"
-        files:
-            - "**/*.png"
-            - "**/*.mp4"
