@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -37,6 +38,7 @@ export default function SubmitFile(props: {
     const [unauthorized, setUnauthorized] = useState<boolean>(false);
     const [fileName, selectedFileName] = useState<string>('No File Selected');
     const [showDashboardButton, setDashboardButton] = useState<boolean>(false);
+    const [showLoadingCircle, setLoadingCircle] = useState<boolean>(false);
     const inputFileRef: any = useRef<HTMLInputElement>(null);
 
     const papaPromise = async (rawFile: File): Promise<object | Error> => {
@@ -179,9 +181,9 @@ export default function SubmitFile(props: {
     };
 
     const handleUpload = async (file: File): Promise<void> => {
+        setLoadingCircle(true);
         const headers = await generateHeaders();
         const data = await convertFileToJson(file);
-        console.log(data);
         const url = baseUrl + '/control';
         axios.post(url, data, headers).then(response => {
             if (response.status === 400) {
@@ -201,6 +203,7 @@ export default function SubmitFile(props: {
                     headers['headers']['Authorization'],
                     headers['headers']['x-api-key'],
                 );
+                setLoadingCircle(false);
                 setDashboardButton(true);
             }
             if (response.status === 200) {
@@ -275,8 +278,8 @@ export default function SubmitFile(props: {
                                 Upload
                             </Button>
                         </Grid>
-                        {showDashboardButton && (
-                            <Grid item>
+                        <Grid item>
+                            {showDashboardButton && (
                                 <Link to="/dashboard">
                                     <Button
                                         type="submit"
@@ -287,8 +290,9 @@ export default function SubmitFile(props: {
                                         View Results
                                     </Button>
                                 </Link>
-                            </Grid>
-                        )}
+                            )}
+                            {showLoadingCircle && <CircularProgress color="primary" />}
+                        </Grid>
                         <Grid item>
                             <Chip color="primary" onDelete={handleDelete} icon={<FileCopyIcon />} label={fileName} />
                         </Grid>
