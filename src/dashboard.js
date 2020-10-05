@@ -78,19 +78,20 @@ export default function Dashboard(props) {
             }
             console.log(remediationText);
             obj['Remediation'] = remediationText.join('');
-            console.log(obj);
             return obj;
         });
     };
 
     const fillNulls = controls => {
         return controls.map(function(obj) {
-            for (const key of Object.entries(obj)) {
-                if (obj[key] === null) {
-                    obj[key] = 'Not Provided';
+            for (const [key, value] of Object.entries(obj)) {
+                if (obj[key] === null || undefined) {
+                    obj[key] = 'None';
+                } else {
+                    obj[key] = String(value);
                 }
-                return obj;
             }
+            return obj;
         });
     };
 
@@ -108,6 +109,8 @@ export default function Dashboard(props) {
                 }
             }
             delete obj['additional_data'];
+            delete obj['job_id'];
+            delete obj['organisation_id'];
             return obj;
         });
     };
@@ -115,6 +118,7 @@ export default function Dashboard(props) {
     const createCSVDownload = rawFile => {
         const file = unwrapAdditionalData(rawFile);
         const processedFile = fillNulls(file);
+        console.log(processedFile);
         return processedFile;
     };
 
