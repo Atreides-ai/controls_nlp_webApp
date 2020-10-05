@@ -48,14 +48,12 @@ export default function Dashboard(props) {
     const baseUrl = 'https://api.atreides.ai/dev/atreides-app/controls-nlp/v1';
     const [progress, setProgress] = useState(0);
     const [waitMessage, showWaitMessage] = useState(false);
-    const [ackWaitMessage, setAckWaitMessage] = useState(false);
     const [errorMessage, showErrorMessage] = useState(false);
     const [limitMessage, showLimitMessage] = useState(false);
     const descriptions = dashboardDescriptions;
 
     const handleClose = () => {
         showWaitMessage(false);
-        setAckWaitMessage(true);
     };
 
     const createRemediationList = dashboardfile => {
@@ -129,9 +127,9 @@ export default function Dashboard(props) {
         const headers = { headers: { 'x-api-key': apiKey, Authorization: token } };
         const interval = setInterval(() => {
             axios.get(url, headers).then(response => {
-                if (response.status === 200) {
+                if (response.status === 200 && response['data']['percent_complete'] === 100) {
                     setProgress(100);
-                    showWaitMessage(false);
+                    console.log('completed');
                     if (response.data.controls) {
                         console.log(response.data.controls);
                         setFile(response.data.controls);
@@ -140,13 +138,9 @@ export default function Dashboard(props) {
                     } else {
                         showErrorMessage(true);
                     }
-                } else if (response.status === 202) {
-                    if (progress < 100) {
-                        console.log(response);
-                        setProgress(progress + 10);
-                    } else if (!ackWaitMessage) {
-                        showWaitMessage(true);
-                    }
+                } else if (response.status === 200 && response['data']['percent_complete'] != 100) {
+                    console.log(response);
+                    setProgress(response['data']['percent_complete']);
                 } else if (response.status === 403) {
                     showLimitMessage(true);
                     clearInterval(interval);
@@ -319,7 +313,7 @@ export default function Dashboard(props) {
             {dashboard === false && (
                 <Container component="main" maxWidth="xs">
                     <div className={classes.progress} align="centre">
-                        <LinearProgress color="secondary" variant="indeterminate" />
+                        <LinearProgress color="secondary" variant="determinate" value={progress} />
                     </div>
                     <Dialog
                         open={waitMessage}
