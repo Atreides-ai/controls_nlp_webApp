@@ -43,4 +43,4 @@ test:
                 - yarn install --production=false
         test:
             commands:
-                - yarn test
+                - yarn test a
