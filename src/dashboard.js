@@ -59,38 +59,90 @@ export default function Dashboard(props) {
     const createRemediationList = dashboardfile => {
         return dashboardfile.map(function(obj) {
             const remediationText = [];
-            if (obj['contains_whats'] === false) {
-                remediationText.push('No what,');
+            if (obj['contains_whats'] === 'false') {
+                remediationText.push('No what.\n');
             }
-            if (obj['contains_hows'] === false) {
+            if (obj['contains_hows'] === 'false') {
                 console.log('No how triggered...');
-                remediationText.push('No how, ');
+                remediationText.push('No how.\n');
                 console.log(remediationText);
             }
-            if (obj['contains_whos'] === false) {
-                remediationText.push('No who, ');
+            if (obj['contains_whos'] === 'false') {
+                remediationText.push('No who\n');
             }
-            if (obj['contains_whens'] === false) {
-                remediationText.push('No when, ');
+            if (obj['contains_whens'] === 'false') {
+                remediationText.push('No when\n');
             }
             if (remediationText === '') {
                 remediationText.push('No remediation required');
             }
             console.log(remediationText);
             obj['Remediation'] = remediationText.join('');
-            console.log(obj);
             return obj;
         });
     };
 
+    const orderDownload = file => {
+        const download = [];
+        file.map(obj => {
+            const newObj = {};
+
+            // Control Information
+            newObj['Control ID'] = obj['control_id'];
+            newObj['Control Description'] = obj['control_description'];
+            newObj['Risk Description'] = obj['risk_description'];
+            newObj['Control Operator'] = obj['control_operator'];
+            newObj['Control Frequency'] = obj['control_frequency'];
+
+            // Core Metrics
+            newObj['Relevance to Risk'] = obj['relevance_to_risk'];
+            newObj['Contains Whats'] = obj['contains_whats'];
+            newObj['Contains Hows'] = obj['contains_hows'];
+            newObj['Contains Whens'] = obj['contains_whens'];
+            newObj['Contains Whos'] = obj['contains_whos'];
+            newObj['Contains Thresholds'] = obj['contains_thresholds'];
+            newObj['Control Summary Rating'] = obj['control_summary_rating'];
+
+            // Wh Question Details
+            newObj['Whats'] = obj['whats'];
+            newObj['Hows'] = obj['hows'];
+            newObj['Whens'] = obj['whens'];
+            newObj['Who'] = obj['who'];
+            newObj['Thresholds'] = obj['thresholds'];
+
+            // Multiple Whs
+            newObj['Multiple Whats'] = obj['multiple_whats'];
+            newObj['Multiple Hows'] = obj['multiple_hows'];
+            newObj['Multiple Whens'] = obj['multiple_whens'];
+            newObj['Multiple Whos'] = obj['multiple_whos'];
+            newObj['Multiple Thresholds'] = obj['multiple_thresholds'];
+
+            // Financial Statement Assertions
+
+            newObj['Accuracy'] = obj['accuracy'];
+            newObj['Classification & Understandability'] = obj['classification_and_understandability'];
+            newObj['Completeness'] = obj['completeness'];
+            newObj['Cut Off'] = obj['cut_off'];
+            newObj['Existence'] = obj['existence'];
+            newObj['Valuation'] = obj['valuation'];
+            newObj['Rights and Obligations'] = obj['rights_and_obligations'];
+            newObj['Occurrence'] = obj['occurrence'];
+
+            download.push(newObj);
+        });
+        return download;
+    };
+
     const fillNulls = controls => {
         return controls.map(function(obj) {
-            for (const key of Object.entries(obj)) {
-                if (obj[key] === null) {
-                    obj[key] = 'Not Provided';
+            for (const [key, value] of Object.entries(obj)) {
+                if (obj[key] === null || undefined || []) {
+                    obj[key] = 'None';
+                } else {
+                    obj[key] = String(value);
                 }
-                return obj;
             }
+            return obj;
         });
     };
 
@@ -107,7 +159,7 @@ export default function Dashboard(props) {
                     obj[key] = value;
                 }
             }
-            delete obj['additional_data'];
+
             return obj;
         });
     };
@@ -115,7 +167,9 @@ export default function Dashboard(props) {
     const createCSVDownload = rawFile => {
         const file = unwrapAdditionalData(rawFile);
         const processedFile = fillNulls(file);
-        return processedFile;
+        const orderedData = orderDownload(processedFile);
+        console.log(orderedData);
+        return orderedData;
     };
 
     /**
@@ -131,6 +185,7 @@ export default function Dashboard(props) {
                     setProgress(100);
                     console.log('completed');
                     if (response.data.controls) {
+                        console.log(response);
                         console.log(response.data.controls);
                         setFile(response.data.controls);
                         clearInterval(interval);

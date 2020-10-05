@@ -39,6 +39,7 @@ export default function SubmitFile(props: {
     const [fileName, selectedFileName] = useState<string>('No File Selected');
     const [showDashboardButton, setDashboardButton] = useState<boolean>(false);
     const [showLoadingCircle, setLoadingCircle] = useState<boolean>(false);
+    const [allowSubmission, setAllowSubmission] = useState<boolean>(true);
     const inputFileRef: any = useRef<HTMLInputElement>(null);
 
     const papaPromise = async (rawFile: File): Promise<object | Error> => {
@@ -181,37 +182,40 @@ export default function SubmitFile(props: {
     };
 
     const handleUpload = async (file: File): Promise<void> => {
-        setLoadingCircle(true);
         const headers = await generateHeaders();
         const data = await convertFileToJson(file);
         const url = baseUrl + '/control';
-        axios.post(url, data, headers).then(response => {
-            if (response.status === 400) {
-                setOpen(true);
-                setBadData(true);
-            }
-            if (response.status === 403) {
-                setOpen(true);
-                setUnauthorized(true);
-            }
-            if (response.status === 202) {
-                console.log(response);
-                successMessage();
-                setOpen(true);
-                props.dbCallback(
-                    response['data']['job_id'],
-                    headers['headers']['Authorization'],
-                    headers['headers']['x-api-key'],
-                );
-                setLoadingCircle(false);
-                setDashboardButton(true);
-            }
-            if (response.status === 200) {
-                successMessage();
-                setOpen(true);
-                setDashboardButton(true);
-            }
-        });
+        if (allowSubmission === true) {
+            setAllowSubmission(false);
+            setLoadingCircle(true);
+            axios.post(url, data, headers).then(response => {
+                if (response.status === 400) {
+                    setOpen(true);
+                    setBadData(true);
+                }
+                if (response.status === 403) {
+                    setOpen(true);
+                    setUnauthorized(true);
+                }
+                if (response.status === 202) {
+                    console.log(response);
+                    successMessage();
+                    setOpen(true);
+                    props.dbCallback(
+                        response['data']['job_id'],
+                        headers['headers']['Authorization'],
+                        headers['headers']['x-api-key'],
+                    );
+                    setLoadingCircle(false);
+                    setDashboardButton(true);
+                }
+                if (response.status === 200) {
+                    successMessage();
+                    setOpen(true);
+                    setDashboardButton(true);
+                }
+            });
+        }
     };
 
     const uploadManager = async (): Promise<void> => {
