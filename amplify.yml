@@ -43,4 +43,10 @@ test:
                 - yarn install --production=false
         test:
             commands:
-                - yarn test a
+                - yarn test
+    artifacts:
+        baseDirectory: test
+        configFilePath: "**/jest.json"
+        files:
+            - "**/*.png"
+            - "**/*.mp4"
