@@ -14,6 +14,7 @@ frontend:
                 - yarn install
         build:
             commands:
+                - echo REACT_APP_ENDPOINT = $REACT_APP_ENDPOINT >> .env
                 - nvm use $VERSION_NODE_12
                 - INLINE_RUNTIME_CHUNK=false yarn run build
     artifacts:

@@ -29,7 +29,7 @@ import XLSX from 'xlsx';
 export default function SubmitFile(props: {
     dbCallback: (jobID: string, token: string, apiKey: string) => void;
 }): JSX.Element {
-    const baseUrl = 'https://api.atreides.ai/dev/atreides-app/controls-nlp/v1';
+    const baseUrl = process.env.REACT_APP_ENDPOINT;
     const classes = useStyles();
     const [file, selectFile] = useState<File>();
     const [open, setOpen] = useState<boolean>(false);

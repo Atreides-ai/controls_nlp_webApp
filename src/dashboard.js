@@ -45,7 +45,7 @@ export default function Dashboard(props) {
     const classes = useStyles();
     const [dashboard, showDashboard] = useState(false);
     const [dashboardfile, setFile] = useState();
-    const baseUrl = 'https://api.atreides.ai/dev/atreides-app/controls-nlp/v1';
+    const baseUrl = process.env.REACT_APP_ENDPOINT;
     const [progress, setProgress] = useState(0);
     const [waitMessage, showWaitMessage] = useState(false);
     const [errorMessage, showErrorMessage] = useState(false);
