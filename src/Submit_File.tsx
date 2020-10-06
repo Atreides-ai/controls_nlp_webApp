@@ -113,14 +113,31 @@ export default function SubmitFile(props: {
         });
     };
 
+    const handleTitleRow = (rawWorkBook: any, sheetName: string): Array<object> => {
+        const sheet = XLSX.utils.sheet_to_json(rawWorkBook.Sheets[sheetName]) as Array<object>;
+        if (sheet[0].hasOwnProperty('Control Description') && sheet[0].hasOwnProperty('Risk Description')) {
+            return sheet;
+        } else {
+            return XLSX.utils.sheet_to_json(rawWorkBook.Sheets[sheetName], { range: 1 });
+        }
+    };
+
+    const addSheetName = (sheet: Array<object>, sheetName: string): Array<object> => {
+        return sheet.map(obj => {
+            obj['sheetName'] = sheetName;
+            return obj;
+        });
+    };
+
     const convertXLToJSON = async (file: File): Promise<Record<string, any>> => {
         const data = await fileReaderPromise(file)
             .then(rawData => {
                 const rawWorkbook = XLSX.read(rawData, { type: 'binary' });
                 const jsonList: unknown[][] = [];
                 rawWorkbook.SheetNames.forEach(function(sheetName) {
-                    const sheet = XLSX.utils.sheet_to_json(rawWorkbook.Sheets[sheetName]);
-                    jsonList.push(sheet);
+                    const sheet = handleTitleRow(rawWorkbook, sheetName);
+                    const namedSheets = addSheetName(sheet, sheetName);
+                    jsonList.push(namedSheets);
                 });
                 // This was used instead of .flat() to ensure compatability with IE
                 const mergedData = jsonList.reduce((accumulator, value) => accumulator.concat(value), []);
@@ -135,7 +152,7 @@ export default function SubmitFile(props: {
     };
 
     const convertFileToJson = async (file: File): Promise<Record<string, any>> => {
-        if (fileName.split('.').pop() === '.csv') {
+        if (fileName.split('.').pop() === 'csv') {
             return convertCSVToJSON(file);
         } else {
             return convertXLToJSON(file);
@@ -184,6 +201,7 @@ export default function SubmitFile(props: {
     const handleUpload = async (file: File): Promise<void> => {
         const headers = await generateHeaders();
         const data = await convertFileToJson(file);
+        console.log(data);
         const url = baseUrl + '/control';
         if (allowSubmission === true) {
             setAllowSubmission(false);
