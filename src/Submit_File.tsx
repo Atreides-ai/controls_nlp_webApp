@@ -113,20 +113,29 @@ export default function SubmitFile(props: {
         });
     };
 
-    const handleTitleRow = (rawWorkBook: any, sheetName: string): Array<object> => {
-        const sheet = XLSX.utils.sheet_to_json(rawWorkBook.Sheets[sheetName]) as Array<object>;
-        if (sheet[0].hasOwnProperty('Control Description') && sheet[0].hasOwnProperty('Risk Description')) {
-            return sheet;
-        } else {
-            return XLSX.utils.sheet_to_json(rawWorkBook.Sheets[sheetName], { range: 1 });
-        }
-    };
-
     const addSheetName = (sheet: Array<object>, sheetName: string): Array<object> => {
         return sheet.map(obj => {
             obj['sheetName'] = sheetName;
             return obj;
         });
+    };
+
+    const handleTitleRow = (rawWorkBook: any, sheetName: string): Array<object> | void => {
+        let counter = 0;
+        while (counter <= 5) {
+            const sheet = XLSX.utils.sheet_to_json(rawWorkBook.Sheets[sheetName], { range: counter }) as Array<object>;
+            if (sheet[0].hasOwnProperty('Control Description') && sheet[0].hasOwnProperty('Risk Description')) {
+                const namedSheets = addSheetName(sheet, sheetName);
+                return namedSheets;
+            } else {
+                counter++;
+            }
+        }
+
+        if (counter > 5) {
+            setOpen(true);
+            setBadData(true);
+        }
     };
 
     const convertXLToJSON = async (file: File): Promise<Record<string, any>> => {
@@ -135,9 +144,8 @@ export default function SubmitFile(props: {
                 const rawWorkbook = XLSX.read(rawData, { type: 'binary' });
                 const jsonList: unknown[][] = [];
                 rawWorkbook.SheetNames.forEach(function(sheetName) {
-                    const sheet = handleTitleRow(rawWorkbook, sheetName);
-                    const namedSheets = addSheetName(sheet, sheetName);
-                    jsonList.push(namedSheets);
+                    const sheet = handleTitleRow(rawWorkbook, sheetName) as Array<object>;
+                    jsonList.push(sheet);
                 });
                 // This was used instead of .flat() to ensure compatability with IE
                 const mergedData = jsonList.reduce((accumulator, value) => accumulator.concat(value), []);
@@ -201,7 +209,6 @@ export default function SubmitFile(props: {
     const handleUpload = async (file: File): Promise<void> => {
         const headers = await generateHeaders();
         const data = await convertFileToJson(file);
-        console.log(data);
         const url = baseUrl + '/control';
         if (allowSubmission === true) {
             setAllowSubmission(false);
@@ -216,7 +223,6 @@ export default function SubmitFile(props: {
                     setUnauthorized(true);
                 }
                 if (response.status === 202) {
-                    console.log(response);
                     successMessage();
                     setOpen(true);
                     props.dbCallback(

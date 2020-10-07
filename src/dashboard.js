@@ -136,7 +136,7 @@ export default function Dashboard(props) {
     const fillNulls = controls => {
         return controls.map(function(obj) {
             for (const [key, value] of Object.entries(obj)) {
-                if (obj[key] === null || undefined || []) {
+                if (obj[key] === null) {
                     obj[key] = 'None';
                 } else {
                     obj[key] = String(value);
