@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './App.css';
-import SubmitFile from './submit_file.js';
+import SubmitFile from './Submit_File';
 import Dashboard from './dashboard.js';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import PrivateRoute from './private_route.js';
@@ -15,25 +15,34 @@ Amplify.configure(awsmobile);
 
 export default function App() {
     const [authState, setState] = useState(false);
-    const [user, setUser] = useState();
-    const callbackState = (authStateData, currentUser) => {
+    const [jobId, setJobId] = useState(false);
+    const [token, setToken] = useState(false);
+    const [apiKey, setApiKey] = useState(false);
+
+    const authCallbackState = authStateData => {
         setState(authStateData);
-        setUser(currentUser);
     };
+
+    const jobCallback = (jobId_, token_, apiKey_) => {
+        setJobId(jobId_);
+        setToken(token_);
+        setApiKey(apiKey_);
+    };
+
     return (
         <ThemeProvider theme={theme}>
             <Router>
                 <Switch>
                     <PrivateRoute path="/dashboard" authState={authState}>
                         <CssBaseline />
-                        <Dashboard />
+                        <Dashboard jobId={jobId} token={token} apiKey={apiKey} />
                     </PrivateRoute>
                     <PrivateRoute path="/submitFile" authState={authState}>
                         <CssBaseline />
-                        <SubmitFile user={user} />
+                        <SubmitFile dbCallback={jobCallback} />
                     </PrivateRoute>
                     <Route path="/">
-                        <AuthComponent appCallback={callbackState} />
+                        <AuthComponent appCallback={authCallbackState} />
                     </Route>
                 </Switch>
             </Router>

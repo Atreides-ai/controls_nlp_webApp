@@ -1,6 +1,8 @@
-import { green, red, grey } from '@material-ui/core/colors';
+import { green, red } from '@material-ui/core/colors';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { Theme } from '@material-ui/core';
+
+const drawerWidth = 240;
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -42,19 +44,21 @@ const useStyles = makeStyles((theme: Theme) =>
         media: {
             height: 500,
         },
-        circle: {
-            display: 'flex',
+        progress: {
             '& > * + *': {
                 marginLeft: theme.spacing(2),
             },
             align: 'center',
+            width: '100%',
+            marginTop: theme.spacing(15),
+            flexDirection: 'column',
+            alignItems: 'center',
         },
         menuButton: {
             marginRight: theme.spacing(2),
         },
         title: {
             flexGrow: 1,
-            alignContent: 'center',
         },
         pie: {
             height: 250,
@@ -159,6 +163,72 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         summaryButton: {
             marginTop: theme.spacing(1),
+        },
+        appPageRoot: {
+            display: 'flex',
+        },
+        appBar: {
+            transition: theme.transitions.create(['margin', 'width'], {
+                easing: theme.transitions.easing.sharp,
+                duration: theme.transitions.duration.leavingScreen,
+            }),
+        },
+        appBarShift: {
+            width: `calc(100% - ${drawerWidth}px)`,
+            marginLeft: drawerWidth,
+            transition: theme.transitions.create(['margin', 'width'], {
+                easing: theme.transitions.easing.easeOut,
+                duration: theme.transitions.duration.enteringScreen,
+            }),
+        },
+        hide: {
+            display: 'none',
+        },
+        drawer: {
+            width: drawerWidth,
+            flexShrink: 0,
+        },
+        drawerPaper: {
+            width: drawerWidth,
+        },
+        drawerHeader: {
+            display: 'flex',
+            alignItems: 'center',
+            padding: theme.spacing(0, 1),
+            // necessary for content to be below app bar
+            ...theme.mixins.toolbar,
+            justifyContent: 'flex-end',
+        },
+        content: {
+            flexGrow: 1,
+            padding: theme.spacing(3),
+            transition: theme.transitions.create('margin', {
+                easing: theme.transitions.easing.sharp,
+                duration: theme.transitions.duration.leavingScreen,
+            }),
+            marginLeft: -drawerWidth,
+        },
+        contentShift: {
+            transition: theme.transitions.create('margin', {
+                easing: theme.transitions.easing.easeOut,
+                duration: theme.transitions.duration.enteringScreen,
+            }),
+            marginLeft: 0,
+        },
+        homePageCard: {
+            marginLeft: theme.spacing(1),
+            marginRight: theme.spacing(1),
+            maxWidth: 500,
+        },
+        homePageSurface: {
+            marginTop: '5%',
+            marginLeft: '5%',
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+        },
+        atreidesLogo: {
+            marginLeft: '30%',
         },
     }),
 );
