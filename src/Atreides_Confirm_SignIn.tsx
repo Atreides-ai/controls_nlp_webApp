@@ -20,6 +20,7 @@ export default function AtreidesMFA(props: { signInStatus: (stage: string) => vo
 
     const submitCode = (): void => {
         Auth.confirmSignIn(props.user, code, 'SOFTWARE_TOKEN_MFA')
+            .then(user => console.log(user))
             .then(() => props.signInStatus('SignedIn'))
             .catch(() => setError(true));
     };
