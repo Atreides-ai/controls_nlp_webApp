@@ -173,7 +173,6 @@ export default function SubmitFile(props: {
         });
 
         const apiKey = await Auth.currentUserInfo().then(data => {
-            console.log(data);
             return data['attributes']['custom:api-key'];
         });
 
