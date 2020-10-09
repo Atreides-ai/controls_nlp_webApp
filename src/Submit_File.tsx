@@ -113,13 +113,38 @@ export default function SubmitFile(props: {
         });
     };
 
+    const addSheetName = (sheet: Array<object>, sheetName: string): Array<object> => {
+        return sheet.map(obj => {
+            obj['sheetName'] = sheetName;
+            return obj;
+        });
+    };
+
+    const handleTitleRow = (rawWorkBook: any, sheetName: string): Array<object> | void => {
+        let counter = 0;
+        while (counter <= 5) {
+            const sheet = XLSX.utils.sheet_to_json(rawWorkBook.Sheets[sheetName], { range: counter }) as Array<object>;
+            if (sheet[0].hasOwnProperty('Control Description') && sheet[0].hasOwnProperty('Risk Description')) {
+                const namedSheets = addSheetName(sheet, sheetName);
+                return namedSheets;
+            } else {
+                counter++;
+            }
+        }
+
+        if (counter > 5) {
+            setOpen(true);
+            setBadData(true);
+        }
+    };
+
     const convertXLToJSON = async (file: File): Promise<Record<string, any>> => {
         const data = await fileReaderPromise(file)
             .then(rawData => {
                 const rawWorkbook = XLSX.read(rawData, { type: 'binary' });
                 const jsonList: unknown[][] = [];
                 rawWorkbook.SheetNames.forEach(function(sheetName) {
-                    const sheet = XLSX.utils.sheet_to_json(rawWorkbook.Sheets[sheetName]);
+                    const sheet = handleTitleRow(rawWorkbook, sheetName) as Array<object>;
                     jsonList.push(sheet);
                 });
                 // This was used instead of .flat() to ensure compatability with IE
@@ -135,7 +160,7 @@ export default function SubmitFile(props: {
     };
 
     const convertFileToJson = async (file: File): Promise<Record<string, any>> => {
-        if (fileName.split('.').pop() === '.csv') {
+        if (fileName.split('.').pop() === 'csv') {
             return convertCSVToJSON(file);
         } else {
             return convertXLToJSON(file);
@@ -198,7 +223,6 @@ export default function SubmitFile(props: {
                     setUnauthorized(true);
                 }
                 if (response.status === 202) {
-                    console.log(response);
                     successMessage();
                     setOpen(true);
                     props.dbCallback(
