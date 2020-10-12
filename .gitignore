@@ -37,7 +37,7 @@ awsconfiguration.json
 amplifyconfiguration.json
 amplify-gradle-config.json
 amplifyxc.config
-
+.vscode/settings.json
 # python
 .pytest_cache/v/cache/nodeids
 .pytest_cache/v/cache/stepwise
