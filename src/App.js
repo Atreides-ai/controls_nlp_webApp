@@ -10,7 +10,12 @@ import AuthComponent from './Atreides_Auth_Wrapper';
 import { ThemeProvider } from '@material-ui/core/styles';
 import theme from './theme';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import AtreidesDropzone from './Atreides_Dropzone';
+import AppLayout from './AppLayout';
+import FlagIcon from '@material-ui/icons/Flag';
+import HomeIcon from '@material-ui/icons/Home';
+import DonutLargeIcon from '@material-ui/icons/DonutLarge';
+import FolderSharedIcon from '@material-ui/icons/FolderShared';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
 Amplify.configure(awsmobile);
 
@@ -19,6 +24,9 @@ export default function App() {
     const [jobId, setJobId] = useState(false);
     const [token, setToken] = useState(false);
     const [apiKey, setApiKey] = useState(false);
+
+    const listItems = ['Home', 'Dashboard', 'Company Controls', 'Upload'];
+    const listIcons = [<HomeIcon />, <DonutLargeIcon />, <FolderSharedIcon />, <CloudUploadIcon />];
 
     const authCallbackState = authStateData => {
         setState(authStateData);
@@ -40,11 +48,15 @@ export default function App() {
                     </PrivateRoute>
                     <PrivateRoute path="/submitFile" authState={authState}>
                         <CssBaseline />
-                        <SubmitFile dbCallback={jobCallback} />
+                        <AppLayout
+                            pageTitle="File Submission"
+                            listItems={listItems}
+                            listIcons={listIcons}
+                            coreElement={<SubmitFile dbCallback={jobCallback} />}
+                        />
                     </PrivateRoute>
                     <Route path="/">
-                        <AtreidesDropzone></AtreidesDropzone>
-                        {/* <AuthComponent appCallback={authCallbackState} /> */}
+                        <AuthComponent appCallback={authCallbackState} /> */
                     </Route>
                 </Switch>
             </Router>

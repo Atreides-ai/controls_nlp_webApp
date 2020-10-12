@@ -8,15 +8,11 @@ import SignOut from './sign_out';
 import GuidanceDiaglogue from './guidanceDialogue';
 import './button_hider.css';
 import Snackbar from '@material-ui/core/Snackbar';
-import Chip from '@material-ui/core/Chip';
-import FileCopyIcon from '@material-ui/icons/FileCopy';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
 import { Container } from '@material-ui/core';
-import logo from './logo.png';
 import Copyright from './copyright';
 import { Link } from 'react-router-dom';
 import MySnackbarContentWrapper from './mySnackbarContentWrapper';
@@ -25,13 +21,14 @@ import { Auth } from 'aws-amplify';
 import axios from 'axios';
 import papaparse from 'papaparse';
 import XLSX from 'xlsx';
+import AtreidesDropzone from 'Atreides_Dropzone';
 
 export default function SubmitFile(props: {
     dbCallback: (jobID: string, token: string, apiKey: string) => void;
 }): JSX.Element {
     const baseUrl = process.env.REACT_APP_ENDPOINT;
     const classes = useStyles();
-    const [file, selectFile] = useState<File>();
+    const [file, selectFile] = useState<Array<File>>();
     const [open, setOpen] = useState<boolean>(false);
     const [success, setSuccess] = useState<boolean>(false);
     const [badData, setBadData] = useState<boolean>(false);
@@ -40,7 +37,6 @@ export default function SubmitFile(props: {
     const [showDashboardButton, setDashboardButton] = useState<boolean>(false);
     const [showLoadingCircle, setLoadingCircle] = useState<boolean>(false);
     const [allowSubmission, setAllowSubmission] = useState<boolean>(true);
-    const inputFileRef: any = useRef<HTMLInputElement>(null);
 
     const papaPromise = async (rawFile: File): Promise<object | Error> => {
         return new Promise((resolve, reject) => {
@@ -194,52 +190,47 @@ export default function SubmitFile(props: {
         setOpen(false);
     };
 
-    const handleSelectedFile = async (e: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
-        const element = e.target as HTMLInputElement;
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const theFile = element!.files![0];
-        selectFile(theFile);
-        selectedFileName(theFile['name']);
+    const handleFiles = async (files: Array<File>): Promise<void> => {
+        selectFile(files);
     };
 
-    const handleDelete = (): void => {
-        window.location.reload(false);
-    };
-
-    const handleUpload = async (file: File): Promise<void> => {
-        const headers = await generateHeaders();
-        const data = await convertFileToJson(file);
-        const url = baseUrl + '/control';
-        if (allowSubmission === true) {
-            setAllowSubmission(false);
-            setLoadingCircle(true);
-            axios.post(url, data, headers).then(response => {
-                if (response.status === 400) {
-                    setOpen(true);
-                    setBadData(true);
-                }
-                if (response.status === 403) {
-                    setOpen(true);
-                    setUnauthorized(true);
-                }
-                if (response.status === 202) {
-                    successMessage();
-                    setOpen(true);
-                    props.dbCallback(
-                        response['data']['job_id'],
-                        headers['headers']['Authorization'],
-                        headers['headers']['x-api-key'],
-                    );
-                    setLoadingCircle(false);
-                    setDashboardButton(true);
-                }
-                if (response.status === 200) {
-                    successMessage();
-                    setOpen(true);
-                    setDashboardButton(true);
-                }
-            });
-        }
+    const handleUpload = async (files: Array<File>): Promise<void> => {
+        files.forEach(async file => {
+            selectedFileName(file['name']);
+            const headers = await generateHeaders();
+            const data = await convertFileToJson(file);
+            const url = baseUrl + '/control';
+            if (allowSubmission === true) {
+                setAllowSubmission(false);
+                setLoadingCircle(true);
+                axios.post(url, data, headers).then(response => {
+                    if (response.status === 400) {
+                        setOpen(true);
+                        setBadData(true);
+                    }
+                    if (response.status === 403) {
+                        setOpen(true);
+                        setUnauthorized(true);
+                    }
+                    if (response.status === 202) {
+                        successMessage();
+                        setOpen(true);
+                        props.dbCallback(
+                            response['data']['job_id'],
+                            headers['headers']['Authorization'],
+                            headers['headers']['x-api-key'],
+                        );
+                        setLoadingCircle(false);
+                        setDashboardButton(true);
+                    }
+                    if (response.status === 200) {
+                        successMessage();
+                        setOpen(true);
+                        setDashboardButton(true);
+                    }
+                });
+            }
+        });
     };
 
     const uploadManager = async (): Promise<void> => {
@@ -251,12 +242,6 @@ export default function SubmitFile(props: {
         }
     };
 
-    const onBtnClick = () => {
-        /*Collecting node-element and performing click*/
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        inputFileRef!.current!.click();
-    };
-
     return (
         <Container component="main" maxWidth="lg">
             <div className={classes.loginSurface}>
@@ -265,11 +250,8 @@ export default function SubmitFile(props: {
                         <Grid item xs={12} sm="auto" md="auto" lg="auto">
                             <Card className={classes.card}>
                                 <CardActionArea>
-                                    <CardMedia className={classes.media} image={logo} title="Atreides.ai" />
+                                    <AtreidesDropzone handleFiles={handleFiles} />
                                     <CardContent>
-                                        <Typography gutterBottom variant="h5" component="h2">
-                                            Controls Natural Language Processing
-                                        </Typography>
                                         <Typography variant="body2" color="textSecondary" component="p">
                                             Welcome to the Atreides.ai Controls NLP Portal. We are a cutting edge data
                                             science start up applying Machine Learning to the risk management domain.
@@ -286,21 +268,7 @@ export default function SubmitFile(props: {
                             </Card>
                         </Grid>
                     </Grid>
-                    <Grid item xs={12}>
-                        <input
-                            accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                            id="contained-button-file"
-                            ref={inputFileRef}
-                            type="file"
-                            onChange={e => handleSelectedFile(e)}
-                        />
-                    </Grid>
-                    <Grid container direction="row" justify="space-between" alignItems="center">
-                        <Grid item>
-                            <Button variant="contained" color="primary" onClick={onBtnClick}>
-                                Select File
-                            </Button>
-                        </Grid>
+                    <Grid container direction="column" alignItems="center" spacing={3}>
                         <Grid item>
                             <Button variant="contained" color="primary" onClick={uploadManager}>
                                 Upload
@@ -320,9 +288,6 @@ export default function SubmitFile(props: {
                                 </Link>
                             )}
                             {showLoadingCircle && <CircularProgress color="primary" />}
-                        </Grid>
-                        <Grid item>
-                            <Chip color="primary" onDelete={handleDelete} icon={<FileCopyIcon />} label={fileName} />
                         </Grid>
                     </Grid>
                     <Grid />

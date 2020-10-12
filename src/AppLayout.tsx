@@ -9,7 +9,7 @@ import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import AtreidesIcon from './AtreidesIcon';
+import MenuIcon from '@material-ui/icons/Menu';
 import { useTheme } from '@material-ui/core/styles';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
@@ -50,9 +50,9 @@ const AppLayout = (props: {
                         edge="start"
                         className={clsx(classes.menuButton, open && classes.hide)}
                     >
-                        <AtreidesIcon />
+                        <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6" noWrap>
+                    <Typography variant="h6" noWrap align="center">
                         {props.pageTitle}
                     </Typography>
                 </Toolbar>
