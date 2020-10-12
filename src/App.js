@@ -10,7 +10,7 @@ import AuthComponent from './Atreides_Auth_Wrapper';
 import { ThemeProvider } from '@material-ui/core/styles';
 import theme from './theme';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import AtreidesDropzone from './Atreides_Dropzone'
+import AtreidesDropzone from './Atreides_Dropzone';
 
 Amplify.configure(awsmobile);
 
@@ -43,7 +43,7 @@ export default function App() {
                         <SubmitFile dbCallback={jobCallback} />
                     </PrivateRoute>
                     <Route path="/">
-                        <
+                        <AtreidesDropzone></AtreidesDropzone>
                         {/* <AuthComponent appCallback={authCallbackState} /> */}
                     </Route>
                 </Switch>
