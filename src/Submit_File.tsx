@@ -90,14 +90,6 @@ export default function SubmitFile(props: {
         return formattedData;
     };
 
-    const convertCSVToJSON = async (file: File): Promise<Record<string, any>> => {
-        const rawData = await papaPromise(file).then((obj: object | void) => {
-            return obj['data'];
-        });
-        const data = await formatData(rawData);
-        return { data: data };
-    };
-
     const fileReaderPromise = async (file: File): Promise<string | ArrayBuffer | null> => {
         const reader = new FileReader();
         return new Promise((resolve, reject) => {
@@ -120,13 +112,29 @@ export default function SubmitFile(props: {
         });
     };
 
-    const handleTitleRow = (rawWorkBook: any, sheetName: string): Array<object> | void => {
+    const addFileName = (sheet: Array<object>, fileName: string): Array<object> => {
+        return sheet.map(obj => {
+            obj['filename'] = fileName;
+            return obj;
+        });
+    };
+
+    const addUser = (sheet: Array<object>, user: string): Array<object> => {
+        return sheet.map(obj => {
+            obj['user_id'] = user;
+            return obj;
+        });
+    };
+
+    const handleTitleRow = (rawWorkBook: any, sheetName: string, username: string): Array<object> | void => {
         let counter = 0;
         while (counter <= 5) {
             const sheet = XLSX.utils.sheet_to_json(rawWorkBook.Sheets[sheetName], { range: counter }) as Array<object>;
             if (sheet[0].hasOwnProperty('Control Description') && sheet[0].hasOwnProperty('Risk Description')) {
                 const namedSheets = addSheetName(sheet, sheetName);
-                return namedSheets;
+                const fileNameAdded = addFileName(namedSheets, fileName);
+                const usernameAdded = addUser(fileNameAdded, username);
+                return usernameAdded;
             } else {
                 counter++;
             }
@@ -138,13 +146,23 @@ export default function SubmitFile(props: {
         }
     };
 
-    const convertXLToJSON = async (file: File): Promise<Record<string, any>> => {
+    const convertCSVToJSON = async (file: File, user: string): Promise<Record<string, any>> => {
+        const rawData = await papaPromise(file).then((obj: object | void) => {
+            return obj['data'];
+        });
+        const dataWithFileName = await addFileName(rawData, fileName);
+        const dataWithUserId = await addUser(dataWithFileName, user);
+        const data = await formatData(dataWithUserId);
+        return { data: data };
+    };
+
+    const convertXLToJSON = async (file: File, user: string): Promise<Record<string, any>> => {
         const data = await fileReaderPromise(file)
             .then(rawData => {
                 const rawWorkbook = XLSX.read(rawData, { type: 'binary' });
                 const jsonList: unknown[][] = [];
                 rawWorkbook.SheetNames.forEach(function(sheetName) {
-                    const sheet = handleTitleRow(rawWorkbook, sheetName) as Array<object>;
+                    const sheet = handleTitleRow(rawWorkbook, sheetName, user) as Array<object>;
                     jsonList.push(sheet);
                 });
                 // This was used instead of .flat() to ensure compatability with IE
@@ -159,11 +177,11 @@ export default function SubmitFile(props: {
         return { data: data };
     };
 
-    const convertFileToJson = async (file: File): Promise<Record<string, any>> => {
+    const convertFileToJson = async (file: File, user: string): Promise<Record<string, any>> => {
         if (fileName.split('.').pop() === 'csv') {
-            return convertCSVToJSON(file);
+            return convertCSVToJSON(file, user);
         } else {
-            return convertXLToJSON(file);
+            return convertXLToJSON(file, user);
         }
     };
 
@@ -208,7 +226,10 @@ export default function SubmitFile(props: {
 
     const handleUpload = async (file: File): Promise<void> => {
         const headers = await generateHeaders();
-        const data = await convertFileToJson(file);
+        const user = await Auth.currentUserInfo().then(data => {
+            return data['attributes']['email'];
+        });
+        const data = await convertFileToJson(file, user);
         const url = baseUrl + '/control';
         if (allowSubmission === true) {
             setAllowSubmission(false);
