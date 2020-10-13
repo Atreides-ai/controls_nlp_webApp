@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -17,6 +17,7 @@ import useStyles from './useStyles';
 import { TransitionProps } from '@material-ui/core/transitions';
 import { useTheme } from '@material-ui/core/styles';
 import { Theme } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & { children?: React.ReactElement<any, any> },
@@ -36,6 +37,10 @@ export default function GuidanceDialogue() {
         setOpen(false);
     };
 
+    useEffect(() => {
+        setOpen(true);
+    }, []);
+
     return (
         <div>
             <Button size="small" color="primary" onClick={handleClickOpen}>
@@ -51,19 +56,17 @@ export default function GuidanceDialogue() {
                 fullWidth={true}
                 maxWidth={'md'}
             >
-                <DialogTitle id="alert-dialog-slide-title">{"Using Atreides' NLP service for controls?"}</DialogTitle>
+                <DialogTitle id="alert-dialog-slide-title">{'How to use the tool'}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-slide-description">
-                        <li>Please select select the controls file you wish to be processed.</li>
+                        <Typography variant="body1">
+                            Please select select the controls file you wish to be processed.
+                        </Typography>
+                        <div></div>
+                        <li>The file type must be a .csv or Excel file (.xls or .xlsx)</li>
                         <li>
-                            The file type must be a .csv or Excel file (.xls or .xlsx) with no blank rows or columns at
-                            the beginning or end. If you have an Excel file with more than one sheet, all sheets will be
-                            put together into one file (with all columns from all sheets being kept), with a column
-                            added at the beginning showing which original sheet the row is from. The single file is then
-                            analysed in the dashboard, and is what you can download.
-                        </li>
-                        <li>
-                            The file should not contain greater than <b>7,500</b> controls
+                            If you have an Excel file with more than one sheet, all sheets will be put together into one
+                            file. A column is added in the download stating the sheet the row comes from.
                         </li>
                         <li>
                             For best results run a spellcheck on your data prior to uploading and remove any annotations
@@ -79,8 +82,8 @@ export default function GuidanceDialogue() {
                                     <TableRow>
                                         <TableCell align="center">Control Description</TableCell>
                                         <TableCell align="center">Risk Description</TableCell>
-                                        <TableCell align="center">Control Operator</TableCell>
-                                        <TableCell align="center">Control Frequency</TableCell>
+                                        <TableCell align="center">Control Operator (Optional)</TableCell>
+                                        <TableCell align="center">Control Frequency (Optional)</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
