@@ -246,7 +246,7 @@ export default function SubmitFile(props: {
         <Container component="main" maxWidth="lg">
             <div className={classes.loginSurface}>
                 <form className={classes.mui_form} noValidate>
-                    <Grid container direction="row" spacing={3} justify="center">
+                    <Grid container direction="row" spacing={1} justify="center">
                         <Grid item xs={12} sm="auto" md="auto" lg="auto">
                             <Card className={classes.card}>
                                 <CardActionArea>
