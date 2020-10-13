@@ -11,7 +11,6 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import theme from './theme';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppLayout from './AppLayout';
-import FlagIcon from '@material-ui/icons/Flag';
 import HomeIcon from '@material-ui/icons/Home';
 import DonutLargeIcon from '@material-ui/icons/DonutLarge';
 import FolderSharedIcon from '@material-ui/icons/FolderShared';
@@ -27,6 +26,7 @@ export default function App() {
 
     const listItems = ['Home', 'Dashboard', 'Company Controls', 'Upload'];
     const listIcons = [<HomeIcon />, <DonutLargeIcon />, <FolderSharedIcon />, <CloudUploadIcon />];
+    const linkList = ['/home', '/dashboard', '/comp-controls', '/upload'];
 
     const authCallbackState = authStateData => {
         setState(authStateData);
@@ -52,6 +52,7 @@ export default function App() {
                             pageTitle="File Submission"
                             listItems={listItems}
                             listIcons={listIcons}
+                            linkList={linkList}
                             coreElement={<SubmitFile dbCallback={jobCallback} />}
                         />
                     </PrivateRoute>

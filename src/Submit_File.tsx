@@ -33,7 +33,6 @@ export default function SubmitFile(props: {
     const [success, setSuccess] = useState<boolean>(false);
     const [badData, setBadData] = useState<boolean>(false);
     const [unauthorized, setUnauthorized] = useState<boolean>(false);
-    const [fileName, selectedFileName] = useState<string>('No File Selected');
     const [showDashboardButton, setDashboardButton] = useState<boolean>(false);
     const [showLoadingCircle, setLoadingCircle] = useState<boolean>(false);
     const [allowSubmission, setAllowSubmission] = useState<boolean>(true);

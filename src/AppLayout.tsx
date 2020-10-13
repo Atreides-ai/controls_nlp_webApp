@@ -16,11 +16,13 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import { Link } from 'react-router-dom';
 
 const AppLayout = (props: {
     pageTitle: string;
     listItems: [string];
     listIcons: [JSX.Element];
+    linkList: [string];
     coreElement: JSX.Element;
 }): JSX.Element => {
     const classes = useStyles();
@@ -74,10 +76,13 @@ const AppLayout = (props: {
                 <Divider />
                 <List>
                     {props.listItems.map((text, index) => (
-                        <ListItem button key={text}>
-                            <ListItemIcon>{props.listIcons[index]}</ListItemIcon>
-                            <ListItemText primary={text} />
-                        </ListItem>
+                        // eslint-disable-next-line react/jsx-key
+                        <Link to={props.linkList[index]} style={{ textDecoration: 'none' }}>
+                            <ListItem button key={text}>
+                                <ListItemIcon>{props.listIcons[index]}</ListItemIcon>
+                                <ListItemText primary={<Typography color="primary">{text}</Typography>} />
+                            </ListItem>
+                        </Link>
                     ))}
                 </List>
             </Drawer>
