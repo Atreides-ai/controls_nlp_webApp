@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
@@ -155,7 +155,7 @@ export default function SubmitFile(props: {
         return { data: data };
     };
 
-    const convertFileToJson = async (file: File): Promise<Record<string, any>> => {
+    const convertFileToJson = async (file: File, fileName: String): Promise<Record<string, any>> => {
         if (fileName.split('.').pop() === 'csv') {
             return convertCSVToJSON(file);
         } else {
@@ -196,9 +196,9 @@ export default function SubmitFile(props: {
 
     const handleUpload = async (files: Array<File>): Promise<void> => {
         files.forEach(async file => {
-            selectedFileName(file['name']);
+            const fileName = file['name'];
             const headers = await generateHeaders();
-            const data = await convertFileToJson(file);
+            const data = await convertFileToJson(file, fileName);
             const url = baseUrl + '/control';
             if (allowSubmission === true) {
                 setAllowSubmission(false);
