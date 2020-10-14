@@ -20,9 +20,9 @@ import { Link } from 'react-router-dom';
 
 const AppLayout = (props: {
     pageTitle: string;
-    listItems: [string];
-    listIcons: [JSX.Element];
-    linkList: [string];
+    listItems: string[];
+    listIcons: JSX.Element[];
+    linkList: string[];
     coreElement: JSX.Element;
 }): JSX.Element => {
     const classes = useStyles();

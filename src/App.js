@@ -25,6 +25,7 @@ export default function App() {
     const [apiKey, setApiKey] = useState(false);
 
     const listItems = ['Home', 'Dashboard', 'Company Controls', 'Upload'];
+    // eslint-disable-next-line react/jsx-key
     const listIcons = [<HomeIcon />, <DonutLargeIcon />, <FolderSharedIcon />, <CloudUploadIcon />];
     const linkList = ['/home', '/dashboard', '/comp-controls', '/upload'];
 
