@@ -74,11 +74,11 @@ export default function SubmitFile(props: {
             delete obj['Control Description'];
             obj['risk_description'] = obj['Risk Description'];
             delete obj['Risk Description'];
-            if (obj['Control Frequency']) {
+            if (obj.hasOwnProperty('Control Frequency')) {
                 obj['control_frequency'] = obj['Control Frequency'];
                 delete obj['Control Frequency'];
             }
-            if (obj['Control Operator']) {
+            if (obj.hasOwnProperty('Control Operator')) {
                 obj['control_operator'] = obj['Control Operator'];
                 delete obj['Control Operator'];
             }
