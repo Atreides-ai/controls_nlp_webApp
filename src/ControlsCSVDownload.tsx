@@ -1,0 +1,76 @@
+import React from 'react';
+import Button from '@material-ui/core/Button';
+import { CSVLink } from 'react-csv';
+import { COREMETRICS } from 'CoreMetrics';
+
+const ControlsCSVDOwnload = (props: { dashboardFile: Array<object> }): JSX.Element => {
+    const orderDownload = file => {
+        const download = [];
+        file.map(obj => {
+            const newObj = {};
+            COREMETRICS.forEach(item => {
+                newObj[item.replace(/_/g, ' ').toUpperCase()] = obj[item];
+            });
+
+            const keys = Object.keys(obj);
+            const difference = keys.filter(x => !COREMETRICS.includes(x));
+
+            difference.forEach(item => {
+                newObj[item] = obj[item];
+            });
+
+            download.push(newObj);
+        });
+        return download;
+    };
+
+    const fillNulls = controls => {
+        return controls.map(function(obj) {
+            for (const [key, value] of Object.entries(obj)) {
+                if (obj[key] === null) {
+                    obj[key] = 'None';
+                } else if (obj[key] === false) {
+                    obj[key] = String(value);
+                }
+            }
+            return obj;
+        });
+    };
+
+    /**
+     *
+     *
+     * @param {*} inputFile
+     * @returns
+     */
+    const unwrapAdditionalData = inputFile => {
+        return inputFile.map(function(obj) {
+            if (obj['additional_data'] !== undefined) {
+                for (const [key, value] of Object.entries(obj['additional_data'])) {
+                    obj[key] = value;
+                }
+            }
+            delete obj['additional_data'];
+            delete obj['created_at'];
+            delete obj['job_id'];
+            delete obj['organisation_id'];
+            delete obj['__EMPTY'];
+            return obj;
+        });
+    };
+
+    const createCSVDownload = rawFile => {
+        const file = unwrapAdditionalData(rawFile);
+        const processedFile = fillNulls(file);
+        const orderedData = orderDownload(processedFile);
+        return orderedData;
+    };
+
+    return (
+        <CSVLink data={createCSVDownload(props.dashboardfile)} filename="Analysis.csv">
+            <Button variant="outlined" color="secondary">
+                Download All Results
+            </Button>
+        </CSVLink>
+    );
+};

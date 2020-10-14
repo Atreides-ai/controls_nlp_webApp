@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
 import SubmitFile from './Submit_File';
-import Dashboard from './dashboard.js';
+import Dashboard from './Dashboard';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import PrivateRoute from './private_route.js';
 import Amplify from 'aws-amplify';

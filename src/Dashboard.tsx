@@ -15,15 +15,10 @@ import * as d3 from 'd3';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import MyResponsivePie from './pieConfig';
 import useStyles from './useStyles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import Typography from '@material-ui/core/Typography';
 import 'typeface-roboto';
 import Copyright from './copyright';
 import 'array.prototype.move';
-import { CSVLink } from 'react-csv';
 import DashboardContent from './Dashboard_Content';
 import SecurityIcon from '@material-ui/icons/Security';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
@@ -40,7 +35,9 @@ import MaterialTable from 'material-table';
 import DataTablePopUp from './DataTablePopUp';
 import axios from 'axios';
 import tableIcons from './tableIcons';
- => {
+
+
+const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX.Element => {
     const classes = useStyles();
     const [dashboard, showDashboard] = useState(false);
     const [dashboardfile, setFile] = useState();
@@ -51,7 +48,7 @@ import tableIcons from './tableIcons';
     const [limitMessage, showLimitMessage] = useState(false);
     const descriptions = dashboardDescriptions;
 
-    const handleClose = () => {
+    const handleClose = (): void => {
         showWaitMessage(false);
     };
 
@@ -81,67 +78,9 @@ import tableIcons from './tableIcons';
         });
     };
 
-    const orderDownload = file => {
-        const download = [];
-        file.map(obj => {
-            const newObj = {};
-            COREMETRICS.forEach(item => {
-                newObj[item.replace(/_/g, ' ').toUpperCase()] = obj[item];
-            });
 
-            const keys = Object.keys(obj);
-            const difference = keys.filter(x => !COREMETRICS.includes(x));
 
-            difference.forEach(item => {
-                newObj[item] = obj[item];
-            });
-
-            download.push(newObj);
-        });
-        return download;
-    };
-
-    const fillNulls = controls => {
-        return controls.map(function(obj) {
-            for (const [key, value] of Object.entries(obj)) {
-                if (obj[key] === null) {
-                    obj[key] = 'None';
-                } else if (obj[key] === false) {
-                    obj[key] = String(value);
-                }
-            }
-            return obj;
-        });
-    };
-
-    /**
-     *
-     *
-     * @param {*} inputFile
-     * @returns
-     */
-    const unwrapAdditionalData = inputFile => {
-        return inputFile.map(function(obj) {
-            if (obj['additional_data'] !== undefined) {
-                for (const [key, value] of Object.entries(obj['additional_data'])) {
-                    obj[key] = value;
-                }
-            }
-            delete obj['additional_data'];
-            delete obj['created_at'];
-            delete obj['job_id'];
-            delete obj['organisation_id'];
-            delete obj['__EMPTY'];
-            return obj;
-        });
-    };
-
-    const createCSVDownload = rawFile => {
-        const file = unwrapAdditionalData(rawFile);
-        const processedFile = fillNulls(file);
-        const orderedData = orderDownload(processedFile);
-        return orderedData;
-    };
+    
 
     /**
      * Polls the API at 30 second intervals to check job status
@@ -305,37 +244,19 @@ import tableIcons from './tableIcons';
 
     return (
         <Box className={classes.root} id="dashboard">
-            <AppBar position="static">
-                <Toolbar>
-                    {dashboard && (
-                        <div>
-                            <Grid container direction="row" spacing={1}>
-                                <Grid item xs="auto" sm="auto" md="auto" lg="auto">
-                                    <CSVLink data={createCSVDownload(dashboardfile)} filename="Analysis.csv">
-                                        <IconButton edge="start" color="secondary">
-                                            <CloudDownloadIcon></CloudDownloadIcon>
-                                        </IconButton>
-                                    </CSVLink>
-                                </Grid>
-                                <Grid item xs="auto" sm="auto" md="auto" lg="auto">
-                                    <CSVLink data={createCSVDownload(dashboardfile)} filename="Analysis.csv">
-                                        <Button variant="outlined" color="secondary">
-                                            Download All Results
-                                        </Button>
-                                    </CSVLink>
-                                </Grid>
-                                <Grid item xs="auto" sm="auto" md="auto" lg="auto">
-                                    <PrintButton descriptions={descriptions} label="Download Dashboard" />
-                                </Grid>
-                            </Grid>
-                        </div>
-                    )}
-                    <Typography variant="h6" className={classes.title} align="center">
-                        Atreides Controls NLP Dashboard
-                    </Typography>
-                    <Copyright align="right" color="primary"></Copyright>
-                </Toolbar>
-            </AppBar>
+            {dashboard && (
+                <div>
+                    <Grid container direction="row" spacing={1}>
+                        <Grid item xs="auto" sm="auto" md="auto" lg="auto">
+                            {/* TODO: put download button here */}
+                        </Grid>
+                        <Grid item xs="auto" sm="auto" md="auto" lg="auto">
+                            <PrintButton descriptions={descriptions} label="Download Dashboard" />
+                        </Grid>
+                    </Grid>
+                </div>
+            )}
+            <Copyright align="right" color="primary"></Copyright>
             {dashboard === false && (
                 <Container component="main" maxWidth="xs">
                     <div className={classes.progress} align="centre">
@@ -843,3 +764,5 @@ import tableIcons from './tableIcons';
         </Box>
     );
 };
+
+export default Dashboard;
