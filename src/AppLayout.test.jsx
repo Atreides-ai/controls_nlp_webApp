@@ -5,8 +5,8 @@ import HomeIcon from '@material-ui/icons/Home';
 import DonutLargeIcon from '@material-ui/icons/DonutLarge';
 import FolderSharedIcon from '@material-ui/icons/FolderShared';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import { MemoryRouter } from 'react-router-dom';
 import AppLayout from 'AppLayout';
+import { MemoryRouter } from 'react-router-dom';
 
 const AppLayoutProps = {
     pageTitle: 'Test Title',
@@ -40,6 +40,6 @@ describe('AppLayout', () => {
                 />
             </MemoryRouter>,
         );
-        expect(wrapper.props().pageTitle).toEqual(AppLayoutProps.pageTitle);
+        expect(wrapper.find('AppLayout').props().pageTitle).toEqual(AppLayoutProps.pageTitle);
     });
 });
