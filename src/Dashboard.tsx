@@ -17,7 +17,6 @@ import MyResponsivePie from './pieConfig';
 import useStyles from './useStyles';
 import Typography from '@material-ui/core/Typography';
 import 'typeface-roboto';
-import Copyright from './copyright';
 import 'array.prototype.move';
 import DashboardContent from './Dashboard_Content';
 import SecurityIcon from '@material-ui/icons/Security';
@@ -35,7 +34,7 @@ import MaterialTable from 'material-table';
 import DataTablePopUp from './DataTablePopUp';
 import axios from 'axios';
 import tableIcons from './tableIcons';
-
+import ControlsCSVDownload from 'ControlsCSVDownload';
 
 const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX.Element => {
     const classes = useStyles();
@@ -43,7 +42,6 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
     const [dashboardfile, setFile] = useState();
     const baseUrl = process.env.REACT_APP_ENDPOINT;
     const [progress, setProgress] = useState(0);
-    const [waitMessage, showWaitMessage] = useState(false);
     const [errorMessage, showErrorMessage] = useState(false);
     const [limitMessage, showLimitMessage] = useState(false);
     const descriptions = dashboardDescriptions;
@@ -78,15 +76,11 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
         });
     };
 
-
-
-    
-
     /**
      * Polls the API at 30 second intervals to check job status
      *
      */
-    const getFile = async (jobId, apiKey, token) => {
+    const getFile = async (jobId: string, apiKey: string, token: string): void => {
         const url = baseUrl + '/get_results/' + jobId;
         const headers = { headers: { 'x-api-key': apiKey, Authorization: token } };
         const interval = setInterval(() => {
@@ -248,7 +242,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                 <div>
                     <Grid container direction="row" spacing={1}>
                         <Grid item xs="auto" sm="auto" md="auto" lg="auto">
-                            {/* TODO: put download button here */}
+                            <ControlsCSVDownload dashboardFile={dashboardfile} />
                         </Grid>
                         <Grid item xs="auto" sm="auto" md="auto" lg="auto">
                             <PrintButton descriptions={descriptions} label="Download Dashboard" />
@@ -256,31 +250,11 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                     </Grid>
                 </div>
             )}
-            <Copyright align="right" color="primary"></Copyright>
             {dashboard === false && (
                 <Container component="main" maxWidth="xs">
                     <div className={classes.progress} align="centre">
                         <LinearProgress color="secondary" variant="determinate" value={progress} />
                     </div>
-                    <Dialog
-                        open={waitMessage}
-                        onClose={handleClose}
-                        aria-labelledby="alert-dialog-title"
-                        aria-describedby="alert-dialog-description"
-                    >
-                        <DialogTitle id="alert-dialog-title">{'Woah, thats a big file!'}</DialogTitle>
-                        <DialogContent>
-                            <DialogContentText id="alert-dialog-description">
-                                Sorry for the wait. It looks like you uploaded quite a large file, our AI is reading as
-                                fast as it can! We will be right with you.
-                            </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={handleClose} color="primary">
-                                Thanks!
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
                     <Dialog
                         open={limitMessage}
                         onClose={handleClose}

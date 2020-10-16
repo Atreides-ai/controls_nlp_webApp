@@ -41,5 +41,9 @@ describe('AppLayout', () => {
             </MemoryRouter>,
         );
         expect(wrapper.find('AppLayout').props().pageTitle).toEqual(AppLayoutProps.pageTitle);
+        expect(wrapper.find('AppLayout').props().listItems).toEqual(AppLayoutProps.listItems);
+        expect(wrapper.find('AppLayout').props().listIcons).toEqual(AppLayoutProps.listIcons);
+        expect(wrapper.find('AppLayout').props().linkList).toEqual(AppLayoutProps.linkList);
+        expect(wrapper.find('AppLayout').props().coreElement).toEqual(AppLayoutProps.coreElement);
     });
 });

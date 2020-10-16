@@ -3,9 +3,9 @@ import Button from '@material-ui/core/Button';
 import { CSVLink } from 'react-csv';
 import { COREMETRICS } from 'CoreMetrics';
 
-const ControlsCSVDOwnload = (props: { dashboardFile: Array<object> }): JSX.Element => {
-    const orderDownload = file => {
-        const download = [];
+const ControlsCSVDownload = (props: { dashboardFile: Array<object> | undefined }): JSX.Element => {
+    const orderDownload = (file: Array<object>): Array<object> => {
+        const download = [] as Array<[] | object>;
         file.map(obj => {
             const newObj = {};
             COREMETRICS.forEach(item => {
@@ -24,7 +24,7 @@ const ControlsCSVDOwnload = (props: { dashboardFile: Array<object> }): JSX.Eleme
         return download;
     };
 
-    const fillNulls = controls => {
+    const fillNulls = (controls: Array<object>): Array<object> => {
         return controls.map(function(obj) {
             for (const [key, value] of Object.entries(obj)) {
                 if (obj[key] === null) {
@@ -43,7 +43,7 @@ const ControlsCSVDOwnload = (props: { dashboardFile: Array<object> }): JSX.Eleme
      * @param {*} inputFile
      * @returns
      */
-    const unwrapAdditionalData = inputFile => {
+    const unwrapAdditionalData = (inputFile: Array<object>): Array<object> => {
         return inputFile.map(function(obj) {
             if (obj['additional_data'] !== undefined) {
                 for (const [key, value] of Object.entries(obj['additional_data'])) {
@@ -59,7 +59,7 @@ const ControlsCSVDOwnload = (props: { dashboardFile: Array<object> }): JSX.Eleme
         });
     };
 
-    const createCSVDownload = rawFile => {
+    const createCSVDownload = (rawFile: Array<object>): Array<object> => {
         const file = unwrapAdditionalData(rawFile);
         const processedFile = fillNulls(file);
         const orderedData = orderDownload(processedFile);
@@ -67,10 +67,12 @@ const ControlsCSVDOwnload = (props: { dashboardFile: Array<object> }): JSX.Eleme
     };
 
     return (
-        <CSVLink data={createCSVDownload(props.dashboardfile)} filename="Analysis.csv">
+        <CSVLink data={createCSVDownload(props.dashboardFile)} filename="Analysis.csv">
             <Button variant="outlined" color="secondary">
                 Download All Results
             </Button>
         </CSVLink>
     );
 };
+
+export default ControlsCSVDownload;
