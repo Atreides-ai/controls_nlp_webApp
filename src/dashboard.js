@@ -95,9 +95,7 @@ export default function Dashboard(props) {
                 remediationText.push('No what.\n');
             }
             if (obj['contains_hows'] === 'false') {
-                console.log('No how triggered...');
                 remediationText.push('No how.\n');
-                console.log(remediationText);
             }
             if (obj['contains_whos'] === 'false') {
                 remediationText.push('No who\n');
@@ -108,7 +106,7 @@ export default function Dashboard(props) {
             if (remediationText === '') {
                 remediationText.push('No remediation required');
             }
-            console.log(remediationText);
+
             obj['Remediation'] = remediationText.join('');
             return obj;
         });
@@ -139,8 +137,20 @@ export default function Dashboard(props) {
             for (const [key, value] of Object.entries(obj)) {
                 if (obj[key] === null) {
                     obj[key] = 'None';
-                } else if (obj[key] === false) {
-                    obj[key] = String(value);
+                    console.log(String(key));
+                } else if (COREMETRICS.includes(key)) {
+                    obj[key] = value.toString().replace(/,/g, ', ');
+                }
+            }
+            return obj;
+        });
+    };
+
+    const stringifyLists = controls => {
+        return controls.map(obj => {
+            for (const [key, value] of Object.entries(obj)) {
+                if (COREMETRICS.includes(key)) {
+                    obj[key] = value.toString().replace(/,/g, ', ');
                 }
             }
             return obj;
@@ -185,12 +195,10 @@ export default function Dashboard(props) {
         const headers = { headers: { 'x-api-key': apiKey, Authorization: token } };
         const interval = setInterval(() => {
             axios.get(url, headers).then(response => {
+                console.log(response);
                 if (response.status === 200 && response['data']['percent_complete'] === 100) {
                     setProgress(100);
-                    console.log('completed');
                     if (response.data.controls) {
-                        console.log(response);
-                        console.log(response.data.controls);
                         setFile(response.data.controls);
                         clearInterval(interval);
                         showDashboard(true);
@@ -198,13 +206,11 @@ export default function Dashboard(props) {
                         showErrorMessage(true);
                     }
                 } else if (response.status === 200 && response['data']['percent_complete'] != 100) {
-                    console.log(response);
                     setProgress(response['data']['percent_complete']);
                 } else if (response.status === 403) {
                     showLimitMessage(true);
                     clearInterval(interval);
                 } else if (response.status === 400 || 404) {
-                    console.log(response);
                     showErrorMessage(true);
                     clearInterval(interval);
                 }
@@ -329,7 +335,6 @@ export default function Dashboard(props) {
         });
 
         if (fieldCount[0] !== undefined) {
-            console.log(fieldCount);
             return fieldCount[0]['value'].toString();
         }
 
@@ -637,7 +642,7 @@ export default function Dashboard(props) {
                                                     { title: 'Control Description', field: 'control_description' },
                                                     { title: 'Control Method', field: 'Control Method' },
                                                 ]}
-                                                data={dashboardfile}
+                                                data={stringifyLists(dashboardfile)}
                                                 title="Analysis Summary"
                                             />
                                         }
@@ -664,7 +669,7 @@ export default function Dashboard(props) {
                                                     { title: 'What Text', field: 'whats' },
                                                     { title: 'Contains What', field: 'contains_whats' },
                                                 ]}
-                                                data={dashboardfile}
+                                                data={stringifyLists(dashboardfile)}
                                                 title="Analysis Summary"
                                             />
                                         }
@@ -691,7 +696,7 @@ export default function Dashboard(props) {
                                                     { title: 'How Text', field: 'hows' },
                                                     { title: 'Contains How', field: 'contains_hows' },
                                                 ]}
-                                                data={dashboardfile}
+                                                data={stringifyLists(dashboardfile)}
                                                 title="Analysis Summary"
                                             />
                                         }
@@ -720,7 +725,7 @@ export default function Dashboard(props) {
                                                     { title: 'Who Text', field: 'whos' },
                                                     { title: 'Contains Who', field: 'contains_whos' },
                                                 ]}
-                                                data={dashboardfile}
+                                                data={stringifyLists(dashboardfile)}
                                                 title="Analysis Summary"
                                             />
                                         }
@@ -747,7 +752,7 @@ export default function Dashboard(props) {
                                                     { title: 'When Text', field: 'whens' },
                                                     { title: 'Contains When', field: 'contains_whens' },
                                                 ]}
-                                                data={dashboardfile}
+                                                data={stringifyLists(dashboardfile)}
                                                 title="Analysis Summary"
                                             />
                                         }
@@ -777,7 +782,7 @@ export default function Dashboard(props) {
                                                         field: 'multiple_whats',
                                                     },
                                                 ]}
-                                                data={dashboardfile}
+                                                data={stringifyLists(dashboardfile)}
                                                 title="Analysis Summary"
                                             />
                                         }
@@ -806,7 +811,7 @@ export default function Dashboard(props) {
                                                     { title: 'How Text', field: 'hows' },
                                                     { title: 'Contains Multiple Hows', field: 'contains_hows' },
                                                 ]}
-                                                data={dashboardfile}
+                                                data={stringifyLists(dashboardfile)}
                                                 title="Analysis Summary"
                                             />
                                         }
@@ -833,7 +838,7 @@ export default function Dashboard(props) {
                                                     { title: 'Who Text', field: 'whos' },
                                                     { title: 'Contains Multiple Who', field: 'multiple_whos' },
                                                 ]}
-                                                data={dashboardfile}
+                                                data={stringifyLists(dashboardfile)}
                                                 title="Analysis Summary"
                                             />
                                         }
@@ -860,7 +865,7 @@ export default function Dashboard(props) {
                                                     { title: 'When Text', field: 'whens' },
                                                     { title: 'Contains Multiple Whens', field: 'multiple_whens' },
                                                 ]}
-                                                data={dashboardfile}
+                                                data={stringifyLists(dashboardfile)}
                                                 title="Analysis Summary"
                                             />
                                         }
