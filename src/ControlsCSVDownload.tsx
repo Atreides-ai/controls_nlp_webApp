@@ -3,7 +3,7 @@ import Button from '@material-ui/core/Button';
 import { CSVLink } from 'react-csv';
 import { COREMETRICS } from 'CoreMetrics';
 
-const ControlsCSVDownload = (props: { dashboardFile: Array<object> | undefined }): JSX.Element => {
+const ControlsCSVDownload = (props: { dashboardFile: Array<object> }): JSX.Element => {
     const orderDownload = (file: Array<object>): Array<object> => {
         const download = [] as Array<[] | object>;
         file.map(obj => {
@@ -29,8 +29,11 @@ const ControlsCSVDownload = (props: { dashboardFile: Array<object> | undefined }
             for (const [key, value] of Object.entries(obj)) {
                 if (obj[key] === null) {
                     obj[key] = 'None';
-                } else if (obj[key] === false) {
-                    obj[key] = String(value);
+                } else if (COREMETRICS.includes(key) && !['control_description', 'risk_description'].includes(key)) {
+                    obj[key] = value
+                        .toString()
+                        .replace(/,/g, ', ')
+                        .replace(/  +/g, ' ');
                 }
             }
             return obj;
