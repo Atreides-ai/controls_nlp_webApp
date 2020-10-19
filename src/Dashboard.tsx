@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useState, useEffect } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -11,14 +12,12 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import PrintButton from './PDF_Button';
 import dashboardDescriptions from 'Dashboard_Descriptions';
-import * as d3 from 'd3';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import MyResponsivePie from './pieConfig';
 import useStyles from './useStyles';
 import Typography from '@material-ui/core/Typography';
 import 'typeface-roboto';
 import 'array.prototype.move';
-import DashboardContent from './Dashboard_Content';
 import SecurityIcon from '@material-ui/icons/Security';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import NotificationsIcon from '@material-ui/icons/Notifications';
@@ -33,8 +32,8 @@ import PieChartCard from './PieChartCard';
 import MaterialTable from 'material-table';
 import DataTablePopUp from './DataTablePopUp';
 import axios from 'axios';
-import tableIcons from './tableIcons';
 import ControlsCSVDownload from 'ControlsCSVDownload';
+import d3 from 'd3';
 
 const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX.Element => {
     const classes = useStyles();
@@ -47,33 +46,8 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
     const descriptions = dashboardDescriptions;
 
     const handleClose = (): void => {
-        showWaitMessage(false);
-    };
-
-    const createRemediationList = dashboardfile => {
-        return dashboardfile.map(function(obj) {
-            const remediationText = [];
-            if (obj['contains_whats'] === 'false') {
-                remediationText.push('No what.\n');
-            }
-            if (obj['contains_hows'] === 'false') {
-                console.log('No how triggered...');
-                remediationText.push('No how.\n');
-                console.log(remediationText);
-            }
-            if (obj['contains_whos'] === 'false') {
-                remediationText.push('No who\n');
-            }
-            if (obj['contains_whens'] === 'false') {
-                remediationText.push('No when\n');
-            }
-            if (remediationText === '') {
-                remediationText.push('No remediation required');
-            }
-            console.log(remediationText);
-            obj['Remediation'] = remediationText.join('');
-            return obj;
-        });
+        showErrorMessage(false);
+        showLimitMessage(false);
     };
 
     /**
@@ -112,9 +86,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
         }, 5000);
     };
 
-    useEffect(() => {
-        getFile(props.jobId, props.apiKey, props.token);
-    }, [props.jobId, props.apiKey, props.token]);
+    useEffect(() => getFile(props.jobId, props.apiKey, props.token));
 
     /**
      * Takes a file and relevant column name and returns obj counting all keys
@@ -123,13 +95,13 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
      * @param {string} column
      * @returns {[object]}
      */
-    const countColumnValues = (file, column) => {
+    const countColumnValues = (file: Array<object>, column: string): Array<object> => {
         const dataCount = d3
             .nest()
-            .key(function(d) {
+            .key(function(d: any): any {
                 return d[column];
             })
-            .rollup(function(leaves) {
+            .rollup(function(leaves: any): any {
                 return leaves.length;
             })
             .entries(file);
@@ -143,8 +115,8 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
      * @param {[object]} dataCount
      * @returns {[object]} formattedData
      */
-    const formatData = dataCount => {
-        return dataCount.map(function(obj) {
+    const formatData = (dataCount: Array<object>): Array<object> => {
+        return dataCount.map((obj: object): object => {
             obj['id'] = obj['key'];
             delete obj['key'];
             if (obj['id'] === 'true') {
@@ -174,8 +146,8 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
      * @param {[object]} data
      * @returns {[object]} filtered
      */
-    const orderData = data => {
-        data.forEach(function(element) {
+    const orderData = (data: Array<object>): Array<object> => {
+        data.forEach((element: object): void => {
             if (element !== undefined) {
                 if (element['id'] === 'True') {
                     data.move(data.indexOf(element), 0);
@@ -206,7 +178,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
      * @param {string} column
      * @returns {[object]} data
      */
-    const generatePie = (file, column) => {
+    const generatePie = (file: Array<object>, column: string): Array<object> => {
         const dataCount = countColumnValues(file, column);
         if (dataCount[0]['id'] !== 'undefined') {
             const rawData = formatData(dataCount);
@@ -215,44 +187,21 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
         } else return [{ id: 'No Data Provided', value: 20 }];
     };
 
-    /**
-     * Finds the column in the data and returns the count for a given key
-     *
-     * @param {string} column
-     * @param {string} key
-     * @return {integer} value
-     */
-    const generateCardMetric = (file, column, key) => {
-        const countData = countColumnValues(file, column);
-        const fieldCount = countData.filter(function(el) {
-            return el['key'] === key;
-        });
-
-        if (fieldCount[0] !== undefined) {
-            console.log(fieldCount);
-            return fieldCount[0]['value'].toString();
-        }
-
-        return '0';
-    };
-
     return (
         <Box className={classes.root} id="dashboard">
             {dashboard && (
-                <div>
-                    <Grid container direction="row" spacing={1}>
-                        <Grid item xs="auto" sm="auto" md="auto" lg="auto">
-                            <ControlsCSVDownload dashboardFile={dashboardfile} />
-                        </Grid>
-                        <Grid item xs="auto" sm="auto" md="auto" lg="auto">
-                            <PrintButton descriptions={descriptions} label="Download Dashboard" />
-                        </Grid>
+                <Grid container direction="row" spacing={1}>
+                    <Grid item xs="auto" sm="auto" md="auto" lg="auto">
+                        <ControlsCSVDownload dashboardFile={dashboardfile!} />
                     </Grid>
-                </div>
+                    <Grid item xs="auto" sm="auto" md="auto" lg="auto">
+                        <PrintButton descriptions={descriptions} label="Download Dashboard" />
+                    </Grid>
+                </Grid>
             )}
             {dashboard === false && (
                 <Container component="main" maxWidth="xs">
-                    <div className={classes.progress} align="centre">
+                    <div className={classes.progress}>
                         <LinearProgress color="secondary" variant="determinate" value={progress} />
                     </div>
                     <Dialog
@@ -308,90 +257,51 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                             <Grid item xs={12} sm="auto" md="auto" lg="auto">
                                 <CardTablePopUp
                                     id="fully_card"
+                                    icon={<StarIcon style={{ fontSize: 120 }} />}
                                     analysisField="control_summary_rating"
-                                    dashboardFile={createRemediationList(dashboardfile)}
+                                    dashboardFile={dashboardfile!}
                                     filter="Fully"
-                                    tableIcons={tableIcons}
                                     showRemediation={true}
-                                    DashboardContent={
-                                        <DashboardContent
-                                            icon={<StarIcon style={{ fontSize: 120 }} />}
-                                            header="Fully"
-                                            body={generateCardMetric(dashboardfile, 'control_summary_rating', 'Fully')}
-                                        />
-                                    }
                                 />
                             </Grid>
                             <Grid item xs={12} sm="auto" md="auto" lg="auto">
                                 <CardTablePopUp
                                     analysisField="control_summary_rating"
-                                    dashboardFile={createRemediationList(dashboardfile)}
+                                    dashboardFile={dashboardfile!}
                                     filter="Mostly"
-                                    tableIcons={tableIcons}
                                     id="mostly_card"
                                     showRemediation={true}
-                                    DashboardContent={
-                                        <DashboardContent
-                                            icon={<BuildIcon style={{ fontSize: 120 }} />}
-                                            header="Mostly"
-                                            body={generateCardMetric(dashboardfile, 'control_summary_rating', 'Mostly')}
-                                        ></DashboardContent>
-                                    }
+                                    icon={<BuildIcon style={{ fontSize: 120 }} />}
                                 />
                             </Grid>
                             <Grid item xs={12} sm="auto" md="auto" lg="auto">
                                 <CardTablePopUp
                                     analysisField="control_summary_rating"
-                                    dashboardFile={createRemediationList(dashboardfile)}
+                                    dashboardFile={dashboardfile!}
                                     filter="Partially"
-                                    tableIcons={tableIcons}
+                                    icon={<BugReportIcon style={{ fontSize: 120 }} />}
                                     id="partially_card"
                                     showRemediation={true}
-                                    DashboardContent={
-                                        <DashboardContent
-                                            icon={<BugReportIcon style={{ fontSize: 120 }} />}
-                                            header="Partially"
-                                            body={generateCardMetric(
-                                                dashboardfile,
-                                                'control_summary_rating',
-                                                'Partially',
-                                            )}
-                                        ></DashboardContent>
-                                    }
                                 />
                             </Grid>
                             <Grid item xs={12} sm="auto" md="auto" lg="auto">
                                 <CardTablePopUp
                                     analysisField="control_summary_rating"
-                                    dashboardFile={createRemediationList(dashboardfile)}
+                                    icon={<FeedbackIcon style={{ fontSize: 120 }} />}
+                                    dashboardFile={dashboardfile!}
                                     filter="Poorly"
                                     id="poorly_card"
                                     showRemediation={true}
-                                    tableIcons={tableIcons}
-                                    DashboardContent={
-                                        <DashboardContent
-                                            icon={<FeedbackIcon style={{ fontSize: 120 }} />}
-                                            header="Poorly"
-                                            body={generateCardMetric(dashboardfile, 'control_summary_rating', 'Poorly')}
-                                        ></DashboardContent>
-                                    }
                                 />
                             </Grid>
                             <Grid item xs={12} sm="auto" md="auto" lg="auto">
                                 <CardTablePopUp
                                     analysisField="control_summary_rating"
-                                    dashboardFile={createRemediationList(dashboardfile)}
+                                    dashboardFile={dashboardfile!}
                                     filter="None"
-                                    tableIcons={tableIcons}
                                     id="none_card"
                                     showRemediation={true}
-                                    DashboardContent={
-                                        <DashboardContent
-                                            icon={<FlagIcon style={{ fontSize: 120 }} />}
-                                            header="None"
-                                            body={generateCardMetric(dashboardfile, 'control_summary_rating', 'None')}
-                                        ></DashboardContent>
-                                    }
+                                    icon={<FlagIcon style={{ fontSize: 120 }} />}
                                 />
                             </Grid>
                         </Grid>
@@ -408,65 +318,37 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                         <Grid item xs={12} sm={3} md={3} lg={3}>
                             <CardTablePopUp
                                 analysisField="relevance_to_risk"
-                                dashboardFile={dashboardfile}
+                                dashboardFile={dashboardfile!}
                                 filter="strong"
-                                tableIcons={tableIcons}
+                                icon={<SecurityIcon style={{ fontSize: 120 }} />}
                                 id="strong_risk_card"
-                                DashboardContent={
-                                    <DashboardContent
-                                        icon={<SecurityIcon style={{ fontSize: 120 }} />}
-                                        header="Strong"
-                                        body={generateCardMetric(dashboardfile, 'relevance_to_risk', 'strong')}
-                                    ></DashboardContent>
-                                }
                             />
                         </Grid>
                         <Grid item xs={12} sm={3} md={3} lg={3}>
                             <CardTablePopUp
                                 analysisField="relevance_to_risk"
-                                dashboardFile={dashboardfile}
+                                dashboardFile={dashboardfile!}
                                 filter="good"
-                                tableIcons={tableIcons}
+                                icon={<ThumbUpIcon style={{ fontSize: 120 }} />}
                                 id="good_risk_card"
-                                DashboardContent={
-                                    <DashboardContent
-                                        icon={<ThumbUpIcon style={{ fontSize: 120 }} />}
-                                        header="Good"
-                                        body={generateCardMetric(dashboardfile, 'relevance_to_risk', 'good')}
-                                    ></DashboardContent>
-                                }
                             />
                         </Grid>
                         <Grid item xs={12} sm={3} md={3} lg={3}>
                             <CardTablePopUp
                                 analysisField="relevance_to_risk"
-                                dashboardFile={dashboardfile}
+                                dashboardFile={dashboardfile!}
                                 filter="fair"
-                                tableIcons={tableIcons}
+                                icon={<NotificationsIcon style={{ fontSize: 120 }} />}
                                 id="fair_risk_card"
-                                DashboardContent={
-                                    <DashboardContent
-                                        icon={<NotificationsIcon style={{ fontSize: 120 }} />}
-                                        header="Fair"
-                                        body={generateCardMetric(dashboardfile, 'relevance_to_risk', 'fair')}
-                                    ></DashboardContent>
-                                }
                             />
                         </Grid>
                         <Grid item xs={12} sm={3} md={3} lg={3}>
                             <CardTablePopUp
                                 analysisField="relevance_to_risk"
-                                dashboardFile={dashboardfile}
+                                dashboardFile={dashboardfile!}
                                 filter="poor"
-                                tableIcons={tableIcons}
                                 id="poor_risk_card"
-                                DashboardContent={
-                                    <DashboardContent
-                                        icon={<ErrorIcon style={{ fontSize: 120 }} />}
-                                        header="Poor"
-                                        body={generateCardMetric(dashboardfile, 'relevance_to_risk', 'poor')}
-                                    ></DashboardContent>
-                                }
+                                icon={<ErrorIcon style={{ fontSize: 120 }} />}
                             />
                         </Grid>
                         <Grid container direction="row" spacing={1}>
@@ -486,7 +368,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                         <Grid item xs={12} sm={4} md={4} lg={4}>
                             <PieChartCard
                                 id="automated_manual_pie"
-                                chart={<MyResponsivePie data={generatePie(dashboardfile, 'Control Method')} />}
+                                chart={<MyResponsivePie data={generatePie(dashboardfile!, 'Control Method')} />}
                                 table={
                                     <DataTablePopUp
                                         table={
@@ -499,7 +381,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                                                     { title: 'Control Description', field: 'control_description' },
                                                     { title: 'Control Method', field: 'Control Method' },
                                                 ]}
-                                                data={dashboardfile}
+                                                data={dashboardfile!}
                                                 title="Analysis Summary"
                                             />
                                         }
@@ -512,7 +394,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                         <Grid item xs={12} sm={4} md={4} lg={4}>
                             <PieChartCard
                                 id="contains_what_pie"
-                                chart={<MyResponsivePie data={generatePie(dashboardfile, 'contains_whats')} />}
+                                chart={<MyResponsivePie data={generatePie(dashboardfile!, 'contains_whats')} />}
                                 table={
                                     <DataTablePopUp
                                         table={
@@ -526,7 +408,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                                                     { title: 'What Text', field: 'whats' },
                                                     { title: 'Contains What', field: 'contains_whats' },
                                                 ]}
-                                                data={dashboardfile}
+                                                data={dashboardfile!}
                                                 title="Analysis Summary"
                                             />
                                         }
@@ -539,7 +421,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                         <Grid item xs={12} sm={4} md={4} lg={4}>
                             <PieChartCard
                                 id="contains_how_pie"
-                                chart={<MyResponsivePie data={generatePie(dashboardfile, 'contains_hows')} />}
+                                chart={<MyResponsivePie data={generatePie(dashboardfile!, 'contains_hows')} />}
                                 table={
                                     <DataTablePopUp
                                         table={
@@ -553,7 +435,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                                                     { title: 'How Text', field: 'hows' },
                                                     { title: 'Contains How', field: 'contains_hows' },
                                                 ]}
-                                                data={dashboardfile}
+                                                data={dashboardfile!}
                                                 title="Analysis Summary"
                                             />
                                         }
@@ -568,7 +450,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                         <Grid item xs={12} sm={4} md={4} lg={4}>
                             <PieChartCard
                                 id="contains_who_pie"
-                                chart={<MyResponsivePie data={generatePie(dashboardfile, 'contains_whos')} />}
+                                chart={<MyResponsivePie data={generatePie(dashboardfile!, 'contains_whos')} />}
                                 table={
                                     <DataTablePopUp
                                         table={
@@ -582,7 +464,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                                                     { title: 'Who Text', field: 'whos' },
                                                     { title: 'Contains Who', field: 'contains_whos' },
                                                 ]}
-                                                data={dashboardfile}
+                                                data={dashboardfile!}
                                                 title="Analysis Summary"
                                             />
                                         }
@@ -595,7 +477,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                         <Grid item xs={12} sm={4} md={4} lg={4}>
                             <PieChartCard
                                 id="contains_whens_pie"
-                                chart={<MyResponsivePie data={generatePie(dashboardfile, 'contains_whens')} />}
+                                chart={<MyResponsivePie data={generatePie(dashboardfile!, 'contains_whens')} />}
                                 table={
                                     <DataTablePopUp
                                         table={
@@ -609,7 +491,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                                                     { title: 'When Text', field: 'whens' },
                                                     { title: 'Contains When', field: 'contains_whens' },
                                                 ]}
-                                                data={dashboardfile}
+                                                data={dashboardfile!}
                                                 title="Analysis Summary"
                                             />
                                         }
@@ -622,7 +504,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                         <Grid item xs={12} sm={4} md={4} lg={4}>
                             <PieChartCard
                                 id="multiple_what_pie"
-                                chart={<MyResponsivePie data={generatePie(dashboardfile, 'multiple_whats')} />}
+                                chart={<MyResponsivePie data={generatePie(dashboardfile!, 'multiple_whats')} />}
                                 table={
                                     <DataTablePopUp
                                         table={
@@ -639,7 +521,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                                                         field: 'multiple_whats',
                                                     },
                                                 ]}
-                                                data={dashboardfile}
+                                                data={dashboardfile!}
                                                 title="Analysis Summary"
                                             />
                                         }
@@ -654,7 +536,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                         <Grid item xs={12} sm={4} md={4} lg={4}>
                             <PieChartCard
                                 id="multiple_how_pie"
-                                chart={<MyResponsivePie data={generatePie(dashboardfile, 'multiple_hows')} />}
+                                chart={<MyResponsivePie data={generatePie(dashboardfile!, 'multiple_hows')} />}
                                 table={
                                     <DataTablePopUp
                                         table={
@@ -668,7 +550,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                                                     { title: 'How Text', field: 'hows' },
                                                     { title: 'Contains Multiple Hows', field: 'contains_hows' },
                                                 ]}
-                                                data={dashboardfile}
+                                                data={dashboardfile!}
                                                 title="Analysis Summary"
                                             />
                                         }
@@ -681,7 +563,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                         <Grid item xs={12} sm={4} md={4} lg={4}>
                             <PieChartCard
                                 id="multiple_who_pie"
-                                chart={<MyResponsivePie data={generatePie(dashboardfile, 'multiple_whos')} />}
+                                chart={<MyResponsivePie data={generatePie(dashboardfile!, 'multiple_whos')} />}
                                 table={
                                     <DataTablePopUp
                                         table={
@@ -695,7 +577,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                                                     { title: 'Who Text', field: 'whos' },
                                                     { title: 'Contains Multiple Who', field: 'multiple_whos' },
                                                 ]}
-                                                data={dashboardfile}
+                                                data={dashboardfile!}
                                                 title="Analysis Summary"
                                             />
                                         }
@@ -708,7 +590,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                         <Grid item xs={12} sm={4} md={4} lg={4}>
                             <PieChartCard
                                 id="multiple_when_pie"
-                                chart={<MyResponsivePie data={generatePie(dashboardfile, 'multiple_whens')} />}
+                                chart={<MyResponsivePie data={generatePie(dashboardfile!, 'multiple_whens')} />}
                                 table={
                                     <DataTablePopUp
                                         table={
@@ -722,7 +604,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                                                     { title: 'When Text', field: 'whens' },
                                                     { title: 'Contains Multiple Whens', field: 'multiple_whens' },
                                                 ]}
-                                                data={dashboardfile}
+                                                data={dashboardfile!}
                                                 title="Analysis Summary"
                                             />
                                         }

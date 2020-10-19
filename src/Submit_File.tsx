@@ -154,7 +154,7 @@ export default function SubmitFile(props: {
         return { data: data };
     };
 
-    const convertFileToJson = async (file: File, fileName: String): Promise<Record<string, any>> => {
+    const convertFileToJson = async (file: File, fileName: string): Promise<Record<string, any>> => {
         if (fileName.split('.').pop() === 'csv') {
             return convertCSVToJSON(file);
         } else {
