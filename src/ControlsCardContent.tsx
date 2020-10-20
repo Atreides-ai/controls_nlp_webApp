@@ -57,19 +57,17 @@ const ControlsCardContent = (props: {
     };
 
     return (
-        <div>
-            <Card className={classes.cardRoot}>
-                <CardMedia className={classes.cardMedia}>{props.icon}</CardMedia>
-                <CardContent>
-                    <Typography variant="h4" className={classes.title} color="primary">
-                        {props.header}
-                    </Typography>
-                    <Typography variant="h2" className={classes.title} color="secondary">
-                        {generateCardMetric(props.file, props.column, props.header)}
-                    </Typography>
-                </CardContent>
-            </Card>
-        </div>
+        <Card className={classes.cardRoot}>
+            <CardMedia className={classes.cardMedia}>{props.icon}</CardMedia>
+            <CardContent>
+                <Typography variant="h4" className={classes.title} color="primary">
+                    {props.header}
+                </Typography>
+                <Typography variant="h2" className={classes.title} color="secondary">
+                    {generateCardMetric(props.file, props.column, props.header)}
+                </Typography>
+            </CardContent>
+        </Card>
     );
 };
 
