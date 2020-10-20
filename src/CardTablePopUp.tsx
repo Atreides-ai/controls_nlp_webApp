@@ -9,6 +9,7 @@ import { TransitionProps } from '@material-ui/core/transitions';
 import MaterialTable from 'material-table';
 import tableIcons from './tableIcons';
 import ControlsCardContent from './ControlsCardContent';
+import { createRemediationList } from './utils/AtreidesDataUtils';
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & { children?: React.ReactElement<any, any> },
@@ -33,32 +34,6 @@ const CardTablePopUp = (props: {
 
     const handleClose = (): void => {
         setOpen(false);
-    };
-
-    const createRemediationList = (dashboardfile: Array<object>): Array<object> => {
-        return dashboardfile.map((obj: object): object => {
-            const remediationText = [];
-            if (obj['contains_whats'] === 'false') {
-                remediationText.push('No what.\n');
-            }
-            if (obj['contains_hows'] === 'false') {
-                console.log('No how triggered...');
-                remediationText.push('No how.\n');
-                console.log(remediationText);
-            }
-            if (obj['contains_whos'] === 'false') {
-                remediationText.push('No who\n');
-            }
-            if (obj['contains_whens'] === 'false') {
-                remediationText.push('No when\n');
-            }
-            if (remediationText === []) {
-                remediationText.push('No remediation required');
-            }
-            console.log(remediationText);
-            obj['Remediation'] = remediationText.join('');
-            return obj;
-        });
     };
 
     return (
