@@ -8,7 +8,6 @@ import StarIcon from '@material-ui/icons/Star';
 const properties = {
     icon: <StarIcon style={{ fontSize: 120 }} />,
     header: 'fully',
-    file: controlsFile,
     column: 'control_summary_rating',
 };
 
@@ -36,7 +35,7 @@ describe('Controls Card Content', () => {
         );
         expect(wrapper.find('ControlsCardContent').props().icon).toEqual(properties.icon);
         expect(wrapper.find('ControlsCardContent').props().header).toEqual(properties.header);
-        expect(wrapper.find('ControlsCardContent').props().file).toEqual(properties.file);
+        expect(wrapper.find('ControlsCardContent').props().file).toEqual(controlsFile);
         expect(wrapper.find('ControlsCardContent').props().column).toEqual(properties.column);
     });
 });
