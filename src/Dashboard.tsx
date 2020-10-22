@@ -61,10 +61,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
             axios.get(url, headers).then(response => {
                 if (response.status === 200 && response['data']['percent_complete'] === 100) {
                     setProgress(100);
-                    console.log('completed');
                     if (response.data.controls) {
-                        console.log(response);
-                        console.log(response.data.controls);
                         setFile(response.data.controls);
                         clearInterval(interval);
                         showDashboard(true);
@@ -72,7 +69,6 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                         showErrorMessage(true);
                     }
                 } else if (response.status === 200 && response['data']['percent_complete'] != 100) {
-                    console.log(response);
                     setProgress(response['data']['percent_complete']);
                 } else if (response.status === 403) {
                     showLimitMessage(true);
@@ -88,105 +84,8 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
 
     useEffect(() => getFile(props.jobId, props.apiKey, props.token));
 
-    /**
-     * Takes a file and relevant column name and returns obj counting all keys
-     *
-     * @param {[object]} file
-     * @param {string} column
-     * @returns {[object]}
-     */
-    const countColumnValues = (file: Array<object>, column: string): Array<object> => {
-        const dataCount = d3
-            .nest()
-            .key(function(d: any): any {
-                return d[column];
-            })
-            .rollup(function(leaves: any): any {
-                return leaves.length;
-            })
-            .entries(file);
-
-        return dataCount;
-    };
-
-    /**
-     * Takes an array of objects of pie chart data and sets colors for each key
-     *
-     * @param {[object]} dataCount
-     * @returns {[object]} formattedData
-     */
-    const formatData = (dataCount: Array<object>): Array<object> => {
-        return dataCount.map((obj: object): object => {
-            obj['id'] = obj['key'];
-            delete obj['key'];
-            if (obj['id'] === 'true') {
-                obj['color'] = '#7C4DFF';
-            } else if (obj['id'] === 'false') {
-                obj['color'] = '#607D8B';
-            } else if (obj['id'] === 'poor') {
-                obj['color'] = '#7C4DFF';
-            } else if (obj['id'] === 'fair') {
-                obj['color'] = '#607D8B';
-            } else if (obj['id'] === 'good') {
-                obj['color'] = '#CFD8DC';
-            } else if (obj['id'] === 'strong') {
-                obj['color'] = '#455A64';
-            } else if (obj['id'] === 'Manual') {
-                obj['color'] = '#7C4DFF';
-            } else if (obj['id'] === 'Automated') {
-                obj['color'] = '#607D8B';
-            }
-            return obj;
-        });
-    };
-
-    /**
-     * Takes the data for pie chart and orders for legend to ensure consistency
-     *
-     * @param {[object]} data
-     * @returns {[object]} filtered
-     */
-    const orderData = (data: Array<object>): Array<object> => {
-        data.forEach((element: object): void => {
-            if (element !== undefined) {
-                if (element['id'] === 'True') {
-                    data.move(data.indexOf(element), 0);
-                } else if (element['id'] === 'False') {
-                    data.move(data.indexOf(element), 1);
-                } else if (element['id'] === 'poor') {
-                    data.move(data.indexOf(element), 0);
-                } else if (element['id'] === 'fair') {
-                    data.move(data.indexOf(element), 1);
-                } else if (element['id'] === 'good') {
-                    data.move(data.indexOf(element), 2);
-                } else if (element['id'] === 'strong') {
-                    data.move(data.indexOf(element), 3);
-                }
-            }
-        });
-
-        const filtered = data.filter(function(x) {
-            return x !== undefined;
-        });
-
-        return filtered;
-    };
-
-    /**
-     * Takes the file and the column name and generates pie chart data array
-     *
-     * @param {string} column
-     * @returns {[object]} data
-     */
-    const generatePie = (file: Array<object>, column: string): Array<object> => {
-        const dataCount = countColumnValues(file, column);
-        if (dataCount[0]['id'] !== 'undefined') {
-            const rawData = formatData(dataCount);
-            const orderedData = orderData(rawData);
-            return orderedData;
-        } else return [{ id: 'No Data Provided', value: 20 }];
-    };
-
+    
+  
     return (
         <Box className={classes.root} id="dashboard">
             {dashboard && (

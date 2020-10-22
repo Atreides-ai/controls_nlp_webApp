@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import 'array.prototype.move';
 
 /**
  * Adds a remediation checklist to the results received from the Controls api.
@@ -9,24 +10,21 @@ import * as d3 from 'd3';
 export const createRemediationList = (dashboardfile: Array<object>): Array<object> => {
     return dashboardfile.map((obj: object): object => {
         const remediationText = [];
-        if (obj['contains_whats'] === 'false') {
-            remediationText.push('No what.\n');
+        if (obj['contains_whats'] === false) {
+            remediationText.push('No what. ');
         }
-        if (obj['contains_hows'] === 'false') {
-            console.log('No how triggered...');
-            remediationText.push('No how.\n');
-            console.log(remediationText);
+        if (obj['contains_hows'] === false) {
+            remediationText.push('No how. ');
         }
-        if (obj['contains_whos'] === 'false') {
-            remediationText.push('No who.\n');
+        if (obj['contains_whos'] === false) {
+            remediationText.push('No who. ');
         }
-        if (obj['contains_whens'] === 'false') {
-            remediationText.push('No when.\n');
+        if (obj['contains_whens'] === false) {
+            remediationText.push('No when. ');
         }
         if (remediationText === []) {
             remediationText.push('No remediation required.');
         }
-        console.log(remediationText);
         obj['Remediation'] = remediationText.join('');
         return obj;
     });
@@ -67,9 +65,86 @@ export const generateCardMetric = (file: Array<object>, column: string, key: str
     });
 
     if (fieldCount[0] !== undefined) {
-        console.log(fieldCount);
         return fieldCount[0]['value'].toString();
     }
 
     return '0';
+};
+
+/**
+ * Takes an array of objects of pie chart data and sets colors for each key
+ *
+ * @param {[object]} dataCount
+ * @returns {[object]} formattedData
+ */
+export const formatData = (dataCount: Array<object>): Array<object> => {
+    return dataCount.map((obj: object): object => {
+        obj['id'] = obj['key'];
+        delete obj['key'];
+        if (obj['id'] === 'true') {
+            obj['color'] = '#7C4DFF';
+        } else if (obj['id'] === 'false') {
+            obj['color'] = '#607D8B';
+        } else if (obj['id'] === 'poor') {
+            obj['color'] = '#7C4DFF';
+        } else if (obj['id'] === 'fair') {
+            obj['color'] = '#607D8B';
+        } else if (obj['id'] === 'good') {
+            obj['color'] = '#CFD8DC';
+        } else if (obj['id'] === 'strong') {
+            obj['color'] = '#455A64';
+        } else if (obj['id'] === 'Manual') {
+            obj['color'] = '#7C4DFF';
+        } else if (obj['id'] === 'Automated') {
+            obj['color'] = '#607D8B';
+        }
+        return obj;
+    });
+};
+
+/**
+ * Takes the data for pie chart and orders for legend to ensure consistency
+ *
+ * @param {[object]} data
+ * @returns {[object]} filtered
+ */
+export const orderData = (data: Array<object>): Array<object> => {
+    data.forEach((element: object): void => {
+        if (element !== undefined) {
+            if (element['id'] === 'true') {
+                data.move(data.indexOf(element), 0);
+            } else if (element['id'] === 'false') {
+                data.move(data.indexOf(element), 1);
+            } else if (element['id'] === 'poor') {
+                data.move(data.indexOf(element), 0);
+            } else if (element['id'] === 'fair') {
+                data.move(data.indexOf(element), 1);
+            } else if (element['id'] === 'good') {
+                data.move(data.indexOf(element), 2);
+            } else if (element['id'] === 'strong') {
+                data.move(data.indexOf(element), 3);
+            }
+        }
+    });
+
+    const filtered = data.filter(function(x) {
+        return x !== undefined;
+    });
+
+    return filtered;
+};
+
+/**
+ * Takes the file and the column name and generates pie chart data array
+ *
+ * @param {string} column
+ * @returns {[object]} data
+ */
+export const generatePie = (file: Array<object>, column: string): Array<object> => {
+    const dataCount = countColumnValues(file, column);
+    if (dataCount[0]['id'] !== 'undefined') {
+        const rawData = formatData(dataCount);
+        const orderedData = orderData(rawData);
+        return orderedData;
+    } else return [{ id: 'No Data Provided', value: 0 }];
 };
