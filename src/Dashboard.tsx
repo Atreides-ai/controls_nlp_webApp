@@ -13,7 +13,7 @@ import Grid from '@material-ui/core/Grid';
 import PrintButton from './PDF_Button';
 import dashboardDescriptions from 'Dashboard_Descriptions';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import MyResponsivePie from './pieConfig';
+import ResponsivePie from './ResponsivePie';
 import useStyles from './useStyles';
 import Typography from '@material-ui/core/Typography';
 import 'typeface-roboto';
@@ -33,7 +33,7 @@ import MaterialTable from 'material-table';
 import DataTablePopUp from './DataTablePopUp';
 import axios from 'axios';
 import ControlsCSVDownload from 'ControlsCSVDownload';
-import d3 from 'd3';
+import tableIcons from './tableIcons';
 
 const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX.Element => {
     const classes = useStyles();
@@ -84,8 +84,6 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
 
     useEffect(() => getFile(props.jobId, props.apiKey, props.token));
 
-    
-  
     return (
         <Box className={classes.root} id="dashboard">
             {dashboard && (
@@ -264,36 +262,11 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                         </Grid>
                     </Grid>
                     <Grid container direction="row" spacing={1}>
-                        <Grid item xs={12} sm={4} md={4} lg={4}>
-                            <PieChartCard
-                                id="automated_manual_pie"
-                                chart={<MyResponsivePie data={generatePie(dashboardfile!, 'Control Method')} />}
-                                table={
-                                    <DataTablePopUp
-                                        table={
-                                            <MaterialTable
-                                                options={{
-                                                    exportButton: true,
-                                                }}
-                                                icons={tableIcons}
-                                                columns={[
-                                                    { title: 'Control Description', field: 'control_description' },
-                                                    { title: 'Control Method', field: 'Control Method' },
-                                                ]}
-                                                data={dashboardfile!}
-                                                title="Analysis Summary"
-                                            />
-                                        }
-                                    />
-                                }
-                                header="Control Method"
-                                body="The split of controls that are automated or manual."
-                            ></PieChartCard>
-                        </Grid>
+                        <Grid item xs={12} sm={4} md={4} lg={4}></Grid>
                         <Grid item xs={12} sm={4} md={4} lg={4}>
                             <PieChartCard
                                 id="contains_what_pie"
-                                chart={<MyResponsivePie data={generatePie(dashboardfile!, 'contains_whats')} />}
+                                chart={<ResponsivePie controlsFile={dashboardfile!} column="contains_whats" />}
                                 table={
                                     <DataTablePopUp
                                         table={
@@ -320,7 +293,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                         <Grid item xs={12} sm={4} md={4} lg={4}>
                             <PieChartCard
                                 id="contains_how_pie"
-                                chart={<MyResponsivePie data={generatePie(dashboardfile!, 'contains_hows')} />}
+                                chart={<ResponsivePie controlsFile={dashboardfile!} column="contains_hows" />}
                                 table={
                                     <DataTablePopUp
                                         table={
@@ -349,7 +322,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                         <Grid item xs={12} sm={4} md={4} lg={4}>
                             <PieChartCard
                                 id="contains_who_pie"
-                                chart={<MyResponsivePie data={generatePie(dashboardfile!, 'contains_whos')} />}
+                                chart={<ResponsivePie data={generatePie(dashboardfile!, 'contains_whos')} />}
                                 table={
                                     <DataTablePopUp
                                         table={
@@ -376,7 +349,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                         <Grid item xs={12} sm={4} md={4} lg={4}>
                             <PieChartCard
                                 id="contains_whens_pie"
-                                chart={<MyResponsivePie data={generatePie(dashboardfile!, 'contains_whens')} />}
+                                chart={<ResponsivePie data={generatePie(dashboardfile!, 'contains_whens')} />}
                                 table={
                                     <DataTablePopUp
                                         table={
@@ -403,7 +376,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                         <Grid item xs={12} sm={4} md={4} lg={4}>
                             <PieChartCard
                                 id="multiple_what_pie"
-                                chart={<MyResponsivePie data={generatePie(dashboardfile!, 'multiple_whats')} />}
+                                chart={<ResponsivePie data={generatePie(dashboardfile!, 'multiple_whats')} />}
                                 table={
                                     <DataTablePopUp
                                         table={
@@ -435,7 +408,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                         <Grid item xs={12} sm={4} md={4} lg={4}>
                             <PieChartCard
                                 id="multiple_how_pie"
-                                chart={<MyResponsivePie data={generatePie(dashboardfile!, 'multiple_hows')} />}
+                                chart={<ResponsivePie data={generatePie(dashboardfile!, 'multiple_hows')} />}
                                 table={
                                     <DataTablePopUp
                                         table={
@@ -462,7 +435,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                         <Grid item xs={12} sm={4} md={4} lg={4}>
                             <PieChartCard
                                 id="multiple_who_pie"
-                                chart={<MyResponsivePie data={generatePie(dashboardfile!, 'multiple_whos')} />}
+                                chart={<ResponsivePie data={generatePie(dashboardfile!, 'multiple_whos')} />}
                                 table={
                                     <DataTablePopUp
                                         table={
@@ -489,7 +462,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                         <Grid item xs={12} sm={4} md={4} lg={4}>
                             <PieChartCard
                                 id="multiple_when_pie"
-                                chart={<MyResponsivePie data={generatePie(dashboardfile!, 'multiple_whens')} />}
+                                chart={<ResponsivePie data={generatePie(dashboardfile!, 'multiple_whens')} />}
                                 table={
                                     <DataTablePopUp
                                         table={

@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
 import 'array.prototype.move';
+import { PieDatum } from '@nivo/pie';
 
 /**
  * Adds a remediation checklist to the results received from the Controls api.
@@ -140,11 +141,11 @@ export const orderData = (data: Array<object>): Array<object> => {
  * @param {string} column
  * @returns {[object]} data
  */
-export const generatePie = (file: Array<object>, column: string): Array<object> => {
+export const generatePie = (file: Array<object>, column: string): Array<PieDatum> => {
     const dataCount = countColumnValues(file, column);
     if (dataCount[0]['id'] !== 'undefined') {
         const rawData = formatData(dataCount);
         const orderedData = orderData(rawData);
-        return orderedData;
+        return orderedData as Array<PieDatum>;
     } else return [{ id: 'No Data Provided', value: 0 }];
 };
