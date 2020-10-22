@@ -34,6 +34,7 @@ import DataTablePopUp from './DataTablePopUp';
 import axios from 'axios';
 import ControlsCSVDownload from 'ControlsCSVDownload';
 import tableIcons from './tableIcons';
+import PIEMETRICS from './PieMetrics';
 
 const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX.Element => {
     const classes = useStyles();
@@ -49,6 +50,8 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
         showErrorMessage(false);
         showLimitMessage(false);
     };
+
+    let pieCounter = 0
 
     /**
      * Polls the API at 30 second intervals to check job status
@@ -261,6 +264,22 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                             </Typography>
                         </Grid>
                     </Grid>
+
+
+                    {/* map function for components*/}
+                    
+                    {PIEMETRICS.map((PIEMETRIC: { name: React.ReactNode }) => {
+                        if (pieCounter % 3 == 0) {
+
+                        }
+                        pieCounter++
+                        // new grid every three items
+                        // string manipulation on title to create all the relevant keys
+                        // elements
+                    }
+
+
+
                     <Grid container direction="row" spacing={1}>
                         <Grid item xs={12} sm={4} md={4} lg={4}></Grid>
                         <Grid item xs={12} sm={4} md={4} lg={4}>
