@@ -156,10 +156,12 @@ export default function SubmitFile(props: {
 
     const convertFileToJson = async (file: File, fileName: string): Promise<Record<string, any>> => {
         if (fileName.split('.').pop() === 'csv') {
-            return convertCSVToJSON(file);
+            data = convertCSVToJSON(file);
         } else {
-            return convertXLToJSON(file);
+            data = convertXLToJSON(file);
         }
+        data['filename'] = fileName
+        return data;
     };
 
     const generateHeaders = async (): Promise<Record<string, any>> => {

@@ -31,7 +31,7 @@ const AtreidesDropzone = (props: { handleFiles: (files: Array<File>) => Promise<
                 <Typography variant="h6" align="center">
                     {!isDragActive && 'Click here or drop a file to upload.'}
                     {isDragActive && !isDragReject && 'Drop the file Please!'}
-                    {isDragReject && 'File type not accepted, sorry!'}
+                    {isDragReject && 'File type not accepted. Please upload a CSV or XLS, XLXS file'}
                 </Typography>
                 {isFileTooLarge && <Typography variant="caption">File is too large.</Typography>}
             </div>
