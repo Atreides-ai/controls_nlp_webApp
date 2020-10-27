@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 
 const PrintButton = ({ descriptions, label }) => (
     <Button
-        variant="outlined"
+        variant="contained"
         color="secondary"
         onClick={async () => {
             const pdf = new jsPDF('p', 'mm', 'a4');

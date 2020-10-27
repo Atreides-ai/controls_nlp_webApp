@@ -68,10 +68,11 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                 <Grid container direction="row" spacing={1}>
                     {content.map((item: string) => {
                         const id = 'contains_' + item + '_pie';
-                        const column = 'contains_' + item;
-                        const capitalised = _.upperFirst(item);
+                        const column = 'contains_' + item.replace('multiple_', '');
+                        const capitalised = _.upperFirst(item).replace('_', ' ');
                         const valueText = capitalised + ' Text';
                         const trueFalse = 'Contains ' + capitalised;
+                        const textColumn = item.replace('multiple_', '');
                         return (
                             <Grid item xs={12} sm={4} md={4} lg={4}>
                                 <PieChartCard
@@ -87,7 +88,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                                                     icons={tableIcons}
                                                     columns={[
                                                         { title: 'Control Description', field: 'control_description' },
-                                                        { title: valueText, field: item },
+                                                        { title: valueText, field: textColumn },
                                                         { title: trueFalse, field: column },
                                                     ]}
                                                     data={dashboardfile!}
@@ -97,7 +98,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                                         />
                                     }
                                     header={capitalised}
-                                    body={'Our analysis of: ' + item}
+                                    body={'Our analysis of: ' + capitalised}
                                 ></PieChartCard>
                             </Grid>
                         );
@@ -139,7 +140,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
         }, 5000);
     };
 
-    useEffect(() => getFile(props.jobId, props.apiKey, props.token));
+    useEffect(() => getFile(props.jobId, props.apiKey, props.token), []);
 
     return (
         <Box className={classes.root} id="dashboard">

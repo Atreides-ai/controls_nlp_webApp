@@ -1,6 +1,7 @@
 import * as d3 from 'd3';
 import 'array.prototype.move';
 import { PieDatum } from '@nivo/pie';
+import theme from '../theme';
 
 /**
  * Adds a remediation checklist to the results received from the Controls api.
@@ -83,21 +84,9 @@ export const formatData = (dataCount: Array<object>): Array<object> => {
         obj['id'] = obj['key'];
         delete obj['key'];
         if (obj['id'] === 'true') {
-            obj['color'] = '#7C4DFF';
+            obj['color'] = theme.palette.primary.main;
         } else if (obj['id'] === 'false') {
-            obj['color'] = '#607D8B';
-        } else if (obj['id'] === 'poor') {
-            obj['color'] = '#7C4DFF';
-        } else if (obj['id'] === 'fair') {
-            obj['color'] = '#607D8B';
-        } else if (obj['id'] === 'good') {
-            obj['color'] = '#CFD8DC';
-        } else if (obj['id'] === 'strong') {
-            obj['color'] = '#455A64';
-        } else if (obj['id'] === 'Manual') {
-            obj['color'] = '#7C4DFF';
-        } else if (obj['id'] === 'Automated') {
-            obj['color'] = '#607D8B';
+            obj['color'] = theme.palette.secondary.main;
         }
         return obj;
     });
