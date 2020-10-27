@@ -86,7 +86,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         cardRoot: {
             height: 170,
-            borderRadius: theme.spacing(2), // 16px
+            borderRadius: theme.spacing(1), // 16px
             transition: '0.3s',
             position: 'relative',
             maxWidth: 500,
@@ -101,36 +101,25 @@ const useStyles = makeStyles((theme: Theme) =>
             marginBottom: theme.spacing(2),
             [theme.breakpoints.up('lg')]: {
                 flexDirection: 'row',
-                padding: theme.spacing(2),
+                padding: theme.spacing(1),
                 margin: theme.spacing(1),
             },
             [theme.breakpoints.down('md')]: {
-                flexDirection: 'column',
+                flexDirection: 'row',
                 padding: theme.spacing(2),
-                height: 300,
-                margin: theme.spacing(1),
-            },
-            [theme.breakpoints.down('sm')]: {
-                flexDirection: 'column',
-                padding: theme.spacing(1),
-                height: 200,
-                margin: theme.spacing(1),
-            },
-            [theme.breakpoints.down('xs')]: {
-                flexDirection: 'column',
-                padding: theme.spacing(1),
                 height: 200,
                 margin: theme.spacing(1),
             },
         },
         cardMedia: {
             width: '88%',
-            marginLeft: 'auto',
-            marginRight: 'auto',
+            borderRadius: 12,
+            padding: 12,
+            marginLeft: theme.spacing(1),
+            marginRight: theme.spacing(1),
             marginTop: theme.spacing(-3),
             height: 0,
             paddingBottom: '48%',
-            borderRadius: theme.spacing(2),
             backgroundColor: '#fff',
             position: 'relative',
             marginBottom: theme.spacing(2),
@@ -149,15 +138,10 @@ const useStyles = makeStyles((theme: Theme) =>
             },
             [theme.breakpoints.down('sm')]: {
                 paddingTop: '0%',
+                marginTop: theme.spacing(1),
                 marginLeft: theme.spacing(1),
                 marginBottom: theme.spacing(1),
                 paddingBottom: '10%',
-            },
-            [theme.breakpoints.down('xs')]: {
-                paddingTop: '0%',
-                marginLeft: theme.spacing(1),
-                marginBottom: theme.spacing(1),
-                paddingBottom: '5%',
             },
             '&:after': {
                 content: '" "',

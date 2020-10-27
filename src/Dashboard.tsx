@@ -37,11 +37,12 @@ import ControlsCSVDownload from 'ControlsCSVDownload';
 import tableIcons from './tableIcons';
 import { PIEMETRICS } from './PieMetrics';
 import _ from 'lodash';
+import testData from './testData';
 
 const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX.Element => {
     const classes = useStyles();
-    const [dashboard, showDashboard] = useState(true);
-    const [dashboardfile, setFile] = useState();
+    const [dashboard, showDashboard] = useState(false);
+    const [dashboardfile, setFile] = useState<Array<object>>();
     const baseUrl = process.env.REACT_APP_ENDPOINT;
     const [progress, setProgress] = useState(0);
     const [errorMessage, showErrorMessage] = useState(false);
@@ -113,7 +114,8 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
      *
      */
     const getFile = (jobId: string, apiKey: string, token: string): void => {
-        
+        setFile(testData);
+        showDashboard(true);
         // const url = baseUrl + '/get_results/' + jobId;
         // const headers = { headers: { 'x-api-key': apiKey, Authorization: token } };
         // const interval = setInterval(() => {
@@ -210,54 +212,54 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                             </Typography>
                         </Grid>
                         <Grid container direction="row" spacing={3} justify="center">
-                            <Grid item xs={12} sm={6} md={4} lg={2}>
+                            <Grid item xs={12} sm={6} md={4} lg="auto">
                                 <CardTablePopUp
                                     id="fully_card"
-                                    icon={<StarIcon style={{ fontSize: 120 }} />}
+                                    icon={<StarIcon style={{ fontSize: 100 }} />}
                                     analysisField="control_summary_rating"
                                     dashboardFile={dashboardfile!}
                                     filter="Fully"
                                     showRemediation={true}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={6} md={4} lg={2}>
+                            <Grid item xs={12} sm={6} md={4} lg="auto">
                                 <CardTablePopUp
                                     analysisField="control_summary_rating"
                                     dashboardFile={dashboardfile!}
                                     filter="Mostly"
                                     id="mostly_card"
                                     showRemediation={true}
-                                    icon={<BuildIcon style={{ fontSize: 120 }} />}
+                                    icon={<BuildIcon style={{ fontSize: 100 }} />}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={6} md={4} lg={2}>
+                            <Grid item xs={12} sm={6} md={4} lg="auto">
                                 <CardTablePopUp
                                     analysisField="control_summary_rating"
                                     dashboardFile={dashboardfile!}
                                     filter="Partially"
-                                    icon={<BugReportIcon style={{ fontSize: 120 }} />}
+                                    icon={<BugReportIcon style={{ fontSize: 100 }} />}
                                     id="partially_card"
                                     showRemediation={true}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={6} md={4} lg={2}>
+                            <Grid item xs={12} sm={6} md={4} lg="auto">
                                 <CardTablePopUp
                                     analysisField="control_summary_rating"
-                                    icon={<FeedbackIcon style={{ fontSize: 120 }} />}
+                                    icon={<FeedbackIcon style={{ fontSize: 100 }} />}
                                     dashboardFile={dashboardfile!}
                                     filter="Poorly"
                                     id="poorly_card"
                                     showRemediation={true}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={6} md={4} lg={2}>
+                            <Grid item xs={12} sm={6} md={4} lg="auto">
                                 <CardTablePopUp
                                     analysisField="control_summary_rating"
                                     dashboardFile={dashboardfile!}
                                     filter="None"
                                     id="none_card"
                                     showRemediation={true}
-                                    icon={<FlagIcon style={{ fontSize: 120 }} />}
+                                    icon={<FlagIcon style={{ fontSize: 100 }} />}
                                 />
                             </Grid>
                         </Grid>
@@ -271,40 +273,40 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                         </Grid>
                     </Grid>
                     <Grid container direction="row" spacing={1}>
-                        <Grid item xs={12} sm={3} md={3} lg={3}>
+                        <Grid item xs={12} sm={6} md={3} lg={3}>
                             <CardTablePopUp
                                 analysisField="relevance_to_risk"
                                 dashboardFile={dashboardfile!}
                                 filter="strong"
-                                icon={<SecurityIcon style={{ fontSize: 120 }} />}
+                                icon={<SecurityIcon style={{ fontSize: 90 }} />}
                                 id="strong_risk_card"
                             />
                         </Grid>
-                        <Grid item xs={12} sm={3} md={3} lg={3}>
+                        <Grid item xs={12} sm={6} md={3} lg={3}>
                             <CardTablePopUp
                                 analysisField="relevance_to_risk"
                                 dashboardFile={dashboardfile!}
                                 filter="good"
-                                icon={<ThumbUpIcon style={{ fontSize: 120 }} />}
+                                icon={<ThumbUpIcon style={{ fontSize: 90 }} />}
                                 id="good_risk_card"
                             />
                         </Grid>
-                        <Grid item xs={12} sm={3} md={3} lg={3}>
+                        <Grid item xs={12} sm={6} md={3} lg={3}>
                             <CardTablePopUp
                                 analysisField="relevance_to_risk"
                                 dashboardFile={dashboardfile!}
                                 filter="fair"
-                                icon={<NotificationsIcon style={{ fontSize: 120 }} />}
+                                icon={<NotificationsIcon style={{ fontSize: 90 }} />}
                                 id="fair_risk_card"
                             />
                         </Grid>
-                        <Grid item xs={12} sm={3} md={3} lg={3}>
+                        <Grid item xs={12} sm={6} md={3} lg={3}>
                             <CardTablePopUp
                                 analysisField="relevance_to_risk"
                                 dashboardFile={dashboardfile!}
                                 filter="poor"
                                 id="poor_risk_card"
-                                icon={<ErrorIcon style={{ fontSize: 120 }} />}
+                                icon={<ErrorIcon style={{ fontSize: 90 }} />}
                             />
                         </Grid>
                         <Grid container direction="row" spacing={1}>
