@@ -5,6 +5,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import useStyles from './useStyles';
 import { generateCardMetric } from './utils/AtreidesDataUtils';
+import { Box } from '@material-ui/core';
 
 const ControlsCardContent = (props: {
     icon: JSX.Element;

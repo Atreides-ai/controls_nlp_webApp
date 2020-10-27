@@ -40,7 +40,7 @@ import _ from 'lodash';
 
 const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX.Element => {
     const classes = useStyles();
-    const [dashboard, showDashboard] = useState(false);
+    const [dashboard, showDashboard] = useState(true);
     const [dashboardfile, setFile] = useState();
     const baseUrl = process.env.REACT_APP_ENDPOINT;
     const [progress, setProgress] = useState(0);
@@ -113,31 +113,32 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
      *
      */
     const getFile = (jobId: string, apiKey: string, token: string): void => {
-        const url = baseUrl + '/get_results/' + jobId;
-        const headers = { headers: { 'x-api-key': apiKey, Authorization: token } };
-        const interval = setInterval(() => {
-            axios.get(url, headers).then(response => {
-                if (response.status === 200 && response['data']['percent_complete'] === 100) {
-                    setProgress(100);
-                    if (response.data.controls) {
-                        setFile(response.data.controls);
-                        clearInterval(interval);
-                        showDashboard(true);
-                    } else {
-                        showErrorMessage(true);
-                    }
-                } else if (response.status === 200 && response['data']['percent_complete'] != 100) {
-                    setProgress(response['data']['percent_complete']);
-                } else if (response.status === 403) {
-                    showLimitMessage(true);
-                    clearInterval(interval);
-                } else if (response.status === 400 || 404) {
-                    console.log(response);
-                    showErrorMessage(true);
-                    clearInterval(interval);
-                }
-            });
-        }, 5000);
+        
+        // const url = baseUrl + '/get_results/' + jobId;
+        // const headers = { headers: { 'x-api-key': apiKey, Authorization: token } };
+        // const interval = setInterval(() => {
+        //     axios.get(url, headers).then(response => {
+        //         if (response.status === 200 && response['data']['percent_complete'] === 100) {
+        //             setProgress(100);
+        //             if (response.data.controls) {
+        //                 setFile(response.data.controls);
+        //                 clearInterval(interval);
+        //                 showDashboard(true);
+        //             } else {
+        //                 showErrorMessage(true);
+        //             }
+        //         } else if (response.status === 200 && response['data']['percent_complete'] != 100) {
+        //             setProgress(response['data']['percent_complete']);
+        //         } else if (response.status === 403) {
+        //             showLimitMessage(true);
+        //             clearInterval(interval);
+        //         } else if (response.status === 400 || 404) {
+        //             console.log(response);
+        //             showErrorMessage(true);
+        //             clearInterval(interval);
+        //         }
+        //     });
+        // }, 5000);
     };
 
     useEffect(() => getFile(props.jobId, props.apiKey, props.token), []);
@@ -209,7 +210,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                             </Typography>
                         </Grid>
                         <Grid container direction="row" spacing={3} justify="center">
-                            <Grid item xs={12} sm="auto" md="auto" lg="auto">
+                            <Grid item xs={12} sm={6} md={4} lg={2}>
                                 <CardTablePopUp
                                     id="fully_card"
                                     icon={<StarIcon style={{ fontSize: 120 }} />}
@@ -219,7 +220,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                                     showRemediation={true}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm="auto" md="auto" lg="auto">
+                            <Grid item xs={12} sm={6} md={4} lg={2}>
                                 <CardTablePopUp
                                     analysisField="control_summary_rating"
                                     dashboardFile={dashboardfile!}
@@ -229,7 +230,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                                     icon={<BuildIcon style={{ fontSize: 120 }} />}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm="auto" md="auto" lg="auto">
+                            <Grid item xs={12} sm={6} md={4} lg={2}>
                                 <CardTablePopUp
                                     analysisField="control_summary_rating"
                                     dashboardFile={dashboardfile!}
@@ -239,7 +240,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                                     showRemediation={true}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm="auto" md="auto" lg="auto">
+                            <Grid item xs={12} sm={6} md={4} lg={2}>
                                 <CardTablePopUp
                                     analysisField="control_summary_rating"
                                     icon={<FeedbackIcon style={{ fontSize: 120 }} />}
@@ -249,7 +250,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                                     showRemediation={true}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm="auto" md="auto" lg="auto">
+                            <Grid item xs={12} sm={6} md={4} lg={2}>
                                 <CardTablePopUp
                                     analysisField="control_summary_rating"
                                     dashboardFile={dashboardfile!}
