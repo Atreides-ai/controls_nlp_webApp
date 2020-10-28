@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-key */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useState, useEffect } from 'react';
 import Dialog from '@material-ui/core/Dialog';
@@ -34,12 +35,14 @@ import DataTablePopUp from './DataTablePopUp';
 import axios from 'axios';
 import ControlsCSVDownload from 'ControlsCSVDownload';
 import tableIcons from './tableIcons';
-import PIEMETRICS from './PieMetrics';
+import { PIEMETRICS } from './PieMetrics';
+import _ from 'lodash';
+import testData from './testData';
 
 const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX.Element => {
     const classes = useStyles();
     const [dashboard, showDashboard] = useState(false);
-    const [dashboardfile, setFile] = useState();
+    const [dashboardfile, setFile] = useState<Array<object>>();
     const baseUrl = process.env.REACT_APP_ENDPOINT;
     const [progress, setProgress] = useState(0);
     const [errorMessage, showErrorMessage] = useState(false);
@@ -51,41 +54,96 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
         showLimitMessage(false);
     };
 
-    let pieCounter = 0
+    const splitToChunks = (array: Array<string>, parts: number): Array<Array<string>> => {
+        const result = [];
+        for (let i = parts; i > 0; i--) {
+            result.push(array.splice(0, Math.ceil(array.length / i)));
+        }
+        return result;
+    };
+
+    const createPieElements = (): JSX.Element[] => {
+        const gridContent = splitToChunks(PIEMETRICS, 3);
+        return gridContent.map((content: Array<string>) => {
+            return (
+                <Grid container direction="row" spacing={1}>
+                    {content.map((item: string) => {
+                        const id = 'contains_' + item + '_pie';
+                        const column = 'contains_' + item.replace('multiple_', '');
+                        const capitalised = _.upperFirst(item).replace('_', ' ');
+                        const valueText = capitalised + ' Text';
+                        const trueFalse = 'Contains ' + capitalised;
+                        const textColumn = item.replace('multiple_', '');
+                        return (
+                            <Grid item xs={12} sm={4} md={4} lg={4}>
+                                <PieChartCard
+                                    id={id}
+                                    chart={<ResponsivePie controlsFile={dashboardfile!} column={column} />}
+                                    table={
+                                        <DataTablePopUp
+                                            table={
+                                                <MaterialTable
+                                                    options={{
+                                                        exportButton: true,
+                                                    }}
+                                                    icons={tableIcons}
+                                                    columns={[
+                                                        { title: 'Control Description', field: 'control_description' },
+                                                        { title: valueText, field: textColumn },
+                                                        { title: trueFalse, field: column },
+                                                    ]}
+                                                    data={dashboardfile!}
+                                                    title="Analysis Summary"
+                                                />
+                                            }
+                                        />
+                                    }
+                                    header={capitalised}
+                                    body={'Our analysis of: ' + capitalised}
+                                ></PieChartCard>
+                            </Grid>
+                        );
+                    })}
+                </Grid>
+            );
+        });
+    };
 
     /**
      * Polls the API at 30 second intervals to check job status
      *
      */
-    const getFile = async (jobId: string, apiKey: string, token: string): void => {
-        const url = baseUrl + '/get_results/' + jobId;
-        const headers = { headers: { 'x-api-key': apiKey, Authorization: token } };
-        const interval = setInterval(() => {
-            axios.get(url, headers).then(response => {
-                if (response.status === 200 && response['data']['percent_complete'] === 100) {
-                    setProgress(100);
-                    if (response.data.controls) {
-                        setFile(response.data.controls);
-                        clearInterval(interval);
-                        showDashboard(true);
-                    } else {
-                        showErrorMessage(true);
-                    }
-                } else if (response.status === 200 && response['data']['percent_complete'] != 100) {
-                    setProgress(response['data']['percent_complete']);
-                } else if (response.status === 403) {
-                    showLimitMessage(true);
-                    clearInterval(interval);
-                } else if (response.status === 400 || 404) {
-                    console.log(response);
-                    showErrorMessage(true);
-                    clearInterval(interval);
-                }
-            });
-        }, 5000);
+    const getFile = (jobId: string, apiKey: string, token: string): void => {
+        setFile(testData);
+        showDashboard(true);
+        // const url = baseUrl + '/get_results/' + jobId;
+        // const headers = { headers: { 'x-api-key': apiKey, Authorization: token } };
+        // const interval = setInterval(() => {
+        //     axios.get(url, headers).then(response => {
+        //         if (response.status === 200 && response['data']['percent_complete'] === 100) {
+        //             setProgress(100);
+        //             if (response.data.controls) {
+        //                 setFile(response.data.controls);
+        //                 clearInterval(interval);
+        //                 showDashboard(true);
+        //             } else {
+        //                 showErrorMessage(true);
+        //             }
+        //         } else if (response.status === 200 && response['data']['percent_complete'] != 100) {
+        //             setProgress(response['data']['percent_complete']);
+        //         } else if (response.status === 403) {
+        //             showLimitMessage(true);
+        //             clearInterval(interval);
+        //         } else if (response.status === 400 || 404) {
+        //             console.log(response);
+        //             showErrorMessage(true);
+        //             clearInterval(interval);
+        //         }
+        //     });
+        // }, 5000);
     };
 
-    useEffect(() => getFile(props.jobId, props.apiKey, props.token));
+    useEffect(() => getFile(props.jobId, props.apiKey, props.token), []);
 
     return (
         <Box className={classes.root} id="dashboard">
@@ -154,54 +212,54 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                             </Typography>
                         </Grid>
                         <Grid container direction="row" spacing={3} justify="center">
-                            <Grid item xs={12} sm="auto" md="auto" lg="auto">
+                            <Grid item xs={12} sm={6} md={4} lg="auto">
                                 <CardTablePopUp
                                     id="fully_card"
-                                    icon={<StarIcon style={{ fontSize: 120 }} />}
+                                    icon={<StarIcon style={{ fontSize: 100 }} />}
                                     analysisField="control_summary_rating"
                                     dashboardFile={dashboardfile!}
                                     filter="Fully"
                                     showRemediation={true}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm="auto" md="auto" lg="auto">
+                            <Grid item xs={12} sm={6} md={4} lg="auto">
                                 <CardTablePopUp
                                     analysisField="control_summary_rating"
                                     dashboardFile={dashboardfile!}
                                     filter="Mostly"
                                     id="mostly_card"
                                     showRemediation={true}
-                                    icon={<BuildIcon style={{ fontSize: 120 }} />}
+                                    icon={<BuildIcon style={{ fontSize: 100 }} />}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm="auto" md="auto" lg="auto">
+                            <Grid item xs={12} sm={6} md={4} lg="auto">
                                 <CardTablePopUp
                                     analysisField="control_summary_rating"
                                     dashboardFile={dashboardfile!}
                                     filter="Partially"
-                                    icon={<BugReportIcon style={{ fontSize: 120 }} />}
+                                    icon={<BugReportIcon style={{ fontSize: 100 }} />}
                                     id="partially_card"
                                     showRemediation={true}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm="auto" md="auto" lg="auto">
+                            <Grid item xs={12} sm={6} md={4} lg="auto">
                                 <CardTablePopUp
                                     analysisField="control_summary_rating"
-                                    icon={<FeedbackIcon style={{ fontSize: 120 }} />}
+                                    icon={<FeedbackIcon style={{ fontSize: 100 }} />}
                                     dashboardFile={dashboardfile!}
                                     filter="Poorly"
                                     id="poorly_card"
                                     showRemediation={true}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm="auto" md="auto" lg="auto">
+                            <Grid item xs={12} sm={6} md={4} lg="auto">
                                 <CardTablePopUp
                                     analysisField="control_summary_rating"
                                     dashboardFile={dashboardfile!}
                                     filter="None"
                                     id="none_card"
                                     showRemediation={true}
-                                    icon={<FlagIcon style={{ fontSize: 120 }} />}
+                                    icon={<FlagIcon style={{ fontSize: 100 }} />}
                                 />
                             </Grid>
                         </Grid>
@@ -215,40 +273,40 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                         </Grid>
                     </Grid>
                     <Grid container direction="row" spacing={1}>
-                        <Grid item xs={12} sm={3} md={3} lg={3}>
+                        <Grid item xs={12} sm={6} md={3} lg={3}>
                             <CardTablePopUp
                                 analysisField="relevance_to_risk"
                                 dashboardFile={dashboardfile!}
                                 filter="strong"
-                                icon={<SecurityIcon style={{ fontSize: 120 }} />}
+                                icon={<SecurityIcon style={{ fontSize: 90 }} />}
                                 id="strong_risk_card"
                             />
                         </Grid>
-                        <Grid item xs={12} sm={3} md={3} lg={3}>
+                        <Grid item xs={12} sm={6} md={3} lg={3}>
                             <CardTablePopUp
                                 analysisField="relevance_to_risk"
                                 dashboardFile={dashboardfile!}
                                 filter="good"
-                                icon={<ThumbUpIcon style={{ fontSize: 120 }} />}
+                                icon={<ThumbUpIcon style={{ fontSize: 90 }} />}
                                 id="good_risk_card"
                             />
                         </Grid>
-                        <Grid item xs={12} sm={3} md={3} lg={3}>
+                        <Grid item xs={12} sm={6} md={3} lg={3}>
                             <CardTablePopUp
                                 analysisField="relevance_to_risk"
                                 dashboardFile={dashboardfile!}
                                 filter="fair"
-                                icon={<NotificationsIcon style={{ fontSize: 120 }} />}
+                                icon={<NotificationsIcon style={{ fontSize: 90 }} />}
                                 id="fair_risk_card"
                             />
                         </Grid>
-                        <Grid item xs={12} sm={3} md={3} lg={3}>
+                        <Grid item xs={12} sm={6} md={3} lg={3}>
                             <CardTablePopUp
                                 analysisField="relevance_to_risk"
                                 dashboardFile={dashboardfile!}
                                 filter="poor"
                                 id="poor_risk_card"
-                                icon={<ErrorIcon style={{ fontSize: 120 }} />}
+                                icon={<ErrorIcon style={{ fontSize: 90 }} />}
                             />
                         </Grid>
                         <Grid container direction="row" spacing={1}>
@@ -264,248 +322,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                             </Typography>
                         </Grid>
                     </Grid>
-
-
-                    {/* map function for components*/}
-                    
-                    {PIEMETRICS.map((PIEMETRIC: { name: React.ReactNode }) => {
-                        if (pieCounter % 3 == 0) {
-
-                        }
-                        pieCounter++
-                        // new grid every three items
-                        // string manipulation on title to create all the relevant keys
-                        // elements
-                    }
-
-
-
-                    <Grid container direction="row" spacing={1}>
-                        <Grid item xs={12} sm={4} md={4} lg={4}></Grid>
-                        <Grid item xs={12} sm={4} md={4} lg={4}>
-                            <PieChartCard
-                                id="contains_what_pie"
-                                chart={<ResponsivePie controlsFile={dashboardfile!} column="contains_whats" />}
-                                table={
-                                    <DataTablePopUp
-                                        table={
-                                            <MaterialTable
-                                                options={{
-                                                    exportButton: true,
-                                                }}
-                                                icons={tableIcons}
-                                                columns={[
-                                                    { title: 'Control Description', field: 'control_description' },
-                                                    { title: 'What Text', field: 'whats' },
-                                                    { title: 'Contains What', field: 'contains_whats' },
-                                                ]}
-                                                data={dashboardfile!}
-                                                title="Analysis Summary"
-                                            />
-                                        }
-                                    />
-                                }
-                                header="What"
-                                body="Controls that define what is performed."
-                            ></PieChartCard>
-                        </Grid>
-                        <Grid item xs={12} sm={4} md={4} lg={4}>
-                            <PieChartCard
-                                id="contains_how_pie"
-                                chart={<ResponsivePie controlsFile={dashboardfile!} column="contains_hows" />}
-                                table={
-                                    <DataTablePopUp
-                                        table={
-                                            <MaterialTable
-                                                options={{
-                                                    exportButton: true,
-                                                }}
-                                                icons={tableIcons}
-                                                columns={[
-                                                    { title: 'Control Description', field: 'control_description' },
-                                                    { title: 'How Text', field: 'hows' },
-                                                    { title: 'Contains How', field: 'contains_hows' },
-                                                ]}
-                                                data={dashboardfile!}
-                                                title="Analysis Summary"
-                                            />
-                                        }
-                                    />
-                                }
-                                header="How"
-                                body="Controls that define how the activity is done or evidenced."
-                            ></PieChartCard>
-                        </Grid>
-                    </Grid>
-                    <Grid container direction="row" spacing={1}>
-                        <Grid item xs={12} sm={4} md={4} lg={4}>
-                            <PieChartCard
-                                id="contains_who_pie"
-                                chart={<ResponsivePie data={generatePie(dashboardfile!, 'contains_whos')} />}
-                                table={
-                                    <DataTablePopUp
-                                        table={
-                                            <MaterialTable
-                                                options={{
-                                                    exportButton: true,
-                                                }}
-                                                icons={tableIcons}
-                                                columns={[
-                                                    { title: 'Control Description', field: 'control_description' },
-                                                    { title: 'Who Text', field: 'whos' },
-                                                    { title: 'Contains Who', field: 'contains_whos' },
-                                                ]}
-                                                data={dashboardfile!}
-                                                title="Analysis Summary"
-                                            />
-                                        }
-                                    />
-                                }
-                                header="Who"
-                                body="Controls that define the operator."
-                            ></PieChartCard>
-                        </Grid>
-                        <Grid item xs={12} sm={4} md={4} lg={4}>
-                            <PieChartCard
-                                id="contains_whens_pie"
-                                chart={<ResponsivePie data={generatePie(dashboardfile!, 'contains_whens')} />}
-                                table={
-                                    <DataTablePopUp
-                                        table={
-                                            <MaterialTable
-                                                options={{
-                                                    exportButton: true,
-                                                }}
-                                                icons={tableIcons}
-                                                columns={[
-                                                    { title: 'Control Description', field: 'control_description' },
-                                                    { title: 'When Text', field: 'whens' },
-                                                    { title: 'Contains When', field: 'contains_whens' },
-                                                ]}
-                                                data={dashboardfile!}
-                                                title="Analysis Summary"
-                                            />
-                                        }
-                                    />
-                                }
-                                header="When"
-                                body="Controls that define the frequency of performance."
-                            ></PieChartCard>
-                        </Grid>
-                        <Grid item xs={12} sm={4} md={4} lg={4}>
-                            <PieChartCard
-                                id="multiple_what_pie"
-                                chart={<ResponsivePie data={generatePie(dashboardfile!, 'multiple_whats')} />}
-                                table={
-                                    <DataTablePopUp
-                                        table={
-                                            <MaterialTable
-                                                options={{
-                                                    exportButton: true,
-                                                }}
-                                                icons={tableIcons}
-                                                columns={[
-                                                    { title: 'Control Description', field: 'control_description' },
-                                                    { title: 'Multiple Whats', field: 'whats' },
-                                                    {
-                                                        title: 'Contains Multiple Whats',
-                                                        field: 'multiple_whats',
-                                                    },
-                                                ]}
-                                                data={dashboardfile!}
-                                                title="Analysis Summary"
-                                            />
-                                        }
-                                    />
-                                }
-                                header="Multiple Whats"
-                                body="Controls with multiple activities."
-                            ></PieChartCard>
-                        </Grid>
-                    </Grid>
-                    <Grid container direction="row" spacing={1}>
-                        <Grid item xs={12} sm={4} md={4} lg={4}>
-                            <PieChartCard
-                                id="multiple_how_pie"
-                                chart={<ResponsivePie data={generatePie(dashboardfile!, 'multiple_hows')} />}
-                                table={
-                                    <DataTablePopUp
-                                        table={
-                                            <MaterialTable
-                                                options={{
-                                                    exportButton: true,
-                                                }}
-                                                icons={tableIcons}
-                                                columns={[
-                                                    { title: 'Control Description', field: 'control_description' },
-                                                    { title: 'How Text', field: 'hows' },
-                                                    { title: 'Contains Multiple Hows', field: 'contains_hows' },
-                                                ]}
-                                                data={dashboardfile!}
-                                                title="Analysis Summary"
-                                            />
-                                        }
-                                    />
-                                }
-                                header="Multiple Hows"
-                                body="Controls that define how multiple activities are performed."
-                            ></PieChartCard>
-                        </Grid>
-                        <Grid item xs={12} sm={4} md={4} lg={4}>
-                            <PieChartCard
-                                id="multiple_who_pie"
-                                chart={<ResponsivePie data={generatePie(dashboardfile!, 'multiple_whos')} />}
-                                table={
-                                    <DataTablePopUp
-                                        table={
-                                            <MaterialTable
-                                                options={{
-                                                    exportButton: true,
-                                                }}
-                                                icons={tableIcons}
-                                                columns={[
-                                                    { title: 'Control Description', field: 'control_description' },
-                                                    { title: 'Who Text', field: 'whos' },
-                                                    { title: 'Contains Multiple Who', field: 'multiple_whos' },
-                                                ]}
-                                                data={dashboardfile!}
-                                                title="Analysis Summary"
-                                            />
-                                        }
-                                    />
-                                }
-                                header="Multiple Whos"
-                                body="Controls with multiple operators likely defined."
-                            ></PieChartCard>
-                        </Grid>
-                        <Grid item xs={12} sm={4} md={4} lg={4}>
-                            <PieChartCard
-                                id="multiple_when_pie"
-                                chart={<ResponsivePie data={generatePie(dashboardfile!, 'multiple_whens')} />}
-                                table={
-                                    <DataTablePopUp
-                                        table={
-                                            <MaterialTable
-                                                options={{
-                                                    exportButton: true,
-                                                }}
-                                                icons={tableIcons}
-                                                columns={[
-                                                    { title: 'Control Description', field: 'control_description' },
-                                                    { title: 'When Text', field: 'whens' },
-                                                    { title: 'Contains Multiple Whens', field: 'multiple_whens' },
-                                                ]}
-                                                data={dashboardfile!}
-                                                title="Analysis Summary"
-                                            />
-                                        }
-                                    />
-                                }
-                                header="Multiple Whens"
-                                body="Controls with multiple frequencies."
-                            ></PieChartCard>
-                        </Grid>
-                    </Grid>
+                    {createPieElements()}
                 </div>
             )}
         </Box>

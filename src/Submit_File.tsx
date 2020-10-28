@@ -271,7 +271,7 @@ export default function SubmitFile(props: {
                     </Grid>
                     <Grid container direction="column" alignItems="center" spacing={3}>
                         <Grid item>
-                            <Button variant="contained" color="primary" onClick={uploadManager}>
+                            <Button variant="contained" color="secondary" onClick={uploadManager}>
                                 Upload
                             </Button>
                         </Grid>
