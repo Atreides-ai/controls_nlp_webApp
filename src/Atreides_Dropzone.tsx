@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import 'fontsource-roboto';
-import { Typography, Grid } from '@material-ui/core';
+import { Typography, Grid, Divider, Container } from '@material-ui/core';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
 const AtreidesDropzone = (props: { handleFiles: (files: Array<File>) => Promise<void> }): JSX.Element => {
@@ -22,30 +22,33 @@ const AtreidesDropzone = (props: { handleFiles: (files: Array<File>) => Promise<
 
     return (
         <div>
-            <Grid container direction="column" alignItems="center" justify="center">
-                <div {...getRootProps()}>
-                    <input {...getInputProps()} />
-                    <Grid item xs="auto" sm="auto" md="auto" lg="auto">
-                        <CloudUploadIcon color="secondary" fontSize="large" />{' '}
+            <div {...getRootProps()}>
+                <input {...getInputProps()} />
+                <Grid container direction="column" alignItems="center" justify="center">
+                    <Grid item xs={12} sm={12} md={12} lg={12}>
+                        <Container>
+                            <CloudUploadIcon color="secondary" style={{ fontSize: 200 }} />
+                        </Container>
+                        <Divider></Divider>
                     </Grid>
-                    <Typography variant="h6" align="center">
-                        {!isDragActive && 'Click here or drop a file to upload.'}
-                        {isDragActive && !isDragReject && 'Drop the file Please!'}
-                        {isDragReject && 'File type not accepted, sorry!'}
-                    </Typography>
-                    {isFileTooLarge && <Typography variant="caption">File is too large.</Typography>}
-                </div>
-                <ul>
-                    {acceptedFiles.length > 0 &&
+                </Grid>
+                <Typography variant="h6" align="center">
+                    {!isDragActive && 'Click here or drop a file to upload.'}
+                    {isDragActive && !isDragReject && 'Drop the file Please!'}
+                    {isDragReject && 'File type not accepted, sorry!'}
+                </Typography>
+                {isFileTooLarge && <Typography variant="caption">File is too large.</Typography>}
+            </div>
+            <ul>
+                {acceptedFiles.length > 0 &&
+                    // eslint-disable-next-line react/jsx-key
+                    acceptedFiles.map((acceptedFile: { name: React.ReactNode }) => (
                         // eslint-disable-next-line react/jsx-key
-                        acceptedFiles.map((acceptedFile: { name: React.ReactNode }) => (
-                            // eslint-disable-next-line react/jsx-key
-                            <li>
-                                <Typography variant="overline">{acceptedFile.name}</Typography>
-                            </li>
-                        ))}
-                </ul>
-            </Grid>
+                        <li>
+                            <Typography variant="overline">{acceptedFile.name}</Typography>
+                        </li>
+                    ))}
+            </ul>
         </div>
     );
 };

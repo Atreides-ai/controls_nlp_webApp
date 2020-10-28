@@ -5,7 +5,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import useStyles from './useStyles';
 import { generateCardMetric } from './utils/AtreidesDataUtils';
-import { Box } from '@material-ui/core';
+import _ from 'lodash';
 
 const ControlsCardContent = (props: {
     icon: JSX.Element;
@@ -20,7 +20,7 @@ const ControlsCardContent = (props: {
             <CardMedia className={classes.cardMedia}>{props.icon}</CardMedia>
             <CardContent>
                 <Typography variant="h4" className={classes.title} color="primary">
-                    {props.header}
+                    {_.upperFirst(props.header)}
                 </Typography>
                 <Typography variant="h2" className={classes.title} color="secondary">
                     {generateCardMetric(props.file, props.column, props.header)}

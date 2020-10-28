@@ -9,6 +9,7 @@ import {
 } from './AtreidesDataUtils';
 import { controlsFile } from '../test_utils/controlsTestFile';
 import _ from 'lodash';
+import theme from 'theme';
 
 describe('Atreides Data Utils', () => {
     it('createRemediationList', () => {
@@ -30,8 +31,8 @@ describe('Atreides Data Utils', () => {
             { key: 'false', value: 1 },
         ];
         const expectedOutput = [
-            { id: 'true', value: 1, color: '#7C4DFF' },
-            { id: 'false', value: 1, color: '#607D8B' },
+            { id: 'true', value: 1, color: theme.palette.primary.main },
+            { id: 'false', value: 1, color: theme.palette.secondary.main },
         ];
         expect(formatData(input)).toEqual(expectedOutput);
     });
@@ -48,7 +49,7 @@ describe('Atreides Data Utils', () => {
     });
     it('generatePie', () => {
         const input = controlsFile;
-        const expectedOutput = [{ color: '#7C4DFF', id: 'true', value: 1 }];
+        const expectedOutput = [{ color: theme.palette.primary.main, id: 'true', value: 1 }];
         expect(generatePie(input, 'contains_whats')).toEqual(expectedOutput);
     });
 });

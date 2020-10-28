@@ -33,7 +33,6 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         mui_form: {
             width: '100%',
-            marginTop: '10%',
         },
         submit: {
             margin: theme.spacing(3, 0, 2),

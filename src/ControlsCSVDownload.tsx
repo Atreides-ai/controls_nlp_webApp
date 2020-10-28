@@ -70,7 +70,11 @@ const ControlsCSVDownload = (props: { dashboardFile: Array<object> }): JSX.Eleme
     };
 
     return (
-        <CSVLink data={createCSVDownload(props.dashboardFile)} filename="Analysis.csv">
+        <CSVLink
+            data={createCSVDownload(props.dashboardFile)}
+            filename="Analysis.csv"
+            style={{ textDecoration: 'none' }}
+        >
             <Button variant="contained" color="secondary">
                 Download All Results
             </Button>

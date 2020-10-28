@@ -23,7 +23,6 @@ import SecurityIcon from '@material-ui/icons/Security';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import ErrorIcon from '@material-ui/icons/Error';
-import Divider from '@material-ui/core/Divider';
 import FeedbackIcon from '@material-ui/icons/Feedback';
 import FlagIcon from '@material-ui/icons/Flag';
 import StarIcon from '@material-ui/icons/Star';
@@ -37,7 +36,7 @@ import ControlsCSVDownload from 'ControlsCSVDownload';
 import tableIcons from './tableIcons';
 import { PIEMETRICS } from './PieMetrics';
 import _ from 'lodash';
-import testData from './testData';
+import { controlsFile } from './test_utils/controlsTestFile';
 
 const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX.Element => {
     const classes = useStyles();
@@ -114,7 +113,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
      *
      */
     const getFile = (jobId: string, apiKey: string, token: string): void => {
-        setFile(testData);
+        setFile(controlsFile);
         showDashboard(true);
         // const url = baseUrl + '/get_results/' + jobId;
         // const headers = { headers: { 'x-api-key': apiKey, Authorization: token } };
@@ -148,11 +147,11 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
     return (
         <Box className={classes.root} id="dashboard">
             {dashboard && (
-                <Grid container direction="row" spacing={1}>
-                    <Grid item xs="auto" sm="auto" md="auto" lg="auto">
+                <Grid container direction="row" spacing={1} justify="flex-end">
+                    <Grid item xs={12} sm="auto" md="auto" lg="auto">
                         <ControlsCSVDownload dashboardFile={dashboardfile!} />
                     </Grid>
-                    <Grid item xs="auto" sm="auto" md="auto" lg="auto">
+                    <Grid item xs={12} sm="auto" md="auto" lg="auto">
                         <PrintButton descriptions={descriptions} label="Download Dashboard" />
                     </Grid>
                 </Grid>
@@ -206,7 +205,6 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                 <div className={classes.root}>
                     <Grid container direction="row" spacing={1}>
                         <Grid item xs={12} sm="auto" md="auto" lg="auto">
-                            <Divider variant="middle" />
                             <Typography variant="h4" className={classes.dashboardHeader}>
                                 How well do the controls cover the design requirements?
                             </Typography>
@@ -266,7 +264,6 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                     </Grid>
                     <Grid container direction="row" spacing={1}>
                         <Grid item xs={12} sm="auto" md="auto" lg="auto">
-                            <Divider variant="middle" />
                             <Typography variant="h4" className={classes.dashboardHeader}>
                                 Control Relevance To Risk
                             </Typography>
@@ -310,9 +307,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
                             />
                         </Grid>
                         <Grid container direction="row" spacing={1}>
-                            <Grid item xs={12} sm={12} md={12} lg={12}>
-                                <Divider variant="middle" />
-                            </Grid>
+                            <Grid item xs={12} sm={12} md={12} lg={12}></Grid>
                         </Grid>
                     </Grid>
                     <Grid container direction="row" spacing={1}>
