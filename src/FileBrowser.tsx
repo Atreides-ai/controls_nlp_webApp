@@ -1,23 +1,40 @@
 import React, { useState } from 'react';
-// import { DataGrid, ColDef } from '@material-ui/data-grid';
+import MaterialTable from 'material-table';
+import axios from 'axios';
+import { Button } from '@material-ui/core';
+import { generateHeaders } from './utils/AtreidesAPIUtils';
 
-// const FileBrowser = (props: { apiKey: string; token: string }): JSX.Element => {
-//     const groupedData = useState<Array<Array<object>>>();
-//     const getFileNames = process.env.REACT_APP_FILENAMES_ENDPOINT
-//     const columns: ColDef[] = [
-//         { field: 'filename', headerName: 'File', width: 130 },
-//         { field: 'created', headerName: 'Created', width: 130 },
-//         { field: 'recommend', headerName: 'Recommend', width: 130 },
-//     ];
+const FileBrowser = (props: { baseUrl: string }): JSX.Element => {
+    const groupedData = useState<Array<Array<object>>>();
+    // const columns: ColDef[] = [
+    //     { field: 'filename', headerName: 'File', width: 130 },
+    //     { field: 'created', headerName: 'Created', width: 130 },
+    //     { field: 'recommend', headerName: 'Recommend', width: 130 },
+    // ];
 
-//     const getOrgFileNames = (): Array<object> => {
-//         // TODO make some api request to the get all controls endpoint
-//         // need endpoints for dev and prod set up
-//     };
+    const getOrgFileNames = async (): Promise<void> => {
+        const url = props.baseUrl + '/filename';
+        const headers = await generateHeaders();
+        console.log(headers);
+        axios.get(url, headers).then(response => {
+            console.log(response);
+            if (response.status === 200) {
+                // process results
+            } else {
+                // show error message
+            }
+        });
+    };
 
-//     const getTableRows = () => {
-//         // each grouped object will have a meta header to match row format required
-//     };
+    const getTableRows = () => {
+        // each grouped object will have a meta header to match row format required
+    };
 
-//     return <DataGrid rows={getOrgFileNames()} columns={columns} pageSize={25} checkboxSelection />;
-// };
+    return (
+        <Button color="primary" onClick={getOrgFileNames}>
+            Click Me
+        </Button>
+    );
+};
+
+export default FileBrowser;

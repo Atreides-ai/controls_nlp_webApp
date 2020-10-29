@@ -22,11 +22,9 @@ import axios from 'axios';
 import papaparse from 'papaparse';
 import XLSX from 'xlsx';
 import AtreidesDropzone from 'Atreides_Dropzone';
+import { generateHeaders } from './utils/AtreidesAPIUtils';
 
-export default function SubmitFile(props: {
-    dbCallback: (jobID: string, token: string, apiKey: string) => void;
-}): JSX.Element {
-    const baseUrl = process.env.REACT_APP_ENDPOINT;
+export default function SubmitFile(props: { dbCallback: (jobID: string) => void; baseUrl: string }): JSX.Element {
     const classes = useStyles();
     const [file, selectFile] = useState<Array<File>>();
     const [open, setOpen] = useState<boolean>(false);
@@ -175,18 +173,6 @@ export default function SubmitFile(props: {
         }
     };
 
-    const generateHeaders = async (): Promise<object> => {
-        const token = await Auth.currentSession().then(data => {
-            return data['idToken']['jwtToken'];
-        });
-
-        const apiKey = await Auth.currentUserInfo().then(data => {
-            return data['attributes']['custom:api-key'];
-        });
-
-        return { headers: { 'x-api-key': apiKey, Authorization: token } };
-    };
-
     const successMessage = async (): Promise<void> => {
         setSuccess(true);
         setOpen(true);
@@ -212,7 +198,7 @@ export default function SubmitFile(props: {
             const headers = await generateHeaders();
             const data = await convertFileToJson(file, fileName);
             const subData = await addFileNameanduserID(data, fileName);
-            const url = baseUrl + '/control';
+            const url = props.baseUrl + '/control';
             if (allowSubmission === true) {
                 setAllowSubmission(false);
                 setLoadingCircle(true);
@@ -229,11 +215,7 @@ export default function SubmitFile(props: {
                     if (response.status === 202) {
                         successMessage();
                         setOpen(true);
-                        props.dbCallback(
-                            response['data']['job_id'],
-                            headers['headers']['Authorization'],
-                            headers['headers']['x-api-key'],
-                        );
+                        props.dbCallback(response['data']['job_id']);
                         setLoadingCircle(false);
                         setDashboardButton(true);
                     }

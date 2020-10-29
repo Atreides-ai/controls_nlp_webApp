@@ -36,13 +36,13 @@ import ControlsCSVDownload from 'ControlsCSVDownload';
 import tableIcons from './tableIcons';
 import { PIEMETRICS } from './PieMetrics';
 import _ from 'lodash';
+import { generateHeaders } from './utils/AtreidesAPIUtils';
 import { controlsFile } from './test_utils/controlsTestFile';
 
-const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX.Element => {
+const Dashboard = (props: { jobId: string; token: string; apiKey: string; baseUrl: string }): JSX.Element => {
     const classes = useStyles();
     const [dashboard, showDashboard] = useState(false);
     const [dashboardfile, setFile] = useState<Array<object>>();
-    const baseUrl = process.env.REACT_APP_ENDPOINT;
     const [progress, setProgress] = useState(0);
     const [errorMessage, showErrorMessage] = useState(false);
     const [limitMessage, showLimitMessage] = useState(false);
@@ -112,13 +112,13 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
      * Polls the API at 30 second intervals to check job status
      *
      */
-    const getFile = (jobId: string, apiKey: string, token: string): void => {
+    const getFile = async (jobId: string): Promise<void> => {
         // This is for testing only ------->
         // setFile(controlsFile);
         // showDashboard(true);
         // ------------>
-        const url = baseUrl + '/get_results/' + jobId;
-        const headers = { headers: { 'x-api-key': apiKey, Authorization: token } };
+        const url = props.baseUrl + '/get_results/' + jobId;
+        const headers = await generateHeaders();
         const interval = setInterval(() => {
             axios.get(url, headers).then(response => {
                 if (response.status === 200 && response['data']['percent_complete'] === 100) {
@@ -144,7 +144,9 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
         }, 5000);
     };
 
-    useEffect(() => getFile(props.jobId, props.apiKey, props.token), []);
+    useEffect(() => {
+        getFile(props.jobId);
+    }, []);
 
     return (
         <Box className={classes.root} id="dashboard">
