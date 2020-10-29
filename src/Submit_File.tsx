@@ -51,7 +51,7 @@ export default function SubmitFile(props: {
         });
     };
 
-    const convertValuesToString = (rawData: any[]): any[] => {
+    const convertValuesToString = (rawData: Array<object>): Array<object> => {
         return rawData.map(function(obj) {
             for (const key in obj) {
                 if (obj[key] !== undefined) {
@@ -62,7 +62,7 @@ export default function SubmitFile(props: {
         });
     };
 
-    const formatData = (rawData: any[]): any[] => {
+    const formatData = (rawData: Array<object>): Array<object> => {
         const data = rawData.map(function(obj) {
             delete obj[''];
             obj['control_description'] = obj['Control Description'];
@@ -85,12 +85,12 @@ export default function SubmitFile(props: {
         return formattedData;
     };
 
-    const convertCSVToJSON = async (file: File): Promise<Record<string, any>> => {
+    const convertCSVToJSON = async (file: File): Promise<Array<object>> => {
         const rawData = await papaPromise(file).then((obj: object | void) => {
             return obj['data'];
         });
         const data = await formatData(rawData);
-        return { data: data };
+        return data;
     };
 
     const fileReaderPromise = async (file: File): Promise<string | ArrayBuffer | null> => {
@@ -115,6 +115,17 @@ export default function SubmitFile(props: {
         });
     };
 
+    const addFileNameanduserID = async (data: Array<object>, fileName: string): Promise<Array<object>> => {
+        const username = await Auth.currentUserInfo().then(data => {
+            return data['attributes']['email'];
+        });
+        return data.map(obj => {
+            obj['filename'] = fileName;
+            obj['username'] = username;
+            return obj;
+        });
+    };
+
     const handleTitleRow = (rawWorkBook: any, sheetName: string): Array<object> | void => {
         let counter = 0;
         while (counter <= 5) {
@@ -133,7 +144,7 @@ export default function SubmitFile(props: {
         }
     };
 
-    const convertXLToJSON = async (file: File): Promise<Record<string, any>> => {
+    const convertXLToJSON = async (file: File): Promise<Array<object>> => {
         const data = await fileReaderPromise(file)
             .then(rawData => {
                 const rawWorkbook = XLSX.read(rawData, { type: 'binary' });
@@ -144,27 +155,27 @@ export default function SubmitFile(props: {
                 });
                 // This was used instead of .flat() to ensure compatability with IE
                 const mergedData = jsonList.reduce((accumulator, value) => accumulator.concat(value), []);
-                return mergedData;
+                return mergedData as Array<object>;
             })
             .then(mergedData => {
                 const data = formatData(mergedData);
                 return data;
             });
 
-        return { data: data };
-    };
-
-    const convertFileToJson = async (file: File, fileName: string): Promise<Record<string, any>> => {
-        if (fileName.split('.').pop() === 'csv') {
-            data = convertCSVToJSON(file);
-        } else {
-            data = convertXLToJSON(file);
-        }
-        data['filename'] = fileName
         return data;
     };
 
-    const generateHeaders = async (): Promise<Record<string, any>> => {
+    const convertFileToJson = (file: File, fileName: string): Promise<Array<object>> => {
+        if (fileName.split('.').pop() === 'csv') {
+            const data = convertCSVToJSON(file);
+            return data;
+        } else {
+            const data = convertXLToJSON(file);
+            return data;
+        }
+    };
+
+    const generateHeaders = async (): Promise<object> => {
         const token = await Auth.currentSession().then(data => {
             return data['idToken']['jwtToken'];
         });
@@ -200,11 +211,13 @@ export default function SubmitFile(props: {
             const fileName = file['name'];
             const headers = await generateHeaders();
             const data = await convertFileToJson(file, fileName);
+            const subData = await addFileNameanduserID(data, fileName);
             const url = baseUrl + '/control';
             if (allowSubmission === true) {
                 setAllowSubmission(false);
                 setLoadingCircle(true);
-                axios.post(url, data, headers).then(response => {
+                axios.post(url, { data: subData }, headers).then(response => {
+                    console.log(response);
                     if (response.status === 400) {
                         setOpen(true);
                         setBadData(true);

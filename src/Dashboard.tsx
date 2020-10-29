@@ -113,33 +113,35 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string }): JSX
      *
      */
     const getFile = (jobId: string, apiKey: string, token: string): void => {
-        setFile(controlsFile);
-        showDashboard(true);
-        // const url = baseUrl + '/get_results/' + jobId;
-        // const headers = { headers: { 'x-api-key': apiKey, Authorization: token } };
-        // const interval = setInterval(() => {
-        //     axios.get(url, headers).then(response => {
-        //         if (response.status === 200 && response['data']['percent_complete'] === 100) {
-        //             setProgress(100);
-        //             if (response.data.controls) {
-        //                 setFile(response.data.controls);
-        //                 clearInterval(interval);
-        //                 showDashboard(true);
-        //             } else {
-        //                 showErrorMessage(true);
-        //             }
-        //         } else if (response.status === 200 && response['data']['percent_complete'] != 100) {
-        //             setProgress(response['data']['percent_complete']);
-        //         } else if (response.status === 403) {
-        //             showLimitMessage(true);
-        //             clearInterval(interval);
-        //         } else if (response.status === 400 || 404) {
-        //             console.log(response);
-        //             showErrorMessage(true);
-        //             clearInterval(interval);
-        //         }
-        //     });
-        // }, 5000);
+        // This is for testing only ------->
+        // setFile(controlsFile);
+        // showDashboard(true);
+        // ------------>
+        const url = baseUrl + '/get_results/' + jobId;
+        const headers = { headers: { 'x-api-key': apiKey, Authorization: token } };
+        const interval = setInterval(() => {
+            axios.get(url, headers).then(response => {
+                if (response.status === 200 && response['data']['percent_complete'] === 100) {
+                    setProgress(100);
+                    if (response.data.controls) {
+                        setFile(response.data.controls);
+                        clearInterval(interval);
+                        showDashboard(true);
+                    } else {
+                        showErrorMessage(true);
+                    }
+                } else if (response.status === 200 && response['data']['percent_complete'] != 100) {
+                    setProgress(response['data']['percent_complete']);
+                } else if (response.status === 403) {
+                    showLimitMessage(true);
+                    clearInterval(interval);
+                } else if (response.status === 400 || 404) {
+                    console.log(response);
+                    showErrorMessage(true);
+                    clearInterval(interval);
+                }
+            });
+        }, 5000);
     };
 
     useEffect(() => getFile(props.jobId, props.apiKey, props.token), []);
