@@ -272,7 +272,7 @@ export default function SubmitFile(props: { dbCallback: (jobID: string) => void;
                         </Grid>
                         <Grid item>
                             {showDashboardButton && (
-                                <Link to="/dashboard">
+                                <Link to="/fileBrowser">
                                     <Button
                                         type="submit"
                                         variant="contained"

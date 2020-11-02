@@ -39,7 +39,7 @@ import _ from 'lodash';
 import { generateHeaders } from './utils/AtreidesAPIUtils';
 import { controlsFile } from './test_utils/controlsTestFile';
 
-const Dashboard = (props: { jobId: string; token: string; apiKey: string; baseUrl: string }): JSX.Element => {
+const Dashboard = (props: { fileName: string; token: string; apiKey: string; baseUrl: string }): JSX.Element => {
     const classes = useStyles();
     const [dashboard, showDashboard] = useState(false);
     const [dashboardfile, setFile] = useState<Array<object>>();
@@ -112,12 +112,12 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string; baseUr
      * Polls the API at 30 second intervals to check job status
      *
      */
-    const getFile = async (jobId: string): Promise<void> => {
+    const getFile = async (fileId: string): Promise<void> => {
         // This is for testing only ------->
         // setFile(controlsFile);
         // showDashboard(true);
         // ------------>
-        const url = props.baseUrl + '/get_results/' + jobId;
+        const url = props.baseUrl + fileId;
         const headers = await generateHeaders();
         const interval = setInterval(() => {
             axios.get(url, headers).then(response => {
@@ -145,7 +145,7 @@ const Dashboard = (props: { jobId: string; token: string; apiKey: string; baseUr
     };
 
     useEffect(() => {
-        getFile(props.jobId);
+        getFile(props.fileName);
     }, []);
 
     return (

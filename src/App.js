@@ -12,22 +12,23 @@ import theme from './theme';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppLayout from './AppLayout';
 import HomeIcon from '@material-ui/icons/Home';
-import DonutLargeIcon from '@material-ui/icons/DonutLarge';
 import FolderSharedIcon from '@material-ui/icons/FolderShared';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import FileBrowser from './FileBrowser';
+import HomePage from 'HomePage';
 
 Amplify.configure(awsmobile);
 
 export default function App() {
     const [authState, setState] = useState(false);
     const [jobId, setJobId] = useState(false);
+    const [fileName, setFileName] = useState('');
     const baseUrl = process.env.REACT_APP_ENDPOINT;
 
-    const listItems = ['Home', 'Dashboard', 'Company Controls', 'Upload'];
+    const listItems = ['Home', 'Company Controls', 'Upload'];
     // eslint-disable-next-line react/jsx-key
-    const listIcons = [<HomeIcon />, <DonutLargeIcon />, <FolderSharedIcon />, <CloudUploadIcon />];
-    const linkList = ['/home', '/dashboard', '/comp-controls', '/upload'];
+    const listIcons = [<HomeIcon />, <FolderSharedIcon />, <CloudUploadIcon />];
+    const linkList = ['/home', '/fileBrowser', '/controlSubmitFile'];
 
     const authCallbackState = authStateData => {
         setState(authStateData);
@@ -37,10 +38,18 @@ export default function App() {
         setJobId(jobId_);
     };
 
+    const fileNameCallback = fileName_ => {
+        setFileName(fileName_);
+    };
+
     return (
         <ThemeProvider theme={theme}>
             <Router>
                 <Switch>
+                    <PrivateRoute path="/home" authState={authState}>
+                        <CssBaseline />
+                        <HomePage></HomePage>
+                    </PrivateRoute>
                     <PrivateRoute path="/dashboard" authState={authState}>
                         <CssBaseline />
                         <AppLayout
@@ -48,19 +57,28 @@ export default function App() {
                             listItems={listItems}
                             listIcons={listIcons}
                             linkList={linkList}
-                            coreElement={<Dashboard jobId={jobId} baseUrl={baseUrl} />}
+                            coreElement={<Dashboard fileName={fileName} baseUrl={baseUrl} />}
                         />
                     </PrivateRoute>
-                    <PrivateRoute path="/submitFile" authState={authState}>
+                    <PrivateRoute path="/controlSubmitFile" authState={authState}>
                         <CssBaseline />
-                        {/* <AppLayout
+                        <AppLayout
                             pageTitle="File Submission"
                             listItems={listItems}
                             listIcons={listIcons}
                             linkList={linkList}
                             coreElement={<SubmitFile dbCallback={jobCallback} baseUrl={baseUrl} />}
-                        /> */}
-                        <FileBrowser baseUrl={baseUrl}></FileBrowser>
+                        />
+                    </PrivateRoute>
+                    <PrivateRoute path="/fileBrowser" authState={authState}>
+                        <CssBaseline />
+                        <AppLayout
+                            pageTitle="File Browser"
+                            listItems={listItems}
+                            listIcons={listIcons}
+                            linkList={linkList}
+                            coreElement={<FileBrowser dbCallback={fileNameCallback} baseUrl={baseUrl}></FileBrowser>}
+                        />
                     </PrivateRoute>
                     <Route path="/">
                         <AuthComponent appCallback={authCallbackState} />
