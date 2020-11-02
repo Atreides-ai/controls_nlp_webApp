@@ -193,9 +193,9 @@ export default function SubmitFile(props: { dbCallback: (jobID: string) => void;
     };
 
     const handleUpload = async (files: Array<File>): Promise<void> => {
+        const headers = await generateHeaders();
         files.forEach(async file => {
             const fileName = file['name'];
-            const headers = await generateHeaders();
             const data = await convertFileToJson(file, fileName);
             const subData = await addFileNameanduserID(data, fileName);
             const url = props.baseUrl + '/control';
