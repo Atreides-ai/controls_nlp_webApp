@@ -17,6 +17,8 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import { Link } from 'react-router-dom';
+import SignOut from './sign_out';
+import { Button, Grid } from '@material-ui/core';
 
 const AppLayout = (props: {
     pageTitle: string;
@@ -54,9 +56,23 @@ const AppLayout = (props: {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6" noWrap align="center">
-                        {props.pageTitle}
-                    </Typography>
+                    <Grid container direction="row" spacing={1} justify="flex-start">
+                        <Grid item xs={12} sm="auto" md="auto" lg="auto">
+                            <Typography variant="h6" noWrap align="center">
+                                {props.pageTitle}
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                    <Grid container direction="row" spacing={1} justify="flex-end">
+                        <Grid item xs={12} sm="auto" md="auto" lg="auto">
+                            <SignOut />
+                        </Grid>
+                        <Grid item xs={12} sm="auto" md="auto" lg="auto">
+                            <Button variant="contained" size="small" color="secondary" href="https://www.atreides.ai/">
+                                About us
+                            </Button>
+                        </Grid>
+                    </Grid>
                 </Toolbar>
             </AppBar>
             <Drawer

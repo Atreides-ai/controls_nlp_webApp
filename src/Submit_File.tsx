@@ -4,7 +4,6 @@ import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import SignOut from './sign_out';
 import GuidanceDiaglogue from './guidanceDialogue';
 import './button_hider.css';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -31,8 +30,7 @@ export default function SubmitFile(props: { dbCallback: (jobID: string) => void;
     const [success, setSuccess] = useState<boolean>(false);
     const [badData, setBadData] = useState<boolean>(false);
     const [unauthorized, setUnauthorized] = useState<boolean>(false);
-    const [showDashboardButton, setDashboardButton] = useState<boolean>(false);
-    const [showLoadingCircle, setLoadingCircle] = useState<boolean>(false);
+    const [fileBrowserButton, showFileBrowserButton] = useState<boolean>(false);
     const [allowSubmission, setAllowSubmission] = useState<boolean>(true);
 
     const papaPromise = async (rawFile: File): Promise<object | Error> => {
@@ -201,9 +199,7 @@ export default function SubmitFile(props: { dbCallback: (jobID: string) => void;
             const url = props.baseUrl + '/control';
             if (allowSubmission === true) {
                 setAllowSubmission(false);
-                setLoadingCircle(true);
                 axios.post(url, { data: subData }, headers).then(response => {
-                    console.log(response);
                     if (response.status === 400) {
                         setOpen(true);
                         setBadData(true);
@@ -212,17 +208,12 @@ export default function SubmitFile(props: { dbCallback: (jobID: string) => void;
                         setOpen(true);
                         setUnauthorized(true);
                     }
-                    if (response.status === 202) {
+                    if (response.status == 202) {
+                        // TODO: add show filebrowser button back in
                         successMessage();
                         setOpen(true);
                         props.dbCallback(response['data']['job_id']);
-                        setLoadingCircle(false);
-                        setDashboardButton(true);
-                    }
-                    if (response.status === 200) {
-                        successMessage();
-                        setOpen(true);
-                        setDashboardButton(true);
+                        showFileBrowserButton(true);
                     }
                 });
             }
@@ -255,11 +246,7 @@ export default function SubmitFile(props: { dbCallback: (jobID: string) => void;
                                     </CardContent>
                                 </CardActionArea>
                                 <CardActions>
-                                    <Button size="small" color="primary" href="https://www.atreides.ai/">
-                                        About us
-                                    </Button>
                                     <GuidanceDiaglogue />
-                                    <SignOut />
                                 </CardActions>
                             </Card>
                         </Grid>
@@ -271,19 +258,13 @@ export default function SubmitFile(props: { dbCallback: (jobID: string) => void;
                             </Button>
                         </Grid>
                         <Grid item>
-                            {showDashboardButton && (
-                                <Link to="/fileBrowser">
-                                    <Button
-                                        type="submit"
-                                        variant="contained"
-                                        color="secondary"
-                                        className={classes.muisubmit}
-                                    >
-                                        View Results
+                            {showFileBrowserButton && (
+                                <Link to="/fileBrowser" style={{ textDecoration: 'none' }}>
+                                    <Button variant="contained" color="secondary" onClick={uploadManager}>
+                                        View Files
                                     </Button>
                                 </Link>
                             )}
-                            {showLoadingCircle && <CircularProgress color="primary" />}
                         </Grid>
                     </Grid>
                     <Grid />

@@ -112,17 +112,16 @@ const Dashboard = (props: { fileName: string; token: string; apiKey: string; bas
      * Polls the API at 30 second intervals to check job status
      *
      */
-    const getFile = async (fileId: string): Promise<void> => {
+    const getFile = async (filename: string): Promise<void> => {
         // This is for testing only ------->
         // setFile(controlsFile);
         // showDashboard(true);
         // ------------>
-        const url = props.baseUrl + fileId;
+        const url = props.baseUrl + '/controls?filename=' + filename;
         const headers = await generateHeaders();
         const interval = setInterval(() => {
             axios.get(url, headers).then(response => {
-                if (response.status === 200 && response['data']['percent_complete'] === 100) {
-                    setProgress(100);
+                if (response.status === 200) {
                     if (response.data.controls) {
                         setFile(response.data.controls);
                         clearInterval(interval);
@@ -130,8 +129,6 @@ const Dashboard = (props: { fileName: string; token: string; apiKey: string; bas
                     } else {
                         showErrorMessage(true);
                     }
-                } else if (response.status === 200 && response['data']['percent_complete'] != 100) {
-                    setProgress(response['data']['percent_complete']);
                 } else if (response.status === 403) {
                     showLimitMessage(true);
                     clearInterval(interval);

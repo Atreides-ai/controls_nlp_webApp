@@ -8,8 +8,8 @@ export default function SignOut() {
         Auth.signOut().catch(err => console.log(err));
     };
     return (
-        <Link to="/">
-            <Button size="small" onClick={signOut} className="signOutButton" color="primary">
+        <Link to="/" style={{ textDecoration: 'none' }}>
+            <Button variant="contained" size="small" onClick={signOut} className="signOutButton" color="secondary">
                 Sign Out
             </Button>
         </Link>
