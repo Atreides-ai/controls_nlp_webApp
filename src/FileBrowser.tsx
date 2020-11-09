@@ -24,13 +24,18 @@ const FileBrowser = (props: { baseUrl: string; dbCallback: (fileName: string) =>
         showErrorMessage(false);
     };
 
-    const rateFile = async (name: string, value: number | null): Promise<void> => {
-        // TODO: Rating submission URL and finish post request
+    const rateFile = async (name: string, tableDataId: number, value: number | null): Promise<void> => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const dataUpdate = [...tableData!];
+        dataUpdate[tableDataId]['rating'] = value;
+        setTableData([...dataUpdate]);
         const url = props.baseUrl + '/filename';
         const headers = await generateHeaders();
         const data = { data: { name: name, rating: value } };
         axios.post(url, data, headers).then(response => {
-            console.log(response);
+            if (response.status != 200) {
+                showErrorMessage(true);
+            }
         });
     };
 
@@ -49,7 +54,7 @@ const FileBrowser = (props: { baseUrl: string; dbCallback: (fileName: string) =>
                         value={rowData['rating']}
                         onChange={(event, newValue) => {
                             rowData['rating'] = newValue;
-                            rateFile(rowData['name'], newValue);
+                            rateFile(rowData['name'], rowData['tableData']['id'], newValue);
                         }}
                     />
                 );
