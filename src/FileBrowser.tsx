@@ -24,18 +24,21 @@ const FileBrowser = (props: { baseUrl: string; dbCallback: (fileName: string) =>
         showErrorMessage(false);
     };
 
-    const rateFile = async (value: number | null): Promise<void> => {
+    const rateFile = async (name: string, value: number | null): Promise<void> => {
         // TODO: Rating submission URL and finish post request
-        const url = props.baseUrl + '/rate';
+        const url = props.baseUrl + '/filename';
         const headers = await generateHeaders();
-        axios.put(url, { value: value }, headers);
+        const data = { data: { name: name, rating: value } };
+        axios.post(url, data, headers).then(response => {
+            console.log(response);
+        });
     };
 
     const columns = [
         { title: 'File', field: 'name' },
         { title: 'Created', field: 'created_at' },
         { title: 'User', field: 'username' },
-        { title: 'status', field: 'status' },
+        { title: 'Status', field: 'status' },
         {
             title: 'Rating',
             field: 'rating',
@@ -46,7 +49,7 @@ const FileBrowser = (props: { baseUrl: string; dbCallback: (fileName: string) =>
                         value={rowData['rating']}
                         onChange={(event, newValue) => {
                             rowData['rating'] = newValue;
-                            rateFile(newValue);
+                            rateFile(rowData['name'], newValue);
                         }}
                     />
                 );
@@ -84,44 +87,63 @@ const FileBrowser = (props: { baseUrl: string; dbCallback: (fileName: string) =>
         },
     ];
 
-    const getOrgFileNames = () => {
-        return [
-            {
-                name: 'test.csv',
-                created_at: 'today',
-                username: 'richardhurley@atreides.ai',
-                status: 'STARTED',
-                rating: 0,
-            },
-            {
-                name: 'test.csv',
-                created_at: 'today',
-                username: 'richardhurley@atreides.ai',
-                status: 'FAILED',
-                rating: 0,
-            },
-            {
-                name: 'test.csv',
-                created_at: 'today',
-                username: 'richardhurley@atreides.ai',
-                status: 'SUCCEEDED',
-                rating: 0,
-            },
-        ];
+    const checkStarted = async (data: Array<object>): Promise<Array<boolean>> => {
+        return data.map(object => {
+            if (object['status'] === 'STARTED') {
+                return true;
+            } else {
+                return false;
+            }
+        });
+    };
 
-        // const headers = await generateHeaders();
-        // const interval = setInterval(() => {
-        //     const url = props.baseUrl + '/filename';
-        //     axios.get(url, headers).then(response => {
-        //         if (response.status === 200) {
-        //             setTableData(response.data);
-        //             clearInterval(200);
-        //         } else if (response.status === 403) {
-        //             showErrorMessage(true);
-        //             clearInterval(interval);
-        //         }
-        //     });
-        // }, 10000);
+    const getOrgFileNames = async (): Promise<void> => {
+        // return [
+        //     {
+        //         name: 'test.csv',
+        //         created_at: 'today',
+        //         username: 'richardhurley@atreides.ai',
+        //         status: 'STARTED',
+        //         rating: 0,
+        //     },
+        //     {
+        //         name: 'test.csv',
+        //         created_at: 'today',
+        //         username: 'richardhurley@atreides.ai',
+        //         status: 'FAILED',
+        //         rating: 0,
+        //     },
+        //     {
+        //         name: 'test.csv',
+        //         created_at: 'today',
+        //         username: 'richardhurley@atreides.ai',
+        //         status: 'SUCCEEDED',
+        //         rating: 0,
+        //     },
+        // ];
+
+        const headers = await generateHeaders();
+        let int = 1000;
+        const interval = setInterval(() => {
+            const url = props.baseUrl + '/filename';
+            axios.get(url, headers).then(response => {
+                if (response.status === 200) {
+                    const data = Object.values(response.data) as Array<Array<object>>;
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    setTableData(data![0]);
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    const started = checkStarted(data![0]);
+                    if (!started[0]) {
+                        clearInterval(interval);
+                    } else {
+                        int += 500;
+                    }
+                } else if (response.status === 403) {
+                    showErrorMessage(true);
+                    clearInterval(interval);
+                }
+            });
+        }, int);
     };
 
     // each grouped object will have a meta header to match row format required
@@ -159,7 +181,7 @@ const FileBrowser = (props: { baseUrl: string; dbCallback: (fileName: string) =>
                 icons={tableIcons}
                 columns={columns}
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                data={getOrgFileNames()}
+                data={tableData!}
                 title="Files"
             />
         </div>

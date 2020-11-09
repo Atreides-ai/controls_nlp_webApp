@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
@@ -11,7 +11,7 @@ import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import { Container } from '@material-ui/core';
+import { Container, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@material-ui/core';
 import Copyright from './copyright';
 import { Link } from 'react-router-dom';
 import MySnackbarContentWrapper from './mySnackbarContentWrapper';
@@ -25,13 +25,17 @@ import { generateHeaders } from './utils/AtreidesAPIUtils';
 
 export default function SubmitFile(props: { dbCallback: (jobID: string) => void; baseUrl: string }): JSX.Element {
     const classes = useStyles();
-    const [file, selectFile] = useState<Array<File>>();
+    const [files, selectFiles] = useState<Array<File>>();
     const [open, setOpen] = useState<boolean>(false);
     const [success, setSuccess] = useState<boolean>(false);
     const [badData, setBadData] = useState<boolean>(false);
     const [unauthorized, setUnauthorized] = useState<boolean>(false);
+    const [filenameError, setFileNameError] = useState<boolean>(false);
+    const [existingFileNames, setExistingFileNames] = useState<Array<string>>();
     const [fileBrowserButton, showFileBrowserButton] = useState<boolean>(false);
+    const [fileExists, setFileExists] = useState<boolean>(false);
     const [allowSubmission, setAllowSubmission] = useState<boolean>(true);
+    const [intersection, setintersection] = useState<Array<string>>([]);
 
     const papaPromise = async (rawFile: File): Promise<object | Error> => {
         return new Promise((resolve, reject) => {
@@ -184,15 +188,28 @@ export default function SubmitFile(props: { dbCallback: (jobID: string) => void;
             return;
         }
         setOpen(false);
+        setFileExists(false);
     };
 
     const handleFiles = async (files: Array<File>): Promise<void> => {
-        selectFile(files);
+        selectFiles(files);
     };
 
-    const handleUpload = async (files: Array<File>): Promise<void> => {
+    const getnewFileNames = (): Array<string> => {
+        const newFileNames: string[] = [];
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        files!.forEach(file => {
+            newFileNames.push(file['name']);
+        });
+        return newFileNames;
+    };
+
+    const handleUpload = async (): Promise<void> => {
         const headers = await generateHeaders();
-        files.forEach(async file => {
+        setOpen(false);
+        setFileExists(false);
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        files!.forEach(async file => {
             const fileName = file['name'];
             const data = await convertFileToJson(file, fileName);
             const subData = await addFileNameanduserID(data, fileName);
@@ -209,7 +226,6 @@ export default function SubmitFile(props: { dbCallback: (jobID: string) => void;
                         setUnauthorized(true);
                     }
                     if (response.status == 202) {
-                        // TODO: add show filebrowser button back in
                         successMessage();
                         setOpen(true);
                         props.dbCallback(response['data']['job_id']);
@@ -220,14 +236,56 @@ export default function SubmitFile(props: { dbCallback: (jobID: string) => void;
         });
     };
 
+    const createListOfFiles = (data: Array<Array<object>>): void => {
+        const filenameArray = [] as Array<string>;
+        data[0].map((obj: object): void => {
+            filenameArray.push(obj['name']);
+        });
+        console.log(filenameArray);
+        setExistingFileNames(filenameArray);
+    };
+
+    const getFileNames = async (): Promise<void> => {
+        const headers = await generateHeaders();
+        const url = props.baseUrl + '/filename';
+        axios.get(url, headers).then(response => {
+            if (response.status === 200) {
+                createListOfFiles(Object.values(response.data));
+            } else if (response.status === 403) {
+                setFileNameError(true);
+            }
+        });
+    };
+
+    const handleExistingFiles = async (): Promise<void> => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const newFilenames = getnewFileNames();
+        console.log(newFilenames);
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const intersection = existingFileNames!.filter(value => newFilenames.includes(value));
+        console.log(intersection);
+        setintersection(intersection);
+        if (intersection.length > 0) {
+            setOpen(true);
+            setFileExists(true);
+            console.log('pop up should show');
+        } else {
+            handleUpload();
+        }
+    };
+
     const uploadManager = async (): Promise<void> => {
-        if (file !== null || undefined) {
+        if (files !== null || undefined) {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            handleUpload(file!);
+            handleExistingFiles();
         } else {
             failMessage();
         }
     };
+
+    useEffect(() => {
+        getFileNames();
+    }, []);
 
     return (
         <Container component="main" maxWidth="lg">
@@ -258,7 +316,7 @@ export default function SubmitFile(props: { dbCallback: (jobID: string) => void;
                             </Button>
                         </Grid>
                         <Grid item>
-                            {showFileBrowserButton && (
+                            {fileBrowserButton && (
                                 <Link to="/fileBrowser" style={{ textDecoration: 'none' }}>
                                     <Button variant="contained" color="secondary" onClick={uploadManager}>
                                         View Files
@@ -290,7 +348,7 @@ export default function SubmitFile(props: { dbCallback: (jobID: string) => void;
                         vertical: 'bottom',
                         horizontal: 'left',
                     }}
-                    open={open && !success}
+                    open={open && files!.length === 0}
                     autoHideDuration={6000}
                     onClose={handleClose}
                 >
@@ -326,6 +384,53 @@ export default function SubmitFile(props: { dbCallback: (jobID: string) => void;
                         message="Subscription limit Reached!"
                     />
                 </Snackbar>
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                    }}
+                    open={open && filenameError}
+                    autoHideDuration={6000}
+                    onClose={handleClose}
+                >
+                    <MySnackbarContentWrapper
+                        onClose={handleClose}
+                        variant="error"
+                        message="Could not retrieve your existing files."
+                    />
+                </Snackbar>
+                <Dialog
+                    open={open && fileExists}
+                    onClose={handleClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">{'File Overwrite?'}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            The following files with the same file names have been found to exist. Do you wish to
+                            overwrite?
+                            <ul>
+                                {intersection.length > 0 &&
+                                    // eslint-disable-next-line react/jsx-key
+                                    intersection.map((item: string) => (
+                                        // eslint-disable-next-line react/jsx-key
+                                        <li>
+                                            <Typography variant="overline">{item}</Typography>
+                                        </li>
+                                    ))}
+                            </ul>
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleClose} color="primary">
+                            No
+                        </Button>
+                        <Button onClick={handleUpload} color="primary" autoFocus>
+                            Yes
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </div>
         </Container>
     );
