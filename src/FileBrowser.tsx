@@ -17,18 +17,15 @@ import { Rating } from '@material-ui/lab';
 import { Link } from 'react-router-dom';
 
 const FileBrowser = (props: { baseUrl: string; dbCallback: (fileName: string) => void }): JSX.Element => {
-    const [tableData, setTableData] = useState<Array<object>>();
+    const [tableData, setTableData] = useState<Array<object>>([]);
     const [errorMessage, showErrorMessage] = useState<boolean>(false);
 
     const handleClose = (): void => {
         showErrorMessage(false);
     };
 
-    const rateFile = async (name: string, tableDataId: number, value: number | null): Promise<void> => {
+    const rateFile = async (name: string, value: number | null): Promise<void> => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const dataUpdate = [...tableData!];
-        dataUpdate[tableDataId]['rating'] = value;
-        setTableData([...dataUpdate]);
         const url = props.baseUrl + '/filename';
         const headers = await generateHeaders();
         const data = { data: { name: name, rating: value } };
@@ -40,28 +37,33 @@ const FileBrowser = (props: { baseUrl: string; dbCallback: (fileName: string) =>
     };
 
     const columns = [
-        { title: 'File', field: 'name' },
-        { title: 'Created', field: 'created_at' },
-        { title: 'User', field: 'username' },
-        { title: 'Status', field: 'status' },
+        { title: 'File', field: 'name', editable: 'never' as const },
+        { title: 'Created', field: 'created_at', editable: 'never' as const },
+        { title: 'User', field: 'username', editable: 'never' as const },
+        { title: 'Status', field: 'status', editable: 'never' as const },
         {
             title: 'Rating',
             field: 'rating',
+            editable: 'onUpdate' as const,
             render: (rowData: object): JSX.Element => {
-                return (
-                    <Rating
-                        name="hover-feedback"
-                        value={rowData['rating']}
-                        onChange={(event, newValue) => {
-                            rowData['rating'] = newValue;
-                            rateFile(rowData['name'], rowData['tableData']['id'], newValue);
-                        }}
-                    />
-                );
+                return <Rating name="hover-feedback" value={rowData['rating']} readOnly />;
             },
+            // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+            editComponent: (props: { value: number | null | undefined; onChange: (arg0: number | null) => void }) => (
+                <Rating
+                    name="hover-feedback"
+                    // eslint-disable-next-line react/prop-types
+                    value={props.value}
+                    onChange={(event, newValue) => {
+                        // eslint-disable-next-line react/prop-types
+                        props.onChange(newValue);
+                    }}
+                />
+            ),
         },
         {
             title: 'Dashboard',
+            editable: 'never' as const,
             render: (rowData: object): JSX.Element => {
                 if (rowData['status'] === 'SUCCEEDED') {
                     return (
@@ -135,6 +137,7 @@ const FileBrowser = (props: { baseUrl: string; dbCallback: (fileName: string) =>
                 if (response.status === 200) {
                     const data = Object.values(response.data) as Array<Array<object>>;
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    console.log(data);
                     setTableData(data![0]);
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     const started = checkStarted(data![0]);
@@ -150,8 +153,6 @@ const FileBrowser = (props: { baseUrl: string; dbCallback: (fileName: string) =>
             });
         }, int);
     };
-
-    // each grouped object will have a meta header to match row format required
 
     useEffect(() => {
         getOrgFileNames();
@@ -182,6 +183,17 @@ const FileBrowser = (props: { baseUrl: string; dbCallback: (fileName: string) =>
                 options={{
                     exportButton: true,
                     filtering: true,
+                }}
+                editable={{
+                    onRowUpdate: (newData, oldData) =>
+                        new Promise((resolve, reject) => {
+                            const dataUpdate = [...tableData];
+                            const index = oldData!['tableData']['id'];
+                            dataUpdate[index] = newData;
+                            resolve(setTableData(dataUpdate));
+                            console.log(newData['name']);
+                            rateFile(newData['name'], newData['value']);
+                        }),
                 }}
                 icons={tableIcons}
                 columns={columns}

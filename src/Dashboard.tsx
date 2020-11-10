@@ -117,6 +117,8 @@ const Dashboard = (props: { fileName: string; token: string; apiKey: string; bas
         // setFile(controlsFile);
         // showDashboard(true);
         // ------------>
+        console.log(filename);
+        console.log('blah');
         const url = props.baseUrl + '/controls?filename=' + filename;
         const headers = await generateHeaders();
         const interval = setInterval(() => {
