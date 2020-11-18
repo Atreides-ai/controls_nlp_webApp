@@ -143,12 +143,14 @@ const FileBrowser = (props: { baseUrl: string; dbCallback: (fileName: string) =>
                     setTableData(data![0]);
                     showTable(true);
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    const started = checkStarted(data![0]);
-                    if (!started[0]) {
-                        clearInterval(interval);
-                    } else {
-                        int += 500;
-                    }
+                    checkStarted(data![0]).then(started => {
+                        if (!started[0]) {
+                            console.log(started);
+                            clearInterval(interval);
+                        } else {
+                            int += 500;
+                        }
+                    });
                 } else if (response.status === 403) {
                     showErrorMessage(true);
                     clearInterval(interval);

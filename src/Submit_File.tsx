@@ -25,7 +25,7 @@ import { generateHeaders } from './utils/AtreidesAPIUtils';
 
 export default function SubmitFile(props: { dbCallback: (jobID: string) => void; baseUrl: string }): JSX.Element {
     const classes = useStyles();
-    const [files, selectFiles] = useState<Array<File>>();
+    const [files, selectFiles] = useState<Array<File>>([]);
     const [open, setOpen] = useState<boolean>(false);
     const [success, setSuccess] = useState<boolean>(false);
     const [badData, setBadData] = useState<boolean>(false);
@@ -36,6 +36,7 @@ export default function SubmitFile(props: { dbCallback: (jobID: string) => void;
     const [showLoadingCircle, setLoadingCircle] = useState<boolean>(false);
     const [allowSubmission, setAllowSubmission] = useState<boolean>(true);
     const [intersection, setintersection] = useState<Array<string>>([]);
+    const [selectFileError, showSelectFileError] = useState<boolean>(false);
 
     const papaPromise = async (rawFile: File): Promise<object | Error> => {
         return new Promise((resolve, reject) => {
@@ -209,12 +210,12 @@ export default function SubmitFile(props: { dbCallback: (jobID: string) => void;
         setOpen(false);
         setFileExists(false);
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         files!.forEach(async file => {
             const fileName = file['name'];
             const data = await convertFileToJson(file, fileName);
             const subData = await addFileNameanduserID(data, fileName);
             const url = props.baseUrl + '/control';
-            setLoadingCircle(true);
             axios.post(url, { data: subData }, headers).then(response => {
                 if (response.status === 400) {
                     setOpen(true);
@@ -268,7 +269,6 @@ export default function SubmitFile(props: { dbCallback: (jobID: string) => void;
         const newFilenames = getnewFileNames();
         const oldFilenames = await getOldFileNames();
         const intersection = oldFilenames.filter(value => newFilenames.includes(value));
-        console.log(intersection);
         setintersection(intersection);
         if (intersection.length > 0) {
             setOpen(true);
@@ -280,13 +280,15 @@ export default function SubmitFile(props: { dbCallback: (jobID: string) => void;
     };
 
     const uploadManager = async (): Promise<void> => {
-        if (files !== null || undefined) {
+        if (files!.length > 0) {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             if (allowSubmission === true) {
+                setLoadingCircle(true);
                 setAllowSubmission(false);
                 handleExistingFiles();
             }
         } else {
+            showSelectFileError(true);
             failMessage();
         }
     };
@@ -353,7 +355,7 @@ export default function SubmitFile(props: { dbCallback: (jobID: string) => void;
                         vertical: 'bottom',
                         horizontal: 'left',
                     }}
-                    open={open && files!.length === 0}
+                    open={open && selectFileError}
                     autoHideDuration={6000}
                     onClose={handleClose}
                 >
@@ -409,6 +411,7 @@ export default function SubmitFile(props: { dbCallback: (jobID: string) => void;
                     onClose={handleClose}
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description"
+                    disableBackdropClick={true}
                 >
                     <DialogTitle id="alert-dialog-title">{'File Overwrite?'}</DialogTitle>
                     <DialogContent>
