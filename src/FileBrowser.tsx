@@ -10,14 +10,16 @@ import {
     Dialog,
     DialogContentText,
     LinearProgress,
+    Grid,
 } from '@material-ui/core';
 import { generateHeaders } from './utils/AtreidesAPIUtils';
 import tableIcons from 'tableIcons';
-import { Rating } from '@material-ui/lab';
+import { Rating, Skeleton } from '@material-ui/lab';
 import { Link } from 'react-router-dom';
 
 const FileBrowser = (props: { baseUrl: string; dbCallback: (fileName: string) => void }): JSX.Element => {
     const [tableData, setTableData] = useState<Array<object>>([]);
+    const [table, showTable] = useState<boolean>(false);
     const [errorMessage, showErrorMessage] = useState<boolean>(false);
 
     const handleClose = (): void => {
@@ -30,7 +32,7 @@ const FileBrowser = (props: { baseUrl: string; dbCallback: (fileName: string) =>
         const headers = await generateHeaders();
         const data = { data: { name: name, rating: value } };
         axios.post(url, data, headers).then(response => {
-            if (response.status != 200) {
+            if (response.status !== 200) {
                 showErrorMessage(true);
             }
         });
@@ -139,6 +141,7 @@ const FileBrowser = (props: { baseUrl: string; dbCallback: (fileName: string) =>
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     console.log(data);
                     setTableData(data![0]);
+                    showTable(true);
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     const started = checkStarted(data![0]);
                     if (!started[0]) {
@@ -179,28 +182,40 @@ const FileBrowser = (props: { baseUrl: string; dbCallback: (fileName: string) =>
                     </Button>
                 </DialogActions>
             </Dialog>
-            <MaterialTable
-                options={{
-                    exportButton: true,
-                    filtering: true,
-                }}
-                editable={{
-                    onRowUpdate: (newData, oldData) =>
-                        new Promise((resolve, reject) => {
-                            const dataUpdate = [...tableData];
-                            const index = oldData!['tableData']['id'];
-                            dataUpdate[index] = newData;
-                            resolve(setTableData(dataUpdate));
-                            console.log(newData['name']);
-                            rateFile(newData['name'], newData['value']);
-                        }),
-                }}
-                icons={tableIcons}
-                columns={columns}
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                data={tableData!}
-                title="Files"
-            />
+            {table && (
+                <MaterialTable
+                    options={{
+                        exportButton: true,
+                        filtering: true,
+                    }}
+                    editable={{
+                        onRowUpdate: (newData, oldData) =>
+                            new Promise((resolve, reject) => {
+                                const dataUpdate = [...tableData];
+                                const index = oldData!['tableData']['id'];
+                                dataUpdate[index] = newData;
+                                resolve(setTableData(dataUpdate));
+                                console.log(newData['name']);
+                                rateFile(newData['name'], newData['value']);
+                            }),
+                    }}
+                    icons={tableIcons}
+                    columns={columns}
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    data={tableData!}
+                    title="Files"
+                />
+            )}
+            {!table && (
+                <Grid container direction="column" spacing={1}>
+                    <Grid item xs={12} sm="auto" md="auto" lg="auto">
+                        <Skeleton variant="text" />
+                    </Grid>
+                    <Grid item xs={12} sm="auto" md="auto" lg="auto">
+                        <Skeleton variant="rect" height={500} />
+                    </Grid>
+                </Grid>
+            )}
         </div>
     );
 };

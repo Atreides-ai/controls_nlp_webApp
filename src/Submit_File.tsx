@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
@@ -31,9 +31,9 @@ export default function SubmitFile(props: { dbCallback: (jobID: string) => void;
     const [badData, setBadData] = useState<boolean>(false);
     const [unauthorized, setUnauthorized] = useState<boolean>(false);
     const [filenameError, setFileNameError] = useState<boolean>(false);
-    const [existingFileNames, setExistingFileNames] = useState<Array<string>>();
     const [fileBrowserButton, showFileBrowserButton] = useState<boolean>(false);
     const [fileExists, setFileExists] = useState<boolean>(false);
+    const [showLoadingCircle, setLoadingCircle] = useState<boolean>(false);
     const [allowSubmission, setAllowSubmission] = useState<boolean>(true);
     const [intersection, setintersection] = useState<Array<string>>([]);
 
@@ -214,55 +214,60 @@ export default function SubmitFile(props: { dbCallback: (jobID: string) => void;
             const data = await convertFileToJson(file, fileName);
             const subData = await addFileNameanduserID(data, fileName);
             const url = props.baseUrl + '/control';
-            if (allowSubmission === true) {
-                setAllowSubmission(false);
-                axios.post(url, { data: subData }, headers).then(response => {
-                    if (response.status === 400) {
-                        setOpen(true);
-                        setBadData(true);
-                    }
-                    if (response.status === 403) {
-                        setOpen(true);
-                        setUnauthorized(true);
-                    }
-                    if (response.status == 202) {
-                        successMessage();
-                        setOpen(true);
-                        props.dbCallback(response['data']['job_id']);
-                        showFileBrowserButton(true);
-                    }
-                });
-            }
+            setLoadingCircle(true);
+            axios.post(url, { data: subData }, headers).then(response => {
+                if (response.status === 400) {
+                    setOpen(true);
+                    setBadData(true);
+                }
+                if (response.status === 403) {
+                    setOpen(true);
+                    setUnauthorized(true);
+                }
+                if (response.status === 202) {
+                    successMessage();
+                    setOpen(true);
+                    props.dbCallback(response['data']['job_id']);
+                    setLoadingCircle(false);
+                    showFileBrowserButton(true);
+                }
+            });
         });
     };
 
-    const createListOfFiles = (data: Array<Array<object>>): void => {
+    const createListOfFiles = async (data: Array<Array<object>>): Promise<Array<string>> => {
         const filenameArray = [] as Array<string>;
         data[0].map((obj: object): void => {
             filenameArray.push(obj['name']);
+            return;
         });
-        console.log(filenameArray);
-        setExistingFileNames(filenameArray);
+        return filenameArray;
     };
 
-    const getFileNames = async (): Promise<void> => {
+    const getOldFileNames = async (): Promise<Array<string>> => {
         const headers = await generateHeaders();
         const url = props.baseUrl + '/filename';
-        axios.get(url, headers).then(response => {
+        const oldFileNames = await axios.get(url, headers).then(response => {
             if (response.status === 200) {
-                createListOfFiles(Object.values(response.data));
+                if (response['data'] !== []) {
+                    return createListOfFiles(Object.values(response.data));
+                } else {
+                    return [];
+                }
             } else if (response.status === 403) {
                 setFileNameError(true);
+                return [];
+            } else {
+                return [];
             }
         });
+        return oldFileNames;
     };
 
     const handleExistingFiles = async (): Promise<void> => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const newFilenames = getnewFileNames();
-        console.log(newFilenames);
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const intersection = existingFileNames!.filter(value => newFilenames.includes(value));
+        const oldFilenames = await getOldFileNames();
+        const intersection = oldFilenames.filter(value => newFilenames.includes(value));
         console.log(intersection);
         setintersection(intersection);
         if (intersection.length > 0) {
@@ -277,15 +282,14 @@ export default function SubmitFile(props: { dbCallback: (jobID: string) => void;
     const uploadManager = async (): Promise<void> => {
         if (files !== null || undefined) {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            handleExistingFiles();
+            if (allowSubmission === true) {
+                setAllowSubmission(false);
+                handleExistingFiles();
+            }
         } else {
             failMessage();
         }
     };
-
-    useEffect(() => {
-        getFileNames();
-    }, []);
 
     return (
         <Container component="main" maxWidth="lg">
@@ -323,6 +327,7 @@ export default function SubmitFile(props: { dbCallback: (jobID: string) => void;
                                     </Button>
                                 </Link>
                             )}
+                            {showLoadingCircle && <CircularProgress color="primary" />}
                         </Grid>
                     </Grid>
                     <Grid />
