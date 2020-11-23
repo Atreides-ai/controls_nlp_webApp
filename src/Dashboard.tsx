@@ -119,7 +119,7 @@ const Dashboard = (props: { fileName: string; token: string; apiKey: string; bas
         // ------------>
         console.log(filename);
         console.log('blah');
-        const url = props.baseUrl + '/controls?filename=' + filename;
+        const url = props.baseUrl + '/control?filename=' + filename + '&per_page=100';
         const headers = await generateHeaders();
         const interval = setInterval(() => {
             axios.get(url, headers).then(response => {

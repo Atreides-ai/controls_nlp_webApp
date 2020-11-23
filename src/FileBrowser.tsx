@@ -106,7 +106,7 @@ const FileBrowser = (props: { baseUrl: string; dbCallback: (fileName: string) =>
         });
     };
 
-    const getOrgFileNames = async (): Promise<void> => {
+    const getOrgFileNames = async (): Promise<number> => {
         // return [
         //     {
         //         name: 'test.csv',
@@ -131,11 +131,12 @@ const FileBrowser = (props: { baseUrl: string; dbCallback: (fileName: string) =>
         //     },
         // ];
 
-        const headers = await generateHeaders();
-        let int = 1000;
-        const interval = setInterval(() => {
-            const url = props.baseUrl + '/filename';
+        {
+            const url = props.baseUrl + '/filename?check_status=true';
             axios.get(url, headers).then(response => {
+                if (response.status === 504) {
+                    getOrgFileNames();
+                }
                 if (response.status === 200) {
                     const data = Object.values(response.data) as Array<Array<object>>;
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -157,10 +158,16 @@ const FileBrowser = (props: { baseUrl: string; dbCallback: (fileName: string) =>
                 }
             });
         }, int);
+        return (interval as unknown) as number;
     };
 
     useEffect(() => {
-        getOrgFileNames();
+        const headers = await generateHeaders();
+        let int = 1000;
+
+        const interval = setInterval( () => getOrgFileNames(header, int)  );
+
+            return () => clearInterval(interval);
     }, []);
 
     return (
