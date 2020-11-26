@@ -39,7 +39,13 @@ import _ from 'lodash';
 import { generateHeaders } from './utils/AtreidesAPIUtils';
 import { controlsFile } from './test_utils/controlsTestFile';
 
-const Dashboard = (props: { fileName: string; token: string; apiKey: string; baseUrl: string }): JSX.Element => {
+const Dashboard = (props: {
+    fileName: string;
+    token: string;
+    apiKey: string;
+    baseUrl: string;
+    headers: object;
+}): JSX.Element => {
     const classes = useStyles();
     const [dashboard, showDashboard] = useState(false);
     const [dashboardfile, setFile] = useState<Array<object>>();
@@ -112,39 +118,40 @@ const Dashboard = (props: { fileName: string; token: string; apiKey: string; bas
      * Polls the API at 30 second intervals to check job status
      *
      */
-    const getFile = async (filename: string): Promise<void> => {
+    const getFile = async (filename: string, headers: object, interval: number): Promise<void> => {
         // This is for testing only ------->
         // setFile(controlsFile);
         // showDashboard(true);
         // ------------>
-        console.log(filename);
-        console.log('blah');
         const url = props.baseUrl + '/control?filename=' + filename + '&per_page=100';
-        const headers = await generateHeaders();
-        const interval = setInterval(() => {
-            axios.get(url, headers).then(response => {
-                if (response.status === 200) {
-                    if (response.data.controls) {
-                        setFile(response.data.controls);
-                        clearInterval(interval);
-                        showDashboard(true);
-                    } else {
-                        showErrorMessage(true);
-                    }
-                } else if (response.status === 403) {
-                    showLimitMessage(true);
+        axios.get(url, headers).then(response => {
+            if (response.status === 504) {
+                getFile(filename, headers, interval);
+            }
+            if (response.status === 200) {
+                if (response.data.controls) {
+                    setFile(response.data.controls);
+                    showDashboard(true);
                     clearInterval(interval);
-                } else if (response.status === 400 || 404) {
-                    console.log(response);
+                } else {
                     showErrorMessage(true);
                     clearInterval(interval);
                 }
-            });
-        }, 5000);
+            } else if (response.status === 403) {
+                showLimitMessage(true);
+                clearInterval(interval);
+            } else if (response.status === 400 || 404) {
+                clearInterval(interval);
+                showErrorMessage(true);
+            }
+        });
     };
 
     useEffect(() => {
-        getFile(props.fileName);
+        const interval = setInterval(function() {
+            getFile(props.fileName, props.headers, (interval as unknown) as number);
+        }, 3000);
+        return (): void => clearInterval(interval);
     }, []);
 
     return (

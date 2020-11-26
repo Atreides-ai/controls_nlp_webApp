@@ -9,5 +9,7 @@ export const generateHeaders = async (): Promise<object> => {
         return data['attributes']['custom:api-key'];
     });
 
-    return { headers: { 'x-api-key': apiKey, Authorization: token } };
+    return new Promise((resolve, reject) => {
+        resolve({ headers: { 'x-api-key': apiKey, Authorization: token } });
+    });
 };

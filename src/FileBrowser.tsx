@@ -17,7 +17,11 @@ import tableIcons from 'tableIcons';
 import { Rating, Skeleton } from '@material-ui/lab';
 import { Link } from 'react-router-dom';
 
-const FileBrowser = (props: { baseUrl: string; dbCallback: (fileName: string) => void }): JSX.Element => {
+const FileBrowser = (props: {
+    baseUrl: string;
+    headers: object;
+    dbCallback: (fileName: string) => void;
+}): JSX.Element => {
     const [tableData, setTableData] = useState<Array<object>>([]);
     const [table, showTable] = useState<boolean>(false);
     const [errorMessage, showErrorMessage] = useState<boolean>(false);
@@ -106,68 +110,35 @@ const FileBrowser = (props: { baseUrl: string; dbCallback: (fileName: string) =>
         });
     };
 
-    const getOrgFileNames = async (): Promise<number> => {
-        // return [
-        //     {
-        //         name: 'test.csv',
-        //         created_at: 'today',
-        //         username: 'richardhurley@atreides.ai',
-        //         status: 'STARTED',
-        //         rating: 0,
-        //     },
-        //     {
-        //         name: 'test.csv',
-        //         created_at: 'today',
-        //         username: 'richardhurley@atreides.ai',
-        //         status: 'FAILED',
-        //         rating: 0,
-        //     },
-        //     {
-        //         name: 'test.csv',
-        //         created_at: 'today',
-        //         username: 'richardhurley@atreides.ai',
-        //         status: 'SUCCEEDED',
-        //         rating: 0,
-        //     },
-        // ];
-
-        {
-            const url = props.baseUrl + '/filename?check_status=true';
-            axios.get(url, headers).then(response => {
-                if (response.status === 504) {
-                    getOrgFileNames();
-                }
-                if (response.status === 200) {
-                    const data = Object.values(response.data) as Array<Array<object>>;
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    console.log(data);
-                    setTableData(data![0]);
-                    showTable(true);
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    checkStarted(data![0]).then(started => {
-                        if (!started[0]) {
-                            console.log(started);
-                            clearInterval(interval);
-                        } else {
-                            int += 500;
-                        }
-                    });
-                } else if (response.status === 403) {
-                    showErrorMessage(true);
-                    clearInterval(interval);
-                }
-            });
-        }, int);
-        return (interval as unknown) as number;
+    const getOrgFileNames = async (headers: object, interval: number): Promise<void> => {
+        const url = props.baseUrl + '/filename';
+        axios.get(url, headers).then(response => {
+            if (response.status === 504) {
+                getOrgFileNames(headers, interval);
+            }
+            if (response.status === 200) {
+                const data = Object.values(response.data) as Array<Array<object>>;
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                setTableData(data![0]);
+                showTable(true);
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                checkStarted(data![0]).then(started => {
+                    if (!started[0]) {
+                        clearInterval(interval);
+                    }
+                });
+            } else if (response.status === 403) {
+                clearInterval(interval);
+                showErrorMessage(true);
+            }
+        });
     };
 
     useEffect(() => {
-        const headers = await generateHeaders();
-        let int = 1000;
-
-        const interval = setInterval( () => getOrgFileNames(header, int)  );
-
-            return () => clearInterval(interval);
+        const interval = setInterval(function() {
+            getOrgFileNames(props.headers, (interval as unknown) as number);
+        }, 3000);
+        return (): void => clearInterval(interval);
     }, []);
 
     return (

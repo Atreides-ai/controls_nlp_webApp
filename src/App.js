@@ -22,6 +22,7 @@ Amplify.configure(awsmobile);
 export default function App() {
     const [authState, setState] = useState(false);
     const [jobId, setJobId] = useState(false);
+    const [headers, setHeaders] = useState();
     const [fileName, setFileName] = useState('');
     const baseUrl = process.env.REACT_APP_ENDPOINT;
 
@@ -30,8 +31,10 @@ export default function App() {
     const listIcons = [<HomeIcon />, <FolderSharedIcon />, <CloudUploadIcon />];
     const linkList = ['/home', '/fileBrowser', '/controlSubmitFile'];
 
-    const authCallbackState = authStateData => {
+    const authCallbackState = (authStateData, headers) => {
+        console.log(headers);
         setState(authStateData);
+        setHeaders(headers);
     };
 
     const jobCallback = jobId_ => {
@@ -57,7 +60,7 @@ export default function App() {
                             listItems={listItems}
                             listIcons={listIcons}
                             linkList={linkList}
-                            coreElement={<Dashboard fileName={fileName} baseUrl={baseUrl} />}
+                            coreElement={<Dashboard fileName={fileName} baseUrl={baseUrl} headers={headers} />}
                         />
                     </PrivateRoute>
                     <PrivateRoute path="/controlSubmitFile" authState={authState}>
@@ -77,7 +80,13 @@ export default function App() {
                             listItems={listItems}
                             listIcons={listIcons}
                             linkList={linkList}
-                            coreElement={<FileBrowser dbCallback={fileNameCallback} baseUrl={baseUrl}></FileBrowser>}
+                            coreElement={
+                                <FileBrowser
+                                    dbCallback={fileNameCallback}
+                                    baseUrl={baseUrl}
+                                    headers={headers}
+                                ></FileBrowser>
+                            }
                         />
                     </PrivateRoute>
                     <Route path="/">

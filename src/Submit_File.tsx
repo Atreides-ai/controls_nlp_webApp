@@ -23,7 +23,10 @@ import XLSX from 'xlsx';
 import AtreidesDropzone from 'Atreides_Dropzone';
 import { generateHeaders } from './utils/AtreidesAPIUtils';
 
-export default function SubmitFile(props: { dbCallback: (jobID: string) => void; baseUrl: string }): JSX.Element {
+export default function SubmitFile(props: {
+    dbCallback: (jobID: string, headers: object) => void;
+    baseUrl: string;
+}): JSX.Element {
     const classes = useStyles();
     const [files, selectFiles] = useState<Array<File>>([]);
     const [open, setOpen] = useState<boolean>(false);
@@ -192,6 +195,12 @@ export default function SubmitFile(props: { dbCallback: (jobID: string) => void;
         setFileExists(false);
     };
 
+    const closeDialogue = (event: React.SyntheticEvent | React.MouseEvent, reason?: string): void => {
+        setOpen(false);
+        setFileExists(false);
+        setAllowSubmission(true);
+    };
+
     const handleFiles = async (files: Array<File>): Promise<void> => {
         selectFiles(files);
     };
@@ -228,7 +237,7 @@ export default function SubmitFile(props: { dbCallback: (jobID: string) => void;
                 if (response.status === 202) {
                     successMessage();
                     setOpen(true);
-                    props.dbCallback(response['data']['job_id']);
+                    props.dbCallback(response['data']['job_id'], headers);
                     setLoadingCircle(false);
                     showFileBrowserButton(true);
                 }
@@ -431,7 +440,7 @@ export default function SubmitFile(props: { dbCallback: (jobID: string) => void;
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleClose} color="primary">
+                        <Button onClick={closeDialogue} color="primary">
                             No
                         </Button>
                         <Button onClick={handleUpload} color="primary" autoFocus>

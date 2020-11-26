@@ -12,6 +12,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Avatar from '@material-ui/core/Avatar';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Copyright from './copyright';
+import { generateHeaders } from 'utils/AtreidesAPIUtils';
 
 export default function AuthComponent(props: { appCallback: any }): JSX.Element {
     const classes = useStyles();
@@ -23,10 +24,11 @@ export default function AuthComponent(props: { appCallback: any }): JSX.Element 
      *
      * @param {string} stage
      */
-    const manageAuthStage = (stage: string): void => {
+    const manageAuthStage = async (stage: string): Promise<void> => {
         setAuthStage(stage);
         if (stage === 'SignedIn') {
-            props.appCallback(true);
+            const headers = await generateHeaders();
+            props.appCallback(true, headers);
         }
     };
 
