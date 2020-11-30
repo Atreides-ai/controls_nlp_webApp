@@ -264,7 +264,7 @@ export default function SubmitFile(props: {
                 } else {
                     return [];
                 }
-            } else if (response.status === 403) {
+            } else if (response.status === 403 || 404) {
                 setFileNameError(true);
                 return [];
             } else {
