@@ -5,8 +5,15 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import useStyles from './useStyles';
 import { CardActions, CardActionArea, Button } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
-const HomePageTile = (props: { imagePath: string; header: string; body: string; buttonText: string }): JSX.Element => {
+const HomePageTile = (props: {
+    imagePath: string;
+    header: string;
+    body: string;
+    buttonText: string;
+    module: string;
+}): JSX.Element => {
     const classes = useStyles();
     return (
         <Card className={classes.homePageCard}>
@@ -22,9 +29,11 @@ const HomePageTile = (props: { imagePath: string; header: string; body: string; 
                 </CardContent>
             </CardActionArea>
             <CardActions>
-                <Button size="small" color="primary">
-                    {props.buttonText}
-                </Button>
+                <Link to={props.module} style={{ textDecoration: 'none' }}>
+                    <Button variant="contained" size="small" color="secondary">
+                        {props.buttonText}
+                    </Button>
+                </Link>
             </CardActions>
         </Card>
     );

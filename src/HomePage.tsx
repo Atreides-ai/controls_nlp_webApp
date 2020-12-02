@@ -13,7 +13,7 @@ const HomePage = (): JSX.Element => {
         <Container component="main">
             <Grid container direction="row" spacing={1}>
                 <Grid item xs={12} sm={12} md={12} lg={12}>
-                        <AtreidesLogo></AtreidesLogo>
+                    <AtreidesLogo></AtreidesLogo>
                 </Grid>
             </Grid>
             <div className={classes.homePageSurface}>
@@ -24,6 +24,7 @@ const HomePage = (): JSX.Element => {
                             header="Controls"
                             body="Automatically analyze and quality assure your controls."
                             buttonText="Enter"
+                            module="/controlSubmitFile"
                         ></HomePageTile>
                     </Grid>
                     <Grid item xs={12} sm={4} md={4} lg={4}>
@@ -32,6 +33,7 @@ const HomePage = (): JSX.Element => {
                             header="Policy"
                             body="Automatically compare policies against your controls."
                             buttonText="Coming Soon"
+                            module="/home"
                         ></HomePageTile>
                     </Grid>
                     <Grid item xs={12} sm={4} md={4} lg={4}>
@@ -40,6 +42,7 @@ const HomePage = (): JSX.Element => {
                             header="Risk"
                             body="Automatically check for missing controls against risk."
                             buttonText="Coming Soon"
+                            module="/home"
                         ></HomePageTile>
                     </Grid>
                 </Grid>

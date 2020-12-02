@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
 import SubmitFile from './Submit_File';
-import Dashboard from './dashboard.js';
+import Dashboard from './Dashboard';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import PrivateRoute from './private_route.js';
 import Amplify from 'aws-amplify';
@@ -10,36 +10,84 @@ import AuthComponent from './Atreides_Auth_Wrapper';
 import { ThemeProvider } from '@material-ui/core/styles';
 import theme from './theme';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import AppLayout from './AppLayout';
+import HomeIcon from '@material-ui/icons/Home';
+import FolderSharedIcon from '@material-ui/icons/FolderShared';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import FileBrowser from './FileBrowser';
+import HomePage from 'HomePage';
 
 Amplify.configure(awsmobile);
 
 export default function App() {
     const [authState, setState] = useState(false);
     const [jobId, setJobId] = useState(false);
-    const [token, setToken] = useState(false);
-    const [apiKey, setApiKey] = useState(false);
+    const [headers, setHeaders] = useState();
+    const [fileName, setFileName] = useState('');
+    const baseUrl = process.env.REACT_APP_ENDPOINT;
 
-    const authCallbackState = authStateData => {
+    const listItems = ['Home', 'Company Controls', 'Upload'];
+    // eslint-disable-next-line react/jsx-key
+    const listIcons = [<HomeIcon />, <FolderSharedIcon />, <CloudUploadIcon />];
+    const linkList = ['/home', '/fileBrowser', '/controlSubmitFile'];
+
+    const authCallbackState = (authStateData, headers) => {
+        console.log(headers);
         setState(authStateData);
+        setHeaders(headers);
     };
 
-    const jobCallback = (jobId_, token_, apiKey_) => {
+    const jobCallback = jobId_ => {
         setJobId(jobId_);
-        setToken(token_);
-        setApiKey(apiKey_);
+    };
+
+    const fileNameCallback = fileName_ => {
+        setFileName(fileName_);
     };
 
     return (
         <ThemeProvider theme={theme}>
             <Router>
                 <Switch>
+                    <PrivateRoute path="/home" authState={authState}>
+                        <CssBaseline />
+                        <HomePage></HomePage>
+                    </PrivateRoute>
                     <PrivateRoute path="/dashboard" authState={authState}>
                         <CssBaseline />
-                        <Dashboard jobId={jobId} token={token} apiKey={apiKey} />
+                        <AppLayout
+                            pageTitle="Controls Dashboard"
+                            listItems={listItems}
+                            listIcons={listIcons}
+                            linkList={linkList}
+                            coreElement={<Dashboard fileName={fileName} baseUrl={baseUrl} headers={headers} />}
+                        />
                     </PrivateRoute>
-                    <PrivateRoute path="/submitFile" authState={authState}>
+                    <PrivateRoute path="/controlSubmitFile" authState={authState}>
                         <CssBaseline />
-                        <SubmitFile dbCallback={jobCallback} />
+                        <AppLayout
+                            pageTitle="File Submission"
+                            listItems={listItems}
+                            listIcons={listIcons}
+                            linkList={linkList}
+                            coreElement={<SubmitFile dbCallback={jobCallback} baseUrl={baseUrl} />}
+                        />
+                    </PrivateRoute>
+                    <PrivateRoute path="/fileBrowser" authState={authState}>
+                        <CssBaseline />
+                        <AppLayout
+                            pageTitle="File Browser"
+                            listItems={listItems}
+                            listIcons={listIcons}
+                            linkList={linkList}
+                            coreElement={
+                                <FileBrowser
+                                    dbCallback={fileNameCallback}
+                                    baseUrl={baseUrl}
+                                    headers={headers}
+                                ></FileBrowser>
+                            }
+                        />
                     </PrivateRoute>
                     <Route path="/">
                         <AuthComponent appCallback={authCallbackState} />
