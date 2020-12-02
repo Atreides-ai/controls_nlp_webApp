@@ -40,3 +40,6 @@ amplifyxc.config
 # python
 .pytest_cache/v/cache/nodeids
 .pytest_cache/v/cache/stepwise
+pytest_cache/v/cache/stepwise
+pytest_cache/v/cache/nodeids
+.vscode/settings.json
