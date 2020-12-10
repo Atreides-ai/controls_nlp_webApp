@@ -12,8 +12,8 @@ import {
     LinearProgress,
     Grid,
 } from '@material-ui/core';
-import { generateHeaders } from './utils/AtreidesAPIUtils';
 import tableIcons from 'tableIcons';
+import RefreshIcon from '@material-ui/icons/Refresh';
 import { Rating, Skeleton } from '@material-ui/lab';
 import { Link } from 'react-router-dom';
 
@@ -33,9 +33,9 @@ const FileBrowser = (props: {
     const rateFile = async (name: string, value: number | null): Promise<void> => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const url = props.baseUrl + '/filename';
-        const headers = await generateHeaders();
         const data = { data: { name: name, rating: value } };
-        axios.post(url, data, headers).then(response => {
+        console.log(data);
+        axios.post(url, data, props.headers).then(response => {
             if (response.status !== 200) {
                 showErrorMessage(true);
             }
@@ -100,45 +100,25 @@ const FileBrowser = (props: {
         },
     ];
 
-    const checkStarted = async (data: Array<object>): Promise<Array<boolean>> => {
-        return data.map(object => {
-            if (object['status'] === 'STARTED') {
-                return true;
-            } else {
-                return false;
-            }
-        });
-    };
-
-    const getOrgFileNames = async (headers: object, interval: number): Promise<void> => {
+    const getOrgFileNames = async (headers: object): Promise<void> => {
         const url = props.baseUrl + '/filename';
         axios.get(url, headers).then(response => {
             if (response.status === 504) {
-                getOrgFileNames(headers, interval);
+                getOrgFileNames(headers);
             }
             if (response.status === 200) {
                 const data = Object.values(response.data) as Array<Array<object>>;
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 setTableData(data![0]);
                 showTable(true);
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                checkStarted(data![0]).then(started => {
-                    if (!started[0]) {
-                        clearInterval(interval);
-                    }
-                });
             } else if (response.status === 403) {
-                clearInterval(interval);
                 showErrorMessage(true);
             }
         });
     };
 
     useEffect(() => {
-        const interval = setInterval(function() {
-            getOrgFileNames(props.headers, (interval as unknown) as number);
-        }, 3000);
-        return (): void => clearInterval(interval);
+        getOrgFileNames(props.headers);
     }, []);
 
     return (
@@ -164,6 +144,17 @@ const FileBrowser = (props: {
             </Dialog>
             {table && (
                 <MaterialTable
+                    actions={[
+                        {
+                            icon: (): JSX.Element => <RefreshIcon />,
+                            tooltip: 'refresh',
+                            isFreeAction: true,
+                            onClick: (): any => {
+                                showTable(false);
+                                getOrgFileNames(props.headers);
+                            },
+                        },
+                    ]}
                     options={{
                         exportButton: true,
                         filtering: true,
@@ -175,8 +166,7 @@ const FileBrowser = (props: {
                                 const index = oldData!['tableData']['id'];
                                 dataUpdate[index] = newData;
                                 resolve(setTableData(dataUpdate));
-                                console.log(newData['name']);
-                                rateFile(newData['name'], newData['value']);
+                                rateFile(newData['name'], newData['rating']);
                             }),
                     }}
                     icons={tableIcons}
