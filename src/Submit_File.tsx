@@ -81,6 +81,10 @@ export default function SubmitFile(props: {
                 obj['control_operator'] = obj['Control Operator'];
                 delete obj['Control Operator'];
             }
+            if (obj.hasOwnProperty('Control Id')) {
+                obj['control_id'] = obj['Control Id'];
+                delete obj['Control Id'];
+            }
             return obj;
         });
 
@@ -93,7 +97,9 @@ export default function SubmitFile(props: {
         const rawData = await papaPromise(file).then((obj: object | void) => {
             return obj['data'];
         });
+        console.log(rawData);
         const data = await formatData(rawData);
+        console.log(data);
         return data;
     };
 
