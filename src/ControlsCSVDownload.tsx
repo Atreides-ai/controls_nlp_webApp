@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
 import { CSVLink } from 'react-csv';
+import _ from 'lodash';
 import { COREMETRICS } from 'CoreMetrics';
 
 const ControlsCSVDownload = (props: { dashboardFile: Array<object> }): JSX.Element => {
@@ -9,7 +10,7 @@ const ControlsCSVDownload = (props: { dashboardFile: Array<object> }): JSX.Eleme
         file.map(obj => {
             const newObj = {};
             COREMETRICS.forEach(item => {
-                newObj[item.replace(/_/g, ' ').toUpperCase()] = obj[item];
+                newObj[_.startCase(_.toLower(item.replace(/_/g, ' ')))] = obj[item];
             });
 
             const keys = Object.keys(obj);
