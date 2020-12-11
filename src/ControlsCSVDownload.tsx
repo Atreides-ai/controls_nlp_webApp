@@ -48,7 +48,6 @@ const ControlsCSVDownload = (props: { dashboardFile: Array<object> }): JSX.Eleme
      */
     const unwrapAdditionalData = (inputFile: Array<object>): Array<object> => {
         return inputFile.map(function(obj) {
-            console.log(obj);
             if (obj['additional_data'] !== undefined) {
                 for (const [key, value] of Object.entries(obj['additional_data'])) {
                     obj[key] = value;

@@ -34,10 +34,7 @@ import DataTablePopUp from './DataTablePopUp';
 import axios from 'axios';
 import ControlsCSVDownload from 'ControlsCSVDownload';
 import tableIcons from './tableIcons';
-import { PIEMETRICS } from './PieMetrics';
 import _ from 'lodash';
-import { generateHeaders } from './utils/AtreidesAPIUtils';
-import { controlsFile } from './test_utils/controlsTestFile';
 
 const Dashboard = (props: {
     fileName: string;
@@ -68,17 +65,35 @@ const Dashboard = (props: {
     };
 
     const createPieElements = (): JSX.Element[] => {
-        const gridContent = splitToChunks(PIEMETRICS, 3);
+        console.log('creating...');
+        const gridContent = splitToChunks(
+            [
+                'whats',
+                'hows',
+                'whens',
+                'whos',
+                'thresholds',
+                'multiple_whats',
+                'multiple_hows',
+                'multiple_whens',
+                'multiple_whos',
+            ],
+            3,
+        );
+        console.log(gridContent);
         return gridContent.map((content: Array<string>) => {
+            console.log(content);
             return (
                 <Grid container direction="row" spacing={1}>
                     {content.map((item: string) => {
+                        console.log('inside the grid');
                         const id = 'contains_' + item + '_pie';
                         const column = 'contains_' + item.replace('multiple_', '');
                         const capitalised = _.upperFirst(item).replace('_', ' ');
                         const valueText = capitalised + ' Text';
                         const trueFalse = 'Contains ' + capitalised;
                         const textColumn = item.replace('multiple_', '');
+                        console.log(item);
                         return (
                             <Grid item xs={12} sm={4} md={4} lg={4}>
                                 <PieChartCard
