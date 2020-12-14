@@ -97,9 +97,7 @@ export default function SubmitFile(props: {
         const rawData = await papaPromise(file).then((obj: object | void) => {
             return obj['data'];
         });
-        console.log(rawData);
         const data = await formatData(rawData);
-        console.log(data);
         return data;
     };
 
