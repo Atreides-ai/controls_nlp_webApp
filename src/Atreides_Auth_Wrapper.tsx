@@ -43,7 +43,7 @@ export default function AuthComponent(props: { appCallback: any }): JSX.Element 
 
     return (
         <Container component="main" maxWidth="xs">
-            {authStage === 'SignedIn' && <Redirect to="/home" />}
+            {authStage === 'SignedIn' && <Redirect to="/fileBrowser" />}
             <CssBaseline />
             <div className={classes.loginSurface}>
                 <Avatar className={classes.avatar} color="secondary">
