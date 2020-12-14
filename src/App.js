@@ -26,10 +26,10 @@ export default function App() {
     const [fileName, setFileName] = useState('');
     const baseUrl = process.env.REACT_APP_ENDPOINT;
 
-    const listItems = ['Home', 'Company Controls', 'Upload'];
+    const listItems = ['Company Controls', 'Upload'];
     // eslint-disable-next-line react/jsx-key
-    const listIcons = [<HomeIcon />, <FolderSharedIcon />, <CloudUploadIcon />];
-    const linkList = ['/home', '/fileBrowser', '/controlSubmitFile'];
+    const listIcons = [<FolderSharedIcon />, <CloudUploadIcon />];
+    const linkList = ['/fileBrowser', '/controlSubmitFile'];
 
     const authCallbackState = (authStateData, headers) => {
         console.log(headers);
