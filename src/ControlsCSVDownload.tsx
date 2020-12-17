@@ -4,7 +4,7 @@ import { CSVLink } from 'react-csv';
 import _ from 'lodash';
 import { COREMETRICS } from 'CoreMetrics';
 
-const ControlsCSVDownload = (props: { dashboardFile: Array<object> }): JSX.Element => {
+const ControlsCSVDownload = (props: { dashboardFile: Array<object>; fileName: string }): JSX.Element => {
     const orderDownload = (file: Array<object>): Array<object> => {
         const download = [] as Array<[] | object>;
         file.map(obj => {
@@ -73,7 +73,7 @@ const ControlsCSVDownload = (props: { dashboardFile: Array<object> }): JSX.Eleme
     return (
         <CSVLink
             data={createCSVDownload(props.dashboardFile)}
-            filename="Analysis.csv"
+            filename={props.fileName}
             style={{ textDecoration: 'none' }}
         >
             <Button variant="contained" color="secondary">
