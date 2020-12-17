@@ -174,7 +174,7 @@ const Dashboard = (props: {
             {dashboard && (
                 <Grid container direction="row" spacing={1} justify="flex-end">
                     <Grid item xs={12} sm="auto" md="auto" lg="auto">
-                        <ControlsCSVDownload dashboardFile={dashboardfile!} />
+                        <ControlsCSVDownload dashboardFile={dashboardfile!} fileName={props.fileName} />
                     </Grid>
                     <Grid item xs={12} sm="auto" md="auto" lg="auto">
                         <PrintButton descriptions={descriptions} label="Download Dashboard" />
