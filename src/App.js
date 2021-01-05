@@ -39,7 +39,7 @@ export default function App() {
     };
 
     useEffect(() => {
-        const tokenExpired = Auth.currentSession().then(session => {
+        const tokenValid = Auth.currentSession().then(session => {
             const expiry = session['accessToken']['payload']['exp'];
             if (Math.floor(Date.now() / 1000) < expiry) {
                 return true;
@@ -47,7 +47,7 @@ export default function App() {
                 return false;
             }
         });
-        setState(tokenExpired);
+        setState(tokenValid);
     }, []);
 
     return (
