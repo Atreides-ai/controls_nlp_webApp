@@ -16,15 +16,13 @@ import tableIcons from 'tableIcons';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import { Rating, Skeleton } from '@material-ui/lab';
 import { Link } from 'react-router-dom';
+import { generateHeaders } from './utils/AtreidesAPIUtils';
 
-const FileBrowser = (props: {
-    baseUrl: string;
-    headers: object;
-    dbCallback: (fileName: string) => void;
-}): JSX.Element => {
+const FileBrowser = (props: { baseUrl: string; dbCallback: (fileName: string) => void }): JSX.Element => {
     const [tableData, setTableData] = useState<Array<object>>([]);
     const [table, showTable] = useState<boolean>(false);
     const [errorMessage, showErrorMessage] = useState<boolean>(false);
+    const [headers, setHeaders] = useState<object>();
 
     const handleClose = (): void => {
         showErrorMessage(false);
@@ -34,8 +32,7 @@ const FileBrowser = (props: {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const url = props.baseUrl + '/filename';
         const data = { data: { name: name, rating: value } };
-        console.log(data);
-        axios.post(url, data, props.headers).then(response => {
+        axios.post(url, data, headers).then(response => {
             if (response.status !== 200) {
                 showErrorMessage(true);
             }
@@ -100,11 +97,13 @@ const FileBrowser = (props: {
         },
     ];
 
-    const getOrgFileNames = async (headers: object): Promise<void> => {
+    const getOrgFileNames = async (): Promise<void> => {
+        const headers = await generateHeaders();
+        setHeaders(headers);
         const url = props.baseUrl + '/filename';
         axios.get(url, headers).then(response => {
             if (response.status === 504) {
-                getOrgFileNames(headers);
+                getOrgFileNames();
             }
             if (response.status === 200) {
                 const data = Object.values(response.data) as Array<Array<object>>;
@@ -118,7 +117,7 @@ const FileBrowser = (props: {
     };
 
     useEffect(() => {
-        getOrgFileNames(props.headers);
+        getOrgFileNames();
     }, []);
 
     return (
@@ -151,7 +150,7 @@ const FileBrowser = (props: {
                             isFreeAction: true,
                             onClick: (): any => {
                                 showTable(false);
-                                getOrgFileNames(props.headers);
+                                getOrgFileNames();
                             },
                         },
                     ]}

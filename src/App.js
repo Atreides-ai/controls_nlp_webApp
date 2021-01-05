@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import SubmitFile from './Submit_File';
 import Dashboard from './Dashboard';
@@ -37,18 +37,6 @@ export default function App() {
     const fileNameCallback = fileName_ => {
         setFileName(fileName_);
     };
-
-    useEffect(() => {
-        const tokenValid = Auth.currentSession().then(session => {
-            const expiry = session['accessToken']['payload']['exp'];
-            if (Math.floor(Date.now() / 1000) < expiry) {
-                return true;
-            } else {
-                return false;
-            }
-        });
-        setState(tokenValid);
-    }, []);
 
     return (
         <ThemeProvider theme={theme}>

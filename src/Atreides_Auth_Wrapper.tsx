@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import useStyles from './useStyles';
 import Box from '@material-ui/core/Box';
@@ -13,7 +13,7 @@ import Avatar from '@material-ui/core/Avatar';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Copyright from './copyright';
 import { generateHeaders } from 'utils/AtreidesAPIUtils';
-
+import { Auth } from 'aws-amplify';
 
 export default function AuthComponent(props: { appCallback: any }): JSX.Element {
     const classes = useStyles();
@@ -41,6 +41,23 @@ export default function AuthComponent(props: { appCallback: any }): JSX.Element 
     const getUser = (user: any): void => {
         setUser(user);
     };
+
+    useEffect(() => {
+        Auth.currentSession()
+            .then(session => {
+                const expiry = session['accessToken']['payload']['exp'];
+                if (Math.floor(Date.now() / 1000) < expiry) {
+                    return true;
+                } else {
+                    return false;
+                }
+            })
+            .then(authState => {
+                props.appCallback(authState);
+                setAuthStage('SignedIn');
+            })
+            .catch();
+    }, []);
 
     return (
         <Container component="main" maxWidth="xs">
