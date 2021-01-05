@@ -23,10 +23,7 @@ import XLSX from 'xlsx';
 import AtreidesDropzone from 'Atreides_Dropzone';
 import { generateHeaders } from './utils/AtreidesAPIUtils';
 
-export default function SubmitFile(props: {
-    dbCallback: (jobID: string, headers: object) => void;
-    baseUrl: string;
-}): JSX.Element {
+export default function SubmitFile(props: { baseUrl: string }): JSX.Element {
     const classes = useStyles();
     const [files, selectFiles] = useState<Array<File>>([]);
     const [open, setOpen] = useState<boolean>(false);
@@ -241,7 +238,6 @@ export default function SubmitFile(props: {
                 if (response.status === 202) {
                     successMessage();
                     setOpen(true);
-                    props.dbCallback(response['data']['job_id'], headers);
                     setLoadingCircle(false);
                     showFileBrowserButton(true);
                 }
