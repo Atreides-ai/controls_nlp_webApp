@@ -14,6 +14,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Copyright from './copyright';
 import { generateHeaders } from 'utils/AtreidesAPIUtils';
 
+
 export default function AuthComponent(props: { appCallback: any }): JSX.Element {
     const classes = useStyles();
     const [authStage, setAuthStage] = useState<string>('SignedOut');
