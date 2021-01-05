@@ -35,14 +35,10 @@ import axios from 'axios';
 import ControlsCSVDownload from 'ControlsCSVDownload';
 import tableIcons from './tableIcons';
 import _ from 'lodash';
+import { generatePath } from 'react-router-dom';
+import { generateHeaders } from 'utils/AtreidesAPIUtils';
 
-const Dashboard = (props: {
-    fileName: string;
-    token: string;
-    apiKey: string;
-    baseUrl: string;
-    headers: object;
-}): JSX.Element => {
+const Dashboard = (props: { fileName: string; token: string; apiKey: string; baseUrl: string }): JSX.Element => {
     const classes = useStyles();
     const [dashboard, showDashboard] = useState(false);
     const [dashboardfile, setFile] = useState<Array<object>>();
@@ -133,15 +129,16 @@ const Dashboard = (props: {
      * Polls the API at 30 second intervals to check job status
      *
      */
-    const getFile = async (filename: string, headers: object, interval: number): Promise<void> => {
+    const getFile = async (filename: string, interval: number): Promise<void> => {
         // This is for testing only ------->
         // setFile(controlsFile);
         // showDashboard(true);
         // ------------>
+        const headers = await generateHeaders();
         const url = props.baseUrl + '/control?filename=' + filename + '&per_page=100';
         axios.get(url, headers).then(response => {
             if (response.status === 504) {
-                getFile(filename, headers, interval);
+                getFile(filename, interval);
             }
             if (response.status === 200) {
                 if (response.data.controls) {
@@ -164,7 +161,7 @@ const Dashboard = (props: {
 
     useEffect(() => {
         const interval = setInterval(function() {
-            getFile(props.fileName, props.headers, (interval as unknown) as number);
+            getFile(props.fileName, (interval as unknown) as number);
         }, 3000);
         return (): void => clearInterval(interval);
     }, []);
