@@ -282,7 +282,6 @@ export default function SubmitFile(props: { baseUrl: string }): JSX.Element {
         if (intersection.length > 0) {
             setOpen(true);
             setFileExists(true);
-            console.log('pop up should show');
         } else {
             handleUpload();
         }

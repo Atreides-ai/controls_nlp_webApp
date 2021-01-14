@@ -25,9 +25,7 @@ const PrintButton = ({ descriptions, label }) => (
                 item.style.width = null;
             });
             for (const [key, value] of Object.entries(descriptions)) {
-                console.log(key);
                 const input = document.getElementById(key);
-                console.log('this is the element: ' + input);
                 await html2canvas(input, { allowTaint: true }).then(canvas => {
                     const imgData = canvas.toDataURL('image/png');
                     if (counter < 5) {
