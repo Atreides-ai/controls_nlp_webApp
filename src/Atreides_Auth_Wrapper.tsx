@@ -56,7 +56,7 @@ export default function AuthComponent(props: { appCallback: any }): JSX.Element 
                 props.appCallback(authState);
                 setAuthStage('SignedIn');
             })
-            .catch();
+            .catch(() => setAuthStage(false));
     }, []);
 
     return (
