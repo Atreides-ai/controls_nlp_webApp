@@ -44,19 +44,14 @@ export default function AuthComponent(props: { appCallback: any }): JSX.Element 
 
     useEffect(() => {
         Auth.currentSession()
-            .then(session => {
-                const expiry = session['accessToken']['payload']['exp'];
-                if (Math.floor(Date.now() / 1000) < expiry) {
-                    return true;
-                } else {
-                    return false;
-                }
-            })
-            .then(authState => {
-                props.appCallback(authState);
+            .then(() => {
+                props.appCallback(true);
                 setAuthStage('SignedIn');
             })
-            .catch(() => setAuthStage(false));
+            .catch(() => {
+                props.appCallback(false);
+                setAuthStage('SignedOut');
+            });
     }, []);
 
     return (
