@@ -419,7 +419,7 @@ export default function SubmitFile(props: { baseUrl: string }): JSX.Element {
                     <MySnackbarContentWrapper
                         onClose={handleClose}
                         variant="error"
-                        message="Could not retrieve your existing files."
+                        message="Apologies, could not retrieve your existing files. Please sign out and try again."
                     />
                 </Snackbar>
                 <Dialog
