@@ -268,6 +268,7 @@ export default function SubmitFile(props: { baseUrl: string }): JSX.Element {
                     }
                 } else if (response.status === 403 || 404) {
                     setFileNameError(true);
+                    setLoadingCircle(false);
                     return [];
                 } else {
                     return [];
@@ -275,6 +276,7 @@ export default function SubmitFile(props: { baseUrl: string }): JSX.Element {
             })
             .catch(() => {
                 setFileNameError(true);
+                setLoadingCircle(false);
                 return [];
             });
         return oldFileNames;
