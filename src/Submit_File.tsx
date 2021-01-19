@@ -257,20 +257,26 @@ export default function SubmitFile(props: { baseUrl: string }): JSX.Element {
     const getOldFileNames = async (): Promise<Array<string>> => {
         const headers = await generateHeaders();
         const url = props.baseUrl + '/filename';
-        const oldFileNames = await axios.get(url, headers).then(response => {
-            if (response.status === 200) {
-                if (response['data'] !== []) {
-                    return createListOfFiles(Object.values(response.data));
+        const oldFileNames = await axios
+            .get(url, headers)
+            .then(response => {
+                if (response.status === 200) {
+                    if (response['data'] !== []) {
+                        return createListOfFiles(Object.values(response.data));
+                    } else {
+                        return [];
+                    }
+                } else if (response.status === 403 || 404) {
+                    setFileNameError(true);
+                    return [];
                 } else {
                     return [];
                 }
-            } else if (response.status === 403 || 404) {
+            })
+            .catch(() => {
                 setFileNameError(true);
                 return [];
-            } else {
-                return [];
-            }
-        });
+            });
         return oldFileNames;
     };
 
