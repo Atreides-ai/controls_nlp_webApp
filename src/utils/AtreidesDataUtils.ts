@@ -24,7 +24,6 @@ export const createRemediationList = (dashboardfile: Array<object>): Array<objec
         if (obj['contains_whens'] === 'false') {
             remediationText.push('No when. ');
         }
-        console.log(remediationText);
         if (remediationText.length === 0) {
             remediationText.push('No remediation required.');
         }

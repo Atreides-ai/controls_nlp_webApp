@@ -61,7 +61,6 @@ const Dashboard = (props: { fileName: string; token: string; apiKey: string; bas
     };
 
     const createPieElements = (): JSX.Element[] => {
-        console.log('creating...');
         const gridContent = splitToChunks(
             [
                 'whats',
@@ -76,20 +75,17 @@ const Dashboard = (props: { fileName: string; token: string; apiKey: string; bas
             ],
             3,
         );
-        console.log(gridContent);
+
         return gridContent.map((content: Array<string>) => {
-            console.log(content);
             return (
                 <Grid container direction="row" spacing={1}>
                     {content.map((item: string) => {
-                        console.log('inside the grid');
                         const id = 'contains_' + item + '_pie';
                         const column = 'contains_' + item.replace('multiple_', '');
                         const capitalised = _.upperFirst(item).replace('_', ' ');
                         const valueText = capitalised + ' Text';
                         const trueFalse = 'Contains ' + capitalised;
                         const textColumn = item.replace('multiple_', '');
-                        console.log(item);
                         return (
                             <Grid item xs={12} sm={4} md={4} lg={4}>
                                 <PieChartCard
