@@ -131,7 +131,7 @@ const Dashboard = (props: { fileName: string; token: string; apiKey: string; bas
         // showDashboard(true);
         // ------------>
         const headers = await generateHeaders();
-        const url = props.baseUrl + '/control?filename=' + filename + '&per_page=100';
+        const url = props.baseUrl + '/control?filename=' + filename;
         axios.get(url, headers).then(response => {
             if (response.status === 504) {
                 getFile(filename, interval);

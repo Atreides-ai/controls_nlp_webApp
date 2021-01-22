@@ -37,6 +37,7 @@ export default function SubmitFile(props: { baseUrl: string }): JSX.Element {
     const [allowSubmission, setAllowSubmission] = useState<boolean>(true);
     const [intersection, setintersection] = useState<Array<string>>([]);
     const [selectFileError, showSelectFileError] = useState<boolean>(false);
+    const [reUploadError, showreUploadError] = useState<boolean>(false);
 
     const papaPromise = async (rawFile: File): Promise<object | Error> => {
         return new Promise((resolve, reject) => {
@@ -241,6 +242,10 @@ export default function SubmitFile(props: { baseUrl: string }): JSX.Element {
                     setLoadingCircle(false);
                     showFileBrowserButton(true);
                 }
+                if (response.status === 425) {
+                    setOpen(true);
+                    showreUploadError(true);
+                }
             });
         });
     };
@@ -355,6 +360,20 @@ export default function SubmitFile(props: { baseUrl: string }): JSX.Element {
                 </form>
             </div>
             <div>
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                    }}
+                    open={open && reUploadError}
+                    autoHideDuration={6000}
+                    onClose={handleClose}
+                >
+                    <MySnackbarContentWrapper
+                        variant="error"
+                        message="It seems you just uploaded this! Please wait 3 minutes before re-uploading."
+                    />
+                </Snackbar>
                 <Snackbar
                     anchorOrigin={{
                         vertical: 'bottom',
