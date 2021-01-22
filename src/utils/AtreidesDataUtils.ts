@@ -12,19 +12,20 @@ import theme from '../theme';
 export const createRemediationList = (dashboardfile: Array<object>): Array<object> => {
     return dashboardfile.map((obj: object): object => {
         const remediationText = [];
-        if (obj['contains_whats'] === false) {
+        if (obj['contains_whats'] === 'false') {
             remediationText.push('No what. ');
         }
-        if (obj['contains_hows'] === false) {
+        if (obj['contains_hows'] === 'false') {
             remediationText.push('No how. ');
         }
-        if (obj['contains_whos'] === false) {
+        if (obj['contains_whos'] === 'false') {
             remediationText.push('No who. ');
         }
-        if (obj['contains_whens'] === false) {
+        if (obj['contains_whens'] === 'false') {
             remediationText.push('No when. ');
         }
-        if (remediationText === []) {
+        console.log(remediationText);
+        if (remediationText.length === 0) {
             remediationText.push('No remediation required.');
         }
         obj['Remediation'] = remediationText.join('');
