@@ -69,7 +69,7 @@ export default function App() {
                     <PrivateRoute path="/fileBrowser" authState={authState}>
                         <CssBaseline />
                         <AppLayout
-                            pageTitle="File Browser"
+                            pageTitle="Company Controls"
                             listItems={listItems}
                             listIcons={listIcons}
                             linkList={linkList}
