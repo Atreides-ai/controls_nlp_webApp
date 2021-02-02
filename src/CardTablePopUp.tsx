@@ -7,6 +7,9 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import { TransitionProps } from '@material-ui/core/transitions';
 import MaterialTable from 'material-table';
+import tableIcons from './tableIcons';
+import ControlsCardContent from './ControlsCardContent';
+import { createRemediationList } from './utils/AtreidesDataUtils';
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & { children?: React.ReactElement<any, any> },
@@ -16,28 +19,32 @@ const Transition = React.forwardRef(function Transition(
 });
 
 const CardTablePopUp = (props: {
-    DashboardContent: JSX.Element;
+    icon: JSX.Element;
     analysisField: string;
-    dashboardFile: any;
+    dashboardFile: Array<object>;
     filter: any;
-    tableIcons: any;
     id: string;
     showRemediation: boolean;
 }): JSX.Element => {
     const [open, setOpen] = useState(false);
 
-    const handleClickOpen = () => {
+    const handleClickOpen = (): void => {
         setOpen(true);
     };
 
-    const handleClose = () => {
+    const handleClose = (): void => {
         setOpen(false);
     };
 
     return (
         <div>
             <div id={props.id} onClick={handleClickOpen}>
-                {props.DashboardContent}
+                <ControlsCardContent
+                    icon={props.icon}
+                    header={props.filter}
+                    file={props.dashboardFile}
+                    column={props.analysisField}
+                />
             </div>
             <Dialog
                 open={open}
@@ -57,14 +64,14 @@ const CardTablePopUp = (props: {
                                 exportButton: true,
                                 filtering: true,
                             }}
-                            icons={props.tableIcons}
+                            icons={tableIcons}
                             columns={[
                                 { title: 'Control Description', field: 'control_description', filtering: false },
                                 { title: 'Risk Description', field: 'risk_description', filtering: false },
                                 { title: 'Overall Score', field: props.analysisField, defaultFilter: props.filter },
                                 { title: 'Remediation', field: 'Remediation', filtering: false },
                             ]}
-                            data={props.dashboardFile}
+                            data={createRemediationList(props.dashboardFile)}
                             title="Analysis Summary"
                         />
                     )}
@@ -74,7 +81,7 @@ const CardTablePopUp = (props: {
                                 exportButton: true,
                                 filtering: true,
                             }}
-                            icons={props.tableIcons}
+                            icons={tableIcons}
                             columns={[
                                 { title: 'Control Description', field: 'control_description', filtering: false },
                                 { title: 'Risk Description', field: 'risk_description', filtering: false },

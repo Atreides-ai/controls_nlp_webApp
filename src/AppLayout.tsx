@@ -9,18 +9,22 @@ import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import AtreidesIcon from './AtreidesIcon';
+import MenuIcon from '@material-ui/icons/Menu';
 import { useTheme } from '@material-ui/core/styles';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import { Link } from 'react-router-dom';
+import SignOut from './sign_out';
+import { Button, Grid } from '@material-ui/core';
 
 const AppLayout = (props: {
     pageTitle: string;
-    listItems: [string];
-    listIcons: [JSX.Element];
+    listItems: string[];
+    listIcons: JSX.Element[];
+    linkList: string[];
     coreElement: JSX.Element;
 }): JSX.Element => {
     const classes = useStyles();
@@ -50,11 +54,25 @@ const AppLayout = (props: {
                         edge="start"
                         className={clsx(classes.menuButton, open && classes.hide)}
                     >
-                        <AtreidesIcon />
+                        <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6" noWrap>
-                        {props.pageTitle}
-                    </Typography>
+                    <Grid container direction="row" spacing={1} justify="flex-start">
+                        <Grid item xs={12} sm="auto" md="auto" lg="auto">
+                            <Typography variant="h6" noWrap align="center">
+                                {props.pageTitle}
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                    <Grid container direction="row" spacing={1} justify="flex-end">
+                        <Grid item xs={12} sm="auto" md="auto" lg="auto">
+                            <SignOut />
+                        </Grid>
+                        <Grid item xs={12} sm="auto" md="auto" lg="auto">
+                            <Button variant="contained" size="small" color="secondary" href="https://www.atreides.ai/">
+                                About us
+                            </Button>
+                        </Grid>
+                    </Grid>
                 </Toolbar>
             </AppBar>
             <Drawer
@@ -74,10 +92,13 @@ const AppLayout = (props: {
                 <Divider />
                 <List>
                     {props.listItems.map((text, index) => (
-                        <ListItem button key={text}>
-                            <ListItemIcon>{props.listIcons[index]}</ListItemIcon>
-                            <ListItemText primary={text} />
-                        </ListItem>
+                        // eslint-disable-next-line react/jsx-key
+                        <Link to={props.linkList[index]} style={{ textDecoration: 'none' }}>
+                            <ListItem button key={text}>
+                                <ListItemIcon>{props.listIcons[index]}</ListItemIcon>
+                                <ListItemText primary={<Typography color="primary">{text}</Typography>} />
+                            </ListItem>
+                        </Link>
                     ))}
                 </List>
             </Drawer>

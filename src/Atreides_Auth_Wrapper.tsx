@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import useStyles from './useStyles';
 import Box from '@material-ui/core/Box';
@@ -12,6 +12,8 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Avatar from '@material-ui/core/Avatar';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Copyright from './copyright';
+import { generateHeaders } from 'utils/AtreidesAPIUtils';
+import { Auth } from 'aws-amplify';
 
 export default function AuthComponent(props: { appCallback: any }): JSX.Element {
     const classes = useStyles();
@@ -23,10 +25,11 @@ export default function AuthComponent(props: { appCallback: any }): JSX.Element 
      *
      * @param {string} stage
      */
-    const manageAuthStage = (stage: string): void => {
+    const manageAuthStage = async (stage: string): Promise<void> => {
         setAuthStage(stage);
         if (stage === 'SignedIn') {
-            props.appCallback(true);
+            const headers = await generateHeaders();
+            props.appCallback(true, headers);
         }
     };
 
@@ -39,9 +42,21 @@ export default function AuthComponent(props: { appCallback: any }): JSX.Element 
         setUser(user);
     };
 
+    useEffect(() => {
+        Auth.currentSession()
+            .then(() => {
+                props.appCallback(true);
+                setAuthStage('SignedIn');
+            })
+            .catch(() => {
+                props.appCallback(false);
+                setAuthStage('SignedOut');
+            });
+    }, []);
+
     return (
         <Container component="main" maxWidth="xs">
-            {authStage === 'SignedIn' && <Redirect to="/submitFile" />}
+            {authStage === 'SignedIn' && <Redirect to="/controlSubmitFile" />}
             <CssBaseline />
             <div className={classes.loginSurface}>
                 <Avatar className={classes.avatar} color="secondary">
